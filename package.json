@@ -1,0 +1,64 @@
+{
+  "name": "sen-chat",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^39.0.0",
+    "@ckeditor/ckeditor5-react": "^6.1.0",
+    "@ethersproject/providers": "^5.0.0",
+    "@react-oauth/google": "^0.2.6",
+    "@tailwindcss/forms": "0.4.0",
+    "@testing-library/jest-dom": "^5.15.1",
+    "@testing-library/react": "^11.2.7",
+    "@testing-library/user-event": "^12.8.3",
+    "@web3-react/core": "^6.0.0",
+    "@web3modal/wagmi": "^3.2.0",
+    "axios": "^1.5.1",
+    "ethers": "^6.7.1",
+    "prop-types": "^15.8.1",
+    "qs": "^6.11.2",
+    "react": "17.0.2",
+    "react-datepicker": "^4.5.0",
+    "react-dom": "17.0.2",
+    "react-icons": "^4.10.1",
+    "react-pro-sidebar": "^1.0.0",
+    "react-quill": "^2.0.0",
+    "react-router-dom": "6.0.2",
+    "react-router-hash-link": "^2.4.3",
+    "react-scripts": "5.0.0",
+    "viem": "^1.18.1",
+    "wagmi": "^1.4.5",
+    "web-vitals": "^2.1.0",
+    "web3": "^1.10.3",
+    "web3modal": "^1.9.12"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "autoprefixer": "10.4.2",
+    "postcss": "8.4.8",
+    "tailwindcss": "3.0.18"
+  }
+}
