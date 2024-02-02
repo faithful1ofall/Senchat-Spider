@@ -1,21 +1,29 @@
 import React, { useState } from "react";
-import { Button, CheckBox, Img, Input, Text } from "components";
+import { useNavigate } from 'react-router-dom';
+import { Button, Img, Input, Text } from "components";
 import Header from "components/Header";
-import { post} from '../../utils/request';
-import { configureChains, signMessage, createConfig, InjectedConnector, getAccount } from '@wagmi/core';
+import { configureChains, createConfig, InjectedConnector, getAccount, readContract, writeContract } from '@wagmi/core';
 import { publicProvider } from '@wagmi/core/providers/public';
 import { bscTestnet } from "viem/chains";
+import { parseGwei, hexToBigInt } from 'viem';
 import { createWeb3Modal, walletConnectProvider, EIP6963Connector } from '@web3modal/wagmi';
 import { CoinbaseWalletConnector } from '@wagmi/core/connectors/coinbaseWallet';
 import { WalletConnectConnector } from '@wagmi/core/connectors/walletConnect';
-import Web3 from "web3";
+import { NFTStorage, File} from 'nft.storage';
+import ContractABI from '../../utils/contractabi.json';
+
+
+const NFT_STORAGE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweGZkZjE1M0U2ODEzZWZFNDRCNTEyMzU2REFGMjQ1NGE0YzAwYTMwN0IiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTcwNjgzMjU5NzAzNiwibmFtZSI6IjFzdCBrZXkifQ._nwCM9oIRCYSLv4MW8_8Mtb6R0Lvr7XwsQrpCu0cSLg'
 
 
 const Signup = () => {  
   const [successMessage, setSuccessMessage] = useState(null);
-  const [message, setMessage] = useState(null);
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const projectId = 'ee459e804dfa88ec1036d10ab882c4bf';
+  const nftcontract ="0xe8746f49027FeCF2C9C4a8F6E60af2408e3420CD";
   const chainId = bscTestnet.id;
+  const history = useNavigate();
   
 
 
@@ -52,59 +60,108 @@ const Signup = () => {
     chains,
     defaultChain: bscTestnet
   });
-  const web3 = new Web3(Web3.givenProvider || "https://data-seed-prebsc-1-s1.binance.org:8545")
 const account = getAccount();
+
 const connectToWeb3 = async () => {
-    modal.open();
-  setMessage(account);
-  
+    modal.open();  
 };
 
   
   const generateNonceAndSign = async () => {
-    try {     
-      const accounts = await web3.eth.getAccounts();
-      const address = accounts[0];
+
+    if (account.isConnected) {
+
+      const imageOriginUrl = "https://senchatdapp.vercel.app/images/img_image3.png";
+      const r = await fetch(imageOriginUrl);
+      const rb = await r.blob();
+
+      /* const data = await readContract({
+        address: nftcontract,
+        abi: ContractABI,
+        functionName: 'symbol',
+      }); */
+
+      const big = hexToBigInt(account.address);
+      const data = await readContract({
+                address: nftcontract,
+                abi: ContractABI,
+                functionName: 'tokenURI',
+                args: [`1${big}`]
+              });
+
+
       
 
-      setMessage(account);
-      // Fetch a nonce from your backend
-          const response =  await post('/web3-login', {
-            address: address,
-            chainId: chainId
-          });
-    
-          const nonce = response.nonce;
+  
+      console.log("data ", data);
+      const reader = new FileReader();
 
-       const signature = await signMessage({
-        message: nonce,
-      })
+      reader.onload = async () => {
+            const content = reader.result;
  
-      // Send the nonce and signature to your backend for verification
-      const verifyResponse = await post('/web3-confirm-login', { address,
-        chainId, signature, nonce });
+            const image = new File([new Uint8Array(content)], 'senchatlogo.png', { type: 'image/png' });
 
-      if (verifyResponse.token) {
-        // Signature is valid
-        const token  = verifyResponse.token;
-        localStorage.setItem('jwtToken', token);
-        console.log('Success', token);
-        setSuccessMessage('Successfully signed and verified');
-        setMessage(account);
-      } else {
-        setMessage(account);
-        console.error('Signature verification failed');
+            const nftstorage = new NFTStorage({ token: NFT_STORAGE_KEY });
+
+            const signupData = {
+              image,
+              name: username,
+              description: `email: ${email}`,
+              address: account.address,
+              chainId: chainId
+            };
+
+            if (!data) {
+              var response = await nftstorage.store(
+                signupData
+              )
+          };
+
+          try{
+          const hash = await writeContract({
+          address: nftcontract,
+          abi: ContractABI,
+          functionName: 'userMint',
+          args: [account.address, `1${big}`, `ipfs://${response.ipnft}`],
+          value: parseGwei('100'),
+          });
+
+          if (hash) {
+            setSuccessMessage('Successfully signed and verified');
+            history.push('/education');
+          };
+        } catch (error) {
+          setSuccessMessage('Account Alread Exist and verified try signing in'); 
+          history.push('/signin');         
+        };
+
       }
+      
+      reader.readAsArrayBuffer(rb);
 
-    } catch (error) {
-      setMessage(account);
-      console.error('Error signing nonce:', error);
+
+    } else {
+      console.error('Signature verification failed');
     }
+
   };
 
+  const handleChange = (e) => {
+    if (e) {
+      setUsername(e);
+    } else {
+      console.error('Invalid event or value:', e);
+    }
+  }
+  const handleChangeemail = (e) => {
+    if (e) {
+      setEmail(e);
+    } else {
+      console.error('Invalid event or value:', e);
+    }
+  }
 
   return (
- /*    <WagmiConfig config={wagmiConfig}> */
       <div className="bg-gray-100 flex flex-col font-prompt gap-[33px] items-end justify-end mx-auto w-full">
         <div className="flex flex-col items-center w-full">
           <Header className="bg-white-A700 flex flex-col items-center justify-center md:px-5 w-full" />
@@ -152,6 +209,7 @@ const connectToWeb3 = async () => {
                   className="leading-[normal] p-0 placeholder:text-gray-600 sm:pr-5 text-[15.32px] text-gray-600 text-left w-full"
                   wrapClassName="border border-blue_gray-100 border-solid pl-[17px] pr-[35px] py-3 rounded-lg w-full"
                   type="text"
+                  onChange={handleChange}  
                 ></Input>
               </div>
               <div className="flex flex-col gap-[8.75px] items-start justify-start w-full">
@@ -167,6 +225,7 @@ const connectToWeb3 = async () => {
                   className="leading-[normal] p-0 placeholder:text-gray-600 text-[15.32px] text-gray-600 text-left w-full"
                   wrapClassName="border border-blue_gray-100 border-solid pl-[17px] pr-3 py-3 rounded-lg w-full"
                   type="email"
+                  onChange={handleChangeemail}  
                 ></Input>
               </div>
               <Button
@@ -175,10 +234,8 @@ const connectToWeb3 = async () => {
               >
                 Connect to Web3
               </Button>
-              {message && (
-                <div className="text-green-600">{message}</div>
-              )}
-              <Button onClick={generateNonceAndSign} 
+              <Button 
+              onClick={generateNonceAndSign}
               className="bg-teal-A400 cursor-pointer font-medium leading-[normal] min-w-full py-[19px] rounded-[32px] text-[17.51px] text-black-900 text-center"
               >
                
@@ -189,7 +246,7 @@ const connectToWeb3 = async () => {
                 <div className="text-green-600">{successMessage}</div>
               )}
               
-              <div className="flex flex-col font-roboto items-start justify-start w-full">
+              {/* <div className="flex flex-col font-roboto items-start justify-start w-full">
                 <CheckBox
                   className="font-medium leading-[normal] text-[15.32px] text-gray-800 text-left"
                   inputClassName="border border-blue_gray-100 border-solid h-[15px] mr-[5px] rounded-sm w-[15px]"
@@ -197,9 +254,9 @@ const connectToWeb3 = async () => {
                   id="accepttermsand"
                   label="Accept terms and privacy policy"
                 ></CheckBox>
-              </div>
+              </div> */}
             </div>
-            <div className="flex flex-col gap-[17.51px] h-[148px] md:h-auto items-start justify-start w-full">
+            {/* <div className="flex flex-col gap-[17.51px] h-[148px] md:h-auto items-start justify-start w-full">
               <a
                 href="/education"
                 className="bg-teal-A400 cursor-pointer font-medium leading-[normal] min-w-full py-[19px] rounded-[32px] text-[17.51px] text-black-900 text-center"
@@ -210,7 +267,7 @@ const connectToWeb3 = async () => {
                   Sign up
                 </Button>
               </a>
-            </div>
+            </div> */}
           </div>
           <div className="flex flex-row gap-[4.38px] items-center justify-start mb-4 mt-[27px] w-full">
             <Text
@@ -228,7 +285,6 @@ const connectToWeb3 = async () => {
           </div>
         </div>
       </div>
-    /* </WagmiConfig> */
   );
 };
 
