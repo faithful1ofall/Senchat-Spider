@@ -16,7 +16,8 @@ import ContractABI from '../../utils/contractabi.json';
 const NFT_STORAGE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweGZkZjE1M0U2ODEzZWZFNDRCNTEyMzU2REFGMjQ1NGE0YzAwYTMwN0IiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTcwNjgzMjU5NzAzNiwibmFtZSI6IjFzdCBrZXkifQ._nwCM9oIRCYSLv4MW8_8Mtb6R0Lvr7XwsQrpCu0cSLg'
 
 
-const Signup = () => {  
+const Signup = () => {
+  const [isConnected, setIsConnected] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -63,7 +64,10 @@ const Signup = () => {
 const account = getAccount();
 
 const connectToWeb3 = async () => {
-    modal.open();  
+    modal.open();
+  if (account.isConnected) {
+    setIsConnected(true);
+  }
 };
 
   
@@ -232,7 +236,7 @@ const connectToWeb3 = async () => {
                 onClick={connectToWeb3}
                 className="bg-teal-A400 cursor-pointer font-medium leading-[normal] min-w-full py-[19px] rounded-[32px] text-[17.51px] text-black-900 text-center"
               >
-                {account.isConnected ? "Connected" : "Connect to Web3"}
+                {isConnected ? "Connected" : "Connect to Web3"}
               </Button>
               <Button 
               onClick={generateNonceAndSign}
