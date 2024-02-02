@@ -61,7 +61,7 @@ const Signup = () => {
     chains,
     defaultChain: bscTestnet
   });
-const account = getAccount();
+const account = await getAccount();
 
   useEffect(() => {
     // Run checkAccountStatus initially when the component mounts
