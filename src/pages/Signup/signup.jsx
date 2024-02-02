@@ -232,7 +232,7 @@ const connectToWeb3 = async () => {
                 onClick={connectToWeb3}
                 className="bg-teal-A400 cursor-pointer font-medium leading-[normal] min-w-full py-[19px] rounded-[32px] text-[17.51px] text-black-900 text-center"
               >
-                Connect to Web3
+                {account.isConnected ? "Connected" : "Connect to Web3"}
               </Button>
               <Button 
               onClick={generateNonceAndSign}
