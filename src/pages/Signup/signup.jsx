@@ -17,7 +17,7 @@ const NFT_STORAGE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZX
 
 
 const Signup = () => {
-  const [isConnected, setIsConnected] = useState(false);
+  const [isConnected, setIsConnected] = useState();
   const [successMessage, setSuccessMessage] = useState(null);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
