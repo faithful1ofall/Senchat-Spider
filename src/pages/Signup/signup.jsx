@@ -67,6 +67,8 @@ const connectToWeb3 = async () => {
     modal.open();
   if (account.isConnected) {
     setIsConnected(true);
+  } else {
+    setIsConnected(false);
   }
 };
 
