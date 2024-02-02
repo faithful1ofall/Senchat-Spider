@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Button, Img, Input, Text } from "components";
 import Header from "components/Header";
@@ -62,6 +62,27 @@ const Signup = () => {
     defaultChain: bscTestnet
   });
 const account = getAccount();
+
+  useEffect(() => {
+    // Run checkAccountStatus initially when the component mounts
+    if (account.isConnected) {
+    setIsConnected(true);
+  } else {
+    setIsConnected(false);
+    }
+
+    // Set up a listener or polling mechanism for real-time updates
+    const intervalId = setInterval(() => {
+      if (account.isConnected) {
+    setIsConnected(true);
+  } else {
+    setIsConnected(false);
+  }
+    }, 5000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+  
 
 const connectToWeb3 = async () => {
     modal.open();
