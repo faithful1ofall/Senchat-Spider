@@ -61,7 +61,7 @@ const Signup = () => {
     chains,
     defaultChain: bscTestnet
   });
-const account = await getAccount();
+const account = getAccount();
 
   useEffect(() => {
     // Run checkAccountStatus initially when the component mounts
@@ -78,7 +78,7 @@ const account = await getAccount();
   } else {
     setIsConnected(false);
   }
-    }, 5000);
+    }, 100);
 
     return () => clearInterval(intervalId);
   }, []);
