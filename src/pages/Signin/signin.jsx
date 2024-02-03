@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+import { redirect } from 'react-router-dom';
 import { Button, Img, Text } from "components";
 import Header from "components/Header/index";
 import { configureChains, createConfig, InjectedConnector, getAccount, readContract } from '@wagmi/core';
@@ -20,7 +20,7 @@ const Signin = () => {
   const [link, setLink] = useState();
   const [errMessage, seterrMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
-  const history = useNavigate();
+  const history = redirect();
 
   const metadata = {
     name: 'Senchat',
