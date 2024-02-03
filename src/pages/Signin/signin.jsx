@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+9import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Button, Img, Text } from "components";
 import Header from "components/Header";
@@ -56,7 +56,7 @@ const Signin = () => {
 
   const connectToWeb3 = async () => {
     modal.open();
-    modal.subscribeEvents(event async () => {
+    modal.subscribeEvents(async (event) => {
       if (event.data.event === 'CONNECT_SUCCESS' || account.isConnected) {
         setIsConnected(true);
       }
