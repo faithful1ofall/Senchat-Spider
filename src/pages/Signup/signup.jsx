@@ -157,8 +157,8 @@ const connectToWeb3 = async () => {
             };
           } catch (error) {
             seterrMessage(`Insufficient balance ${response} ${response.metadata}`);
-            nftstorage.delete(response);
-            history('/signup');   
+          //  nftstorage.delete(response);
+         //   history('/signup');   
           };
 
         }
