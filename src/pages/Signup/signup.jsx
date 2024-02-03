@@ -18,7 +18,9 @@ const NFT_STORAGE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZX
 
 const Signup = () => {
   const [isConnected, setIsConnected] = useState();
+  const [data, setData] = useState();
   const [successMessage, setSuccessMessage] = useState(null);
+  const [errMessage, seterrMessage] = useState(null);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const projectId = 'ee459e804dfa88ec1036d10ab882c4bf';
@@ -61,36 +63,36 @@ const Signup = () => {
     chains,
     defaultChain: bscTestnet
   });
+
 const account = getAccount();
 
   useEffect(() => {
-    // Run checkAccountStatus initially when the component mounts
-    if (account.isConnected) {
-    setIsConnected(true);
-  } else {
-    setIsConnected(false);
-    }
-
-    // Set up a listener or polling mechanism for real-time updates
-    const intervalId = setInterval(() => {
-      if (account.isConnected) {
-    setIsConnected(true);
-  } else {
-    setIsConnected(false);
-  }
-    }, 100);
-
-    return () => clearInterval(intervalId);
-  }, []);
+    const fetchData = async () => {
+      try {
+        if (account.isConnected) {
+          setIsConnected(true);
+          } else {
+          setIsConnected(false);
+          }
+      } catch (error) {
+        setIsConnected(false); // Example setState call
+        console.error('Error fetching data:', error);
+      }
+    };
+  
+    fetchData();
+   
+  }, [account.isConnected]);
   
 
 const connectToWeb3 = async () => {
     modal.open();
-  if (account.isConnected) {
-    setIsConnected(true);
-  } else {
-    setIsConnected(false);
-  }
+
+    modal.subscribeEvents(event => {
+      if (event.data.event === 'CONNECT_SUCCESS') {
+        setIsConnected(true);
+      }
+    });     
 };
 
   
@@ -102,73 +104,70 @@ const connectToWeb3 = async () => {
       const r = await fetch(imageOriginUrl);
       const rb = await r.blob();
 
-      /* const data = await readContract({
-        address: nftcontract,
-        abi: ContractABI,
-        functionName: 'symbol',
-      }); */
-
       const big = hexToBigInt(account.address);
-      const data = await readContract({
-                address: nftcontract,
-                abi: ContractABI,
-                functionName: 'tokenURI',
-                args: [`1${big}`]
-              });
-
-
-      
-
-  
-      console.log("data ", data);
-      const reader = new FileReader();
-
-      reader.onload = async () => {
-            const content = reader.result;
- 
-            const image = new File([new Uint8Array(content)], 'senchatlogo.png', { type: 'image/png' });
-
-            const nftstorage = new NFTStorage({ token: NFT_STORAGE_KEY });
-
-            const signupData = {
-              image,
-              name: username,
-              description: `email: ${email}`,
-              address: account.address,
-              chainId: chainId
-            };
-
-            if (!data) {
-              var response = await nftstorage.store(
-                signupData
-              )
-          };
-
-          try{
-          const hash = await writeContract({
+      try{
+        await readContract({
           address: nftcontract,
           abi: ContractABI,
-          functionName: 'userMint',
-          args: [account.address, `1${big}`, `ipfs://${response.ipnft}`],
-          value: parseGwei('100'),
-          });
-
-          if (hash) {
-            setSuccessMessage('Successfully signed and verified');
-            history.push('/education');
-          };
-        } catch (error) {
-          setSuccessMessage('Account Alread Exist and verified try signing in'); 
-          history.push('/signin');         
-        };
-
+          functionName: 'tokenURI',
+          args: [`1${big}`]
+        });
+        seterrMessage('Account Alread Exist and verified try signing in'); 
+        setData(false);
+      } catch (error) {
+        setData(true);
       }
-      
-      reader.readAsArrayBuffer(rb);
+      if (data) {
+        const reader = new FileReader();
+
+        reader.onload = async () => {
+              const content = reader.result;
+  
+              const image = new File([new Uint8Array(content)], 'senchatlogo.png', { type: 'image/png' });
+
+              const nftstorage = new NFTStorage({ token: NFT_STORAGE_KEY });
+
+              const signupData = {
+                image,
+                name: username,
+                description: `email: ${email}`,
+                address: account.address,
+                chainId: chainId
+              };
+
+              const response = await nftstorage.store(
+                signupData
+              );
+
+            try{
+            const hash = await writeContract({
+            address: nftcontract,
+            abi: ContractABI,
+            functionName: 'userMint',
+            args: [account.address, `1${big}`, `ipfs://${response.ipnft}`],
+            value: parseGwei('100'),
+            });
+
+            if (hash) {
+              setSuccessMessage('Successfully signed and verified');
+              history('/education');
+            };
+          } catch (error) {
+            nftstorage.delete(response);
+            seterrMessage('Insufficient ballance');
+            history('/signup');   
+          };
+
+        }
+        reader.readAsArrayBuffer(rb);
+      } else {
+        console.error('Account Exist')
+      };
 
 
     } else {
-      console.error('Signature verification failed');
+      seterrMessage('Account Not Connected')
+      console.error('Account not connected');
     }
 
   };
@@ -266,11 +265,14 @@ const connectToWeb3 = async () => {
               className="bg-teal-A400 cursor-pointer font-medium leading-[normal] min-w-full py-[19px] rounded-[32px] text-[17.51px] text-black-900 text-center"
               >
                
-                Sign and Verify
+                Signup and Verify
                 
               </Button>
               {successMessage && (
                 <div className="text-green-600">{successMessage}</div>
+              )}
+              {errMessage && (
+                <div className="text-red-600">{errMessage}</div>
               )}
               
               {/* <div className="flex flex-col font-roboto items-start justify-start w-full">

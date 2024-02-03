@@ -1,20 +1,93 @@
-import React from "react";
-
-// import { useGoogleLogin } from "@react-oauth/google";
-
+import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import { Button, Img, Text } from "components";
 import Header from "components/Header";
+import { configureChains, createConfig, InjectedConnector, getAccount, readContract } from '@wagmi/core';
+import { publicProvider } from '@wagmi/core/providers/public';
+import { bscTestnet } from "viem/chains";
+import { hexToBigInt } from 'viem';
+import { createWeb3Modal, walletConnectProvider, EIP6963Connector } from '@web3modal/wagmi';
+import { CoinbaseWalletConnector } from '@wagmi/core/connectors/coinbaseWallet';
+import { WalletConnectConnector } from '@wagmi/core/connectors/walletConnect';
+import ContractABI from '../../utils/contractabi.json';
 
-// import { CloseSVG } from "../../assets/images";
+
 
 const Signin = () => {
-  /*  const googleSignIn = useGoogleLogin({
-    onSuccess: (res) => {
-      console.log("res", res);
-      alert("Login successfull. 😍");
-    },
-  }); */
+  const projectId = 'ee459e804dfa88ec1036d10ab882c4bf';
+  const nftcontract ="0xe8746f49027FeCF2C9C4a8F6E60af2408e3420CD";
+  const [data, setData] = useState();
+  const [isConnected, setIsConnected] = useState();
+  const [link, setLink] = useState();
+  const [errMessage, seterrMessage] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
+  const history = useNavigate();
 
+  const metadata = {
+    name: 'Senchat',
+    description: 'Senchat web3Modal connector',
+    url: 'https://senchatfront.vercel.app/'
+  }
+
+  const { chains, publicClient } = configureChains(
+    [bscTestnet],
+    [walletConnectProvider({ projectId }), publicProvider()]
+  )
+
+  const wagmiConfig = createConfig({
+    autoConnect: true,
+    connectors: [
+      new WalletConnectConnector({ chains, options: { projectId, showQrModal: false, metadata } }),
+      new EIP6963Connector({ chains }),
+      new InjectedConnector({ chains, options: { shimDisconnect: true } }),
+      new CoinbaseWalletConnector({ chains, options: { appName: metadata.name } })
+    ],
+    publicClient
+  })
+
+  const modal = createWeb3Modal({
+    wagmiConfig,
+    projectId,
+    chains,
+    defaultChain: bscTestnet
+  });
+
+  const account = getAccount();
+
+  const connectToWeb3 = async () => {
+    modal.open()
+    modal.subscribeEvents(event => {
+      if (event.data.event === 'CONNECT_SUCCESS' || account.isConnected) {
+        setIsConnected(true);
+      }
+    });  
+    if (isConnected) {
+      const big = hexToBigInt(account.address);
+      const big1 = hexToBigInt('0xDec660AA3f7c87B3aCCd4a383649669666D6E0DD');
+      console.log(big, big1);
+      
+      try{
+        const url = await readContract({
+          address: nftcontract,
+          abi: ContractABI,
+          functionName: 'tokenURI',
+          args: [`1${big}`]
+        });
+        setLink(url);
+        console.log(link);
+        setData(true);
+        
+      } catch (error) {
+        console.error(error);
+        seterrMessage('Account Do not Exist and try to signup'); 
+        setData(false);
+      }
+      if (data) {
+        setSuccessMessage('connected succesfully')
+      }
+    }
+      
+  }
   return (
     <>
       <div className="bg-gray-100 flex flex-col font-prompt gap-11 items-end justify-start mx-auto w-full">
@@ -50,20 +123,20 @@ const Signin = () => {
                 Welcome back! Please connect your wallet.
               </Text>
             </div>
-            <a
-              href="/education"
-              className="bg-teal-A400 cursor-pointer font-medium leading-[normal] min-w-full py-[19px] rounded-[32px] text-[17.51px] text-black-900 text-center"
-            >
               <Button
-              /* onClick={connectToWeb3} */
+               onClick={connectToWeb3}
               /* disabled={isConnected} */
 
-              // className="bg-teal-A400 cursor-pointer font-medium leading-[normal] min-w-full py-[19px] rounded-[32px] text-[17.51px] text-black-900 text-center"
+               className="bg-teal-A400 cursor-pointer font-medium leading-[normal] min-w-full py-[19px] rounded-[32px] text-[17.51px] text-black-900 text-center"
               >
-                Connect to Web3
-                {/*  {isConnected ?  : "Connect to Web3"} */}
+                {isConnected ? "Connected" : "Connect to Web3"}
               </Button>
-            </a>
+              {errMessage && (
+                <div className="text-red-600">{errMessage}</div>
+              )}
+              {successMessage && (
+                <div className="text-green-600">{successMessage}</div>
+              )}
             <div className="flex flex-col gap-11 items-center justify-start w-full">
               <div className="flex flex-col gap-[22.75px] items-start justify-start w-auto sm:w-full"></div>
             </div>
