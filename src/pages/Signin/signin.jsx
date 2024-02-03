@@ -56,7 +56,7 @@ const Signin = () => {
 
   const connectToWeb3 = async () => {
     modal.open();
-    modal.subscribeEvents(event => {
+    modal.subscribeEvents(event async () => {
       if (event.data.event === 'CONNECT_SUCCESS' || account.isConnected) {
         setIsConnected(true);
       }
