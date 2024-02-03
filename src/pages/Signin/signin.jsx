@@ -56,8 +56,7 @@ const Signin = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userDataParam = localStorage.getItem('userData');
-        if (account.isConnected && userDataParam) {
+        if (account.isConnected) {
           setIsConnected(true);
           } else {
           setIsConnected(false);
