@@ -20,7 +20,7 @@ const Signin = () => {
   const [link, setLink] = useState();
   const [errMessage, seterrMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
-  const history = redirect();
+//  const history = redirect();
 
   const metadata = {
     name: 'Senchat',
@@ -75,7 +75,7 @@ const Signin = () => {
     if (!isConnected) {
       modal.open();
     } else {
-      history(`/education`);
+      redirect(`/education`);
     }
     
     modal.subscribeEvents(async (event) => {
@@ -110,7 +110,7 @@ const Signin = () => {
           setLink(url);
           console.log(link);
           setSuccessMessage(`connected succesfully ${cloudflareUrl}`);
-          history(`/education`);
+          redirect(`/education`);
 
         } catch (error) {
           console.error(error);
