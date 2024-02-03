@@ -87,7 +87,7 @@ const Signin = () => {
         
       } catch (error) {
         console.error(error);
-        seterrMessage(`Failed to fetch from IPFS. Status: ${response.status}`); 
+       // seterrMessage(`Failed to fetch from IPFS. Status: ${response.status}`); 
         seterrMessage('Account Do not Exist and try to signup'); 
         setData(false);
       }
