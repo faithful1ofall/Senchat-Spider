@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Button, Img, Text } from "components";
-import Header from "components/Header";
+import Header from "components/Header2/navbar";
 import { configureChains, createConfig, InjectedConnector, getAccount, readContract } from '@wagmi/core';
 import { publicProvider } from '@wagmi/core/providers/public';
 import { bscTestnet } from "viem/chains";
@@ -15,8 +15,7 @@ import ContractABI from '../../utils/contractabi.json';
 
 const Signin = () => {
   const projectId = 'ee459e804dfa88ec1036d10ab882c4bf';
-  const nftcontract ="0xe8746f49027FeCF2C9C4a8F6E60af2408e3420CD";
-  const [data, setData] = useState();
+  const nftcontract = "0xe8746f49027FeCF2C9C4a8F6E60af2408e3420CD";
   const [isConnected, setIsConnected] = useState();
   const [link, setLink] = useState();
   const [errMessage, seterrMessage] = useState(null);
@@ -54,47 +53,75 @@ const Signin = () => {
 
   const account = getAccount();
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userDataParam = localStorage.getItem('userData');
+        if (account.isConnected && userDataParam) {
+          setIsConnected(true);
+          } else {
+          setIsConnected(false);
+          }
+      } catch (error) {
+        setIsConnected(false); // Example setState call
+        console.error('Error fetching data:', error);
+      }
+    };
+  
+    fetchData();
+   
+  }, [account.isConnected]);
+
   const connectToWeb3 = async () => {
-    modal.open();
+    if (!isConnected) {
+      modal.open();
+    } else {
+      history(`/education`);
+    }
+    
     modal.subscribeEvents(async (event) => {
-      if (event.data.event === 'CONNECT_SUCCESS' || account.isConnected) {
+      if (modal.close() && (event.data.event === 'CONNECT_SUCCESS' || account.isConnected)) {
         setIsConnected(true);
-      const digit = hexToBigInt(account.address);
-      const big = digit % 10000n;
-      
-      try{
-        const url = await readContract({
-          address: nftcontract,
-          abi: ContractABI,
-          functionName: 'tokenURI',
-          args: [`1${big}`]
-        });
-        const hash = url.replace('ipfs://', '');
+
+        const digit = hexToBigInt(account.address);
+        const big = digit % 10000n;
+
+        try {
+          const url = await readContract({
+            address: nftcontract,
+            abi: ContractABI,
+            functionName: 'tokenURI',
+            args: [`12${big}`]
+          });
+          console.log(url);
+          const hash = url.replace('ipfs://', '');
           const cloudflareUrl = `https://cloudflare-ipfs.com/ipfs/${hash}`;
 
           const response = await fetch(cloudflareUrl);
-          /*if (!response.ok) {
-            seterrMessage(`Failed to fetch from IPFS. Status: ${response.status}`); 
-            throw new Error(`Failed to fetch from IPFS. Status: ${response.status}`);
-          }*/
 
-          const jsonData = await response.json();
-        setLink(url);
-        console.log(link);
-        setData(true);
-        setSuccessMessage(`connected succesfully ${cloudflareUrl}`);
-        history(`/education/${encodeURIComponent(JSON.stringify(jsonData))}`);
-        
-      } catch (error) {
-        console.error(error);
-       // seterrMessage(`Failed to fetch from IPFS. Status: ${response.status}`); 
-        seterrMessage('Account Do not Exist and try to signup'); 
-        setData(false);
+          if (!response.ok) {
+            seterrMessage(`Failed to fetch from IPFS. Status: ${response.status}`);
+            throw new Error(`Failed to fetch from IPFS. Status: ${response.status}`);
+          }
+
+          const userData = await response.json();
+
+          localStorage.setItem('userData', JSON.stringify(userData));
+
+          setLink(url);
+          console.log(link);
+          setSuccessMessage(`connected succesfully ${cloudflareUrl}`);
+          history(`/education`);
+
+        } catch (error) {
+          console.error(error);
+          // seterrMessage(`Failed to fetch from IPFS. Status: ${response.status}`); 
+          seterrMessage('Account Do not Exist and try to signup');
+        }
       }
-      }
-    });  
-    
-      
+    });
+
+
   }
   return (
     <>
@@ -131,24 +158,24 @@ const Signin = () => {
                 Welcome back! Please connect your wallet.
               </Text>
             </div>
-              <Button
-               onClick={connectToWeb3}
+            <Button
+              onClick={connectToWeb3}
               /* disabled={isConnected} */
 
-               className="bg-teal-A400 cursor-pointer font-medium leading-[normal] min-w-full py-[19px] rounded-[32px] text-[17.51px] text-black-900 text-center"
-              >
-                {isConnected ? "Connected" : "Connect to Web3"}
-              </Button>
-              {errMessage && (
-                <div className="text-red-600">{errMessage}</div>
-              )}
-              
+              className="bg-teal-A400 cursor-pointer font-medium leading-[normal] min-w-full py-[19px] rounded-[32px] text-[17.51px] text-black-900 text-center"
+            >
+              {isConnected ? "Connected" : "Connect to Web3"}
+            </Button>
+            {errMessage && (
+              <div className="text-red-600">{errMessage}</div>
+            )}
+
             <div className="flex flex-col gap-11 items-center justify-start w-full">
-              
+
               <div className="flex flex-col gap-[22.75px] items-start justify-start w-auto sm:w-full">
-              {successMessage && (
-                <div className="text-green-600">{successMessage}</div>
-              )}
+                {successMessage && (
+                  <div className="text-green-600">{successMessage}</div>
+                )}
               </div>
             </div>
           </div>

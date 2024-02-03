@@ -1,13 +1,65 @@
 import React from "react";
-
-import { Img, Input, Text } from "components";
-import Navbar from "components/Header2/navbar";
-
-import { CloseSVG } from "../../assets/images";
+import { useNavigate } from 'react-router-dom';
+import { Img, Text } from "components";
 import { Link } from "react-router-dom";
+import { configureChains, createConfig, InjectedConnector, getAccount} from '@wagmi/core';
+import { publicProvider } from '@wagmi/core/providers/public';
+import { bscTestnet } from "viem/chains";
+import { createWeb3Modal, walletConnectProvider, EIP6963Connector } from '@web3modal/wagmi';
+import { CoinbaseWalletConnector } from '@wagmi/core/connectors/coinbaseWallet';
+import { WalletConnectConnector } from '@wagmi/core/connectors/walletConnect';
 
+
+ 
 const User = () => {
-  const [framesixvalue, setFramesixvalue] = React.useState("");
+  const userDataParam = localStorage.getItem('userData');
+  const userData = JSON.parse(userDataParam);
+  console.log('JSON Data', userData);
+
+  const projectId = 'ee459e804dfa88ec1036d10ab882c4bf';
+  const history = useNavigate();
+ 
+
+  const metadata = {
+    name: 'Senchat',
+    description: 'Senchat web3Modal connector',
+    url: 'https://senchatfront.vercel.app/'
+  }
+
+  const { chains, publicClient } = configureChains(
+    [bscTestnet],
+    [walletConnectProvider({ projectId }), publicProvider()]
+  )
+
+  const wagmiConfig = createConfig({
+    autoConnect: true,
+    connectors: [
+      new WalletConnectConnector({ chains, options: { projectId, showQrModal: false, metadata } }),
+      new EIP6963Connector({ chains }),
+      new InjectedConnector({ chains, options: { shimDisconnect: true } }),
+      new CoinbaseWalletConnector({ chains, options: { appName: metadata.name } })
+    ],
+    publicClient
+  })
+
+  const modal = createWeb3Modal({
+     wagmiConfig,
+    projectId,
+    chains,
+    defaultChain: bscTestnet
+  });
+
+  const account = getAccount();
+
+  const disconnectToWeb3 = () => {
+      modal.open();
+      modal.subscribeEvents(event => {
+        if (modal.close() && account.isConnected) {
+          history('/signin');
+        }
+      });        
+      
+  }
 
   return (
     <>
@@ -28,13 +80,13 @@ const User = () => {
               className="ml-3 md:ml-[0] text-3xl sm:text-[26px] md:text-[28px] text-black-900"
               size="txtPromptMedium30Black900"
             >
-              @anasabdin
+              {userData.name}
             </Text>
             <Text
               className="mb-0.5 ml-3 md:ml-[0] text-teal-100 text-xl"
               size="txtPromptMedium20Teal100"
             >
-              Senior member
+              A Senchatian
             </Text>
           </Link>
           <Link
@@ -117,8 +169,9 @@ const User = () => {
               alt="arrowright_Three"
             />
           </Link>
-          <Link
-            to="/signin"
+           <Link
+            onClick={disconnectToWeb3}
+            to="/user"
             className="flex sm:flex-col flex-row sm:gap-5 items-start justify-start w-full"
           >
             <Img
@@ -126,9 +179,11 @@ const User = () => {
               src="images/img_frame_teal_100.svg"
               alt="frame_One"
             />
-            <a className="sm:ml-[0] ml-[54px] sm:mt-0 mt-0.5 sm:text-[19px] md:text-[21px] text-[19px] text-black-900">
-              <Text size="txtPromptSemiBold23">Log out</Text>
-            </a>
+             
+              <Text size="txtPromptSemiBold23" 
+              className="sm:ml-[0] ml-[54px] sm:mt-0 mt-0.5 sm:text-[19px] md:text-[21px] text-[19px] text-black-900"
+              >Log out</Text>
+        
             <Img
               className="h-[19px] sm:ml-[0] ml-[326px] sm:mt-0 mt-[9px]"
               src="images/img_arrowright_blue_gray_900_01.svg"

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Button, Img, Input, Text } from "components";
-import Header from "components/Header";
+import Header from "components/Header2/navbar";
 import { configureChains, createConfig, InjectedConnector, getAccount, readContract, writeContract } from '@wagmi/core';
 import { publicProvider } from '@wagmi/core/providers/public';
 import { bscTestnet } from "viem/chains";
@@ -18,7 +18,6 @@ const NFT_STORAGE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZX
 
 const Signup = () => {
   const [isConnected, setIsConnected] = useState();
-  const [data, setData] = useState();
   const [successMessage, setSuccessMessage] = useState(null);
   const [errMessage, seterrMessage] = useState(null);
   const [username, setUsername] = useState('');
@@ -106,20 +105,17 @@ const connectToWeb3 = async () => {
 
       const digit = hexToBigInt(account.address);
       const big = digit % 10000n;
-      console.log(big);
       
       try{
         await readContract({
           address: nftcontract,
           abi: ContractABI,
           functionName: 'tokenURI',
-          args: [`1${big}`]
+          args: [`12${big}`]
         });
         seterrMessage('Account Alread Exist and verified try signing in'); 
-        setData(false);
       } catch (error) {
-        setData(true);
-  
+
         const reader = new FileReader();
 
         reader.onload = async () => {
@@ -141,16 +137,18 @@ const connectToWeb3 = async () => {
                 signupData
               );
 
+              console.log(response);
+
             try{
            await writeContract({
             address: nftcontract,
             abi: ContractABI,
             functionName: 'userMint',
-            args: [account.address, `1${big}`, `ipfs://${response.ipnft}`],
+            args: [account.address, `12${big}`, `${response.url}`],
             value: parseGwei('100'),
             });
               setSuccessMessage('Successfully signed and verified');
-              history('/education');
+              history('/signin');
           } catch (error) {
           seterrMessage(`Insufficient balance ${response.data} ${response.data.metadata}`);
           nftstorage.delete(response.ipnft);

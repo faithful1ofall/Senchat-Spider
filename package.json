@@ -14,7 +14,7 @@
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
     "@web3-react/core": "^6.0.0",
-    "@web3modal/wagmi": "^3.2.0",
+    "@web3modal/wagmi": "^3.5.7",
     "axios": "^1.5.1",
     "cid": "multiformats/cid",
     "ethers": "^6.7.1",

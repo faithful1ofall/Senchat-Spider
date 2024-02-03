@@ -4,14 +4,18 @@ import { Img, Input, Text } from "components";
 
 import { CloseSVG } from "../../assets/images";
 import { Link, NavLink } from "react-router-dom";
-import { useLocation } from "react-router-dom";
 import { BiSearch } from "react-icons/bi";
 
 const Navbar = ({ children }) => {
   const [framesixvalue, setFramesixvalue] = React.useState("");
   const [openNav, setOpenNav] = useState(false);
 
-  const location = useLocation();
+  const userDataParam = localStorage.getItem('userData');
+
+  const userData = JSON.parse(userDataParam);
+
+
+  console.log(userData.name, userData.image, userData);
 
   return (
     <>
@@ -72,8 +76,8 @@ const Navbar = ({ children }) => {
                   isPending
                     ? "pending"
                     : isActive
-                    ? " text-teal-A400 text-xl"
-                    : ""
+                      ? " text-teal-A400 text-xl"
+                      : ""
                 }
                 to="/nft-index"
               >
@@ -115,7 +119,7 @@ const Navbar = ({ children }) => {
                 </Text>
               </Link>
               <Text className="text-base " size="txtPromptBold16">
-                username
+                {userData.name}
               </Text>
               <NavLink
                 to="/user"
@@ -169,8 +173,8 @@ const Navbar = ({ children }) => {
                         isPending
                           ? "pending"
                           : isActive
-                          ? " text-teal-A400 text-xl"
-                          : ""
+                            ? " text-teal-A400 text-xl"
+                            : ""
                       }
                       to="/education"
                     >
@@ -184,8 +188,8 @@ const Navbar = ({ children }) => {
                         isPending
                           ? "pending"
                           : isActive
-                          ? " text-teal-A400 text-xl"
-                          : ""
+                            ? " text-teal-A400 text-xl"
+                            : ""
                       }
                       to="/thread"
                     >
@@ -199,8 +203,8 @@ const Navbar = ({ children }) => {
                         isPending
                           ? "pending"
                           : isActive
-                          ? " text-teal-A400 text-xl"
-                          : ""
+                            ? " text-teal-A400 text-xl"
+                            : ""
                       }
                       to="/nft-index"
                     >
@@ -245,7 +249,7 @@ const Navbar = ({ children }) => {
                       </Text>
                     </Link>
                     <Text className="text-base " size="txtPromptBold16">
-                      username
+                      {userData.name}
                     </Text>
                     <NavLink
                       to="/user"

@@ -1,72 +1,25 @@
 import React from "react";
-
-import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
-
-import { Button, Img, Input, Line, List, Text } from "components";
+//import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
+import { Button, Img, Text } from "components";
 import ForumCol from "components/ForumColumn/forumCol";
-import Header2 from "components/Header2/navbar";
 import { Link } from "react-router-dom";
 import { BiSolidRightArrow } from "react-icons/bi";
 
-import { CloseSVG } from "../../assets/images";
+// import { CloseSVG } from "../../assets/images";
 
 const EducationForum = () => {
-  const [framesixvalue, setFramesixvalue] = React.useState("");
-  const sideBarMenu = [
+  const userDataParam = localStorage.getItem('userData');
+
+  const userData = JSON.parse(userDataParam);
+
+  console.log('JSON Data', userData);
+
+/*   const sideBarMenu = [
     { label: "Title of Thread" },
     { label: "@anasabdin" },
     { label: "Replies 200" },
-  ];
-  const sideBarMenu1 = [
-    { label: "Title of Thread" },
-    { label: "@anasabdin" },
-    { label: "Replies 200" },
-  ];
-  const sideBarMenu2 = [
-    { label: "Title of Thread" },
-    { label: "@anasabdin" },
-    { label: "Replies 200" },
-  ];
-  const sideBarMenu3 = [
-    { label: "Title of Thread" },
-    { label: "@anasabdin" },
-    { label: "Replies 200" },
-  ];
-  const sideBarMenu4 = [
-    { label: "Title of Thread" },
-    { label: "@anasabdin" },
-    { label: "Replies 200" },
-  ];
-  const sideBarMenu5 = [
-    { label: "Title of Thread" },
-    { label: "@anasabdin" },
-    { label: "Replies 200" },
-  ];
-  const sideBarMenu6 = [
-    { label: "Title of Thread" },
-    { label: "@anasabdin" },
-    { label: "Replies 200" },
-  ];
-  const sideBarMenu7 = [
-    { label: "Title of Thread" },
-    { label: "@anasabdin" },
-    { label: "Replies 200" },
-  ];
-  const sideBarMenu8 = [
-    { label: "Title of Thread" },
-    { label: "@anasabdin" },
-    { label: "Replies 200" },
-  ];
-  const sideBarMenu9 = [
-    { label: "Title of Thread" },
-    { label: "@anasabdin" },
-    { label: "Replies 200" },
-  ];
-  const sideBarMenu10 = [
-    { label: "Title of Thread" },
-    { label: "@anasabdin" },
-    { label: "Replies 200" },
-  ];
+  ]; */
+
 
   return (
     <>
@@ -126,7 +79,7 @@ const EducationForum = () => {
             <ForumCol className="bg-white-A700_cc flex flex-col items-start justify-start max-w-[1039px] py-2.5 rounded-[10px] w-full" />
           </div>
         </div>
-        <Sidebar className="!sticky !w-[333px] md:w-full bg-gray-100 flex h-screen mx-[20px] mt-[-16px] md:mt-[26px] overflow-auto md:px-5 top-[0] z-[1]">
+        {/* <Sidebar className="!sticky !w-[333px] md:w-full bg-gray-100 flex h-screen mx-[20px] mt-[-16px] md:mt-[26px] overflow-auto md:px-5 top-[0] z-[1]">
           <div className="bg-gray-100 flex flex-col items-center justify-end py-[31px] w-full"></div>
           <div className="bg-white-A700_cc flex flex-col gap-[26px] justify-start mt-[57px] p-5 rounded-[10px] w-[333px]">
             <div className="flex flex-row gap-1 items-center justify-between w-[292px]">
@@ -378,7 +331,7 @@ const EducationForum = () => {
               S
             </Button>
           </Menu>
-        </Sidebar>
+        </Sidebar> */}
       </div>
     </>
   );
