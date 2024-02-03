@@ -69,10 +69,20 @@ const Signin = () => {
           functionName: 'tokenURI',
           args: [`1${big}`]
         });
+        const hash = url.replace('ipfs://', '');
+          const cloudflareUrl = `https://cloudflare-ipfs.com/ipfs/${hash}`;
+
+          const response = await fetch(cloudflareUrl);
+          if (!response.ok) {
+            throw new Error(`Failed to fetch from IPFS. Status: ${response.status}`);
+          }
+
+          const jsonData = await response.json();
         setLink(url);
         console.log(link);
         setData(true);
-        setSuccessMessage(`connected succesfully ${url}`)
+        setSuccessMessage(`connected succesfully ${cloudflareUrl}`);
+        history(`/education/${encodeURIComponent(JSON.stringify(jsonData))}`);
         
       } catch (error) {
         console.error(error);
