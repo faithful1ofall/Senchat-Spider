@@ -72,7 +72,7 @@ const Signin = () => {
         setLink(url);
         console.log(link);
         setData(true);
-        setSuccessMessage(`connected succesfully ${link}`)
+        setSuccessMessage(`connected succesfully ${url}`)
         
       } catch (error) {
         console.error(error);
