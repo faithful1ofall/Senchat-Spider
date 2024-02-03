@@ -74,6 +74,7 @@ const Signin = () => {
 
           const response = await fetch(cloudflareUrl);
           if (!response.ok) {
+            seterrMessage(`Failed to fetch from IPFS. Status: ${response.status}`); 
             throw new Error(`Failed to fetch from IPFS. Status: ${response.status}`);
           }
 
@@ -86,6 +87,7 @@ const Signin = () => {
         
       } catch (error) {
         console.error(error);
+        seterrMessage(`Failed to fetch from IPFS. Status: ${response.status}`); 
         seterrMessage('Account Do not Exist and try to signup'); 
         setData(false);
       }
