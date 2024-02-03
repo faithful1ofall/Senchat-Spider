@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { redirect } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import { Button, Img, Text } from "components";
 import Header from "components/Header/index";
 import { configureChains, createConfig, InjectedConnector, getAccount, readContract } from '@wagmi/core';
@@ -20,7 +20,7 @@ const Signin = () => {
   const [link, setLink] = useState();
   const [errMessage, seterrMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
-//  const history = redirect();
+  const history = useNavigate();
 
   const metadata = {
     name: 'Senchat',
@@ -75,7 +75,7 @@ const Signin = () => {
     if (!isConnected) {
       modal.open();
     } else {
-      redirect(`/education`);
+      history(`/education`, { replace: true });
     }
     
     modal.subscribeEvents(async (event) => {
@@ -110,7 +110,7 @@ const Signin = () => {
           setLink(url);
           console.log(link);
           setSuccessMessage(`connected succesfully ${cloudflareUrl}`);
-          redirect(`/education`);
+          history(`/education`, { replace: true });
 
         } catch (error) {
           console.error(error);
