@@ -144,7 +144,7 @@ const connectToWeb3 = async () => {
           seterrMessage(` ${response.data} ${response.data.metadata.json} ${response.metadata}`);
 
             try{
-         /*   const hash = await writeContract({
+           const hash = await writeContract({
             address: nftcontract,
             abi: ContractABI,
             functionName: 'userMint',
@@ -154,13 +154,12 @@ const connectToWeb3 = async () => {
 
             if (hash) {
               setSuccessMessage('Successfully signed and verified');
-              history('/education');
-            };*/
+          //    history('/education');
+            };
           } catch (error) {
-           //   seterrMessage(`Insufficient balance ${response} ${response.metadata}`);
-            
-          // nftstorage.delete(response);
-         //   history('/signup');   
+          seterrMessage(`Insufficient balance ${response} ${response.metadata}`);
+          nftstorage.delete(response);
+          history('/signup');   
           };
 
         }
