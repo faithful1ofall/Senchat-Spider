@@ -73,10 +73,10 @@ const Signin = () => {
           const cloudflareUrl = `https://cloudflare-ipfs.com/ipfs/${hash}`;
 
           const response = await fetch(cloudflareUrl);
-          if (!response.ok) {
+          /*if (!response.ok) {
             seterrMessage(`Failed to fetch from IPFS. Status: ${response.status}`); 
             throw new Error(`Failed to fetch from IPFS. Status: ${response.status}`);
-          }
+          }*/
 
           const jsonData = await response.json();
         setLink(url);
