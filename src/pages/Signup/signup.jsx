@@ -98,7 +98,7 @@ const connectToWeb3 = async () => {
   
   const generateNonceAndSign = async () => {
 
-    if (account.isConnected) {
+    if (isConnected) {
 
       const imageOriginUrl = "https://senchatdapp.vercel.app/images/img_image3.png";
       const r = await fetch(imageOriginUrl);
@@ -119,8 +119,7 @@ const connectToWeb3 = async () => {
         setData(false);
       } catch (error) {
         setData(true);
-      }
-      if (data) {
+  
         const reader = new FileReader();
 
         reader.onload = async () => {
@@ -143,28 +142,23 @@ const connectToWeb3 = async () => {
               );
 
             try{
-           const hash = await writeContract({
+           await writeContract({
             address: nftcontract,
             abi: ContractABI,
             functionName: 'userMint',
             args: [account.address, `1${big}`, `ipfs://${response.ipnft}`],
             value: parseGwei('100'),
             });
-
-            if (hash) {
               setSuccessMessage('Successfully signed and verified');
               history('/education');
-            };
           } catch (error) {
           seterrMessage(`Insufficient balance ${response.data} ${response.data.metadata}`);
-          nftstorage.delete(response);
-       //   history('/signup');   
+          nftstorage.delete(response.ipnft);
+          history('/signup');   
           };
 
         }
         reader.readAsArrayBuffer(rb);
-      } else {
-        console.error('Account Exist')
       };
 
 
