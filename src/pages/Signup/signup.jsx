@@ -156,8 +156,8 @@ const connectToWeb3 = async () => {
               history('/education');
             };
           } catch (error) {
+            seterrMessage(`Insufficient balance ${response} ${response.metadata}`);
             nftstorage.delete(response);
-            seterrMessage('Insufficient ballance');
             history('/signup');   
           };
 
