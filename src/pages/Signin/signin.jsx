@@ -164,8 +164,12 @@ const Signin = () => {
 
               className="bg-teal-A400 cursor-pointer font-medium leading-[normal] min-w-full py-[19px] rounded-[32px] text-[17.51px] text-black-900 text-center"
             >
-              {isConnected ? "Connected" : "Connect to Web3"}
-            </Button>
+              {account.isConnecting ? (
+              <span>Loading...</span>
+            ) : (
+              <span>{isConnected ? "Connected" : "Connect to Web3"}</span>
+            )}
+                 </Button>
             {errMessage && (
               <div className="text-red-600">{errMessage}</div>
             )}
