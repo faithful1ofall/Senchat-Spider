@@ -132,10 +132,12 @@ const Signin = () => {
               )}
               
             <div className="flex flex-col gap-11 items-center justify-start w-full">
+              
+              <div className="flex flex-col gap-[22.75px] items-start justify-start w-auto sm:w-full">
               {successMessage && (
                 <div className="text-green-600">{successMessage}</div>
               )}
-              <div className="flex flex-col gap-[22.75px] items-start justify-start w-auto sm:w-full"></div>
+              </div>
             </div>
           </div>
           <div className="flex flex-row font-roboto gap-[4.55px] items-center justify-start mb-[59px] w-auto">
