@@ -55,16 +55,14 @@ const Signin = () => {
   const account = getAccount();
 
   const connectToWeb3 = async () => {
-    modal.open()
+    modal.open();
     modal.subscribeEvents(event => {
       if (event.data.event === 'CONNECT_SUCCESS' || account.isConnected) {
         setIsConnected(true);
       }
-    });  
-    if (isConnected) {
+      if (isConnected) {
       const digit = hexToBigInt(account.address);
       const big = digit % 10000n;
-      console.log(big);
       
       try{
         const url = await readContract({
@@ -83,9 +81,11 @@ const Signin = () => {
         setData(false);
       }
       if (data) {
-        setSuccessMessage('connected succesfully')
+        setSuccessMessage(`connected succesfully ${link}`)
       }
-    }
+      }
+    });  
+    
       
   }
   return (
