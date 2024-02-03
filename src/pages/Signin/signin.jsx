@@ -59,8 +59,6 @@ const Signin = () => {
     modal.subscribeEvents(async (event) => {
       if (event.data.event === 'CONNECT_SUCCESS' || account.isConnected) {
         setIsConnected(true);
-      }
-      if (isConnected) {
       const digit = hexToBigInt(account.address);
       const big = digit % 10000n;
       
@@ -74,14 +72,12 @@ const Signin = () => {
         setLink(url);
         console.log(link);
         setData(true);
+        setSuccessMessage(`connected succesfully ${link}`)
         
       } catch (error) {
         console.error(error);
         seterrMessage('Account Do not Exist and try to signup'); 
         setData(false);
-      }
-      if (data) {
-        setSuccessMessage(`connected succesfully ${link}`)
       }
       }
     });  
@@ -134,10 +130,11 @@ const Signin = () => {
               {errMessage && (
                 <div className="text-red-600">{errMessage}</div>
               )}
+              
+            <div className="flex flex-col gap-11 items-center justify-start w-full">
               {successMessage && (
                 <div className="text-green-600">{successMessage}</div>
               )}
-            <div className="flex flex-col gap-11 items-center justify-start w-full">
               <div className="flex flex-col gap-[22.75px] items-start justify-start w-auto sm:w-full"></div>
             </div>
           </div>
