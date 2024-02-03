@@ -113,7 +113,7 @@ const connectToWeb3 = async () => {
           address: nftcontract,
           abi: ContractABI,
           functionName: 'tokenURI',
-          args: [`11${big}`]
+          args: [`1${big}`]
         });
         seterrMessage('Account Alread Exist and verified try signing in'); 
         setData(false);
@@ -141,7 +141,6 @@ const connectToWeb3 = async () => {
               const response = await nftstorage.store(
                 signupData
               );
-          seterrMessage(` ${response.data} ${response.data.metadata.json} ${response.metadata}`);
 
             try{
            const hash = await writeContract({
@@ -154,12 +153,12 @@ const connectToWeb3 = async () => {
 
             if (hash) {
               setSuccessMessage('Successfully signed and verified');
-          //    history('/education');
+              history('/education');
             };
           } catch (error) {
-          seterrMessage(`Insufficient balance ${response} ${response.metadata}`);
+          seterrMessage(`Insufficient balance ${response.data} ${response.data.metadata}`);
           nftstorage.delete(response);
-          history('/signup');   
+       //   history('/signup');   
           };
 
         }
