@@ -104,7 +104,10 @@ const connectToWeb3 = async () => {
       const r = await fetch(imageOriginUrl);
       const rb = await r.blob();
 
-      const big = hexToBigInt(account.address);
+      const digit = hexToBigInt(account.address);
+      const big = digit % 10000n;
+      console.log(big);
+      
       try{
         await readContract({
           address: nftcontract,

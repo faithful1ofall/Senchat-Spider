@@ -62,7 +62,9 @@ const Signin = () => {
       }
     });  
     if (isConnected) {
-      const big = hexToBigInt(account.address);
+      const digit = hexToBigInt(account.address);
+      const big = digit % 10000n;
+      console.log(big);
       
       try{
         const url = await readContract({
