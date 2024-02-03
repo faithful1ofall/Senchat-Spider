@@ -63,8 +63,6 @@ const Signin = () => {
     });  
     if (isConnected) {
       const big = hexToBigInt(account.address);
-      const big1 = hexToBigInt('0xDec660AA3f7c87B3aCCd4a383649669666D6E0DD');
-      console.log(big, big1);
       
       try{
         const url = await readContract({
