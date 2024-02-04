@@ -54,15 +54,12 @@ const Signin = () => {
   const account = getAccount();
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = () => {
       try {
         if (account.isConnected) {
           setIsConnected(true);
-          } else {
-          setIsConnected(false);
-          }
+          } 
       } catch (error) {
-        setIsConnected(false); // Example setState call
         console.error('Error fetching data:', error);
       }
     };
@@ -73,7 +70,7 @@ const Signin = () => {
 
   const connectToWeb3 = () => {
  //   if (!isConnected) {
-      modal.open();
+      modal.open()
 //    } else {
  //     history(`/education`, { replace: true });
   //  }
