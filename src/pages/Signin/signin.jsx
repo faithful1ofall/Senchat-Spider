@@ -72,11 +72,11 @@ const Signin = () => {
   }, [account.isConnected]);
 
   const connectToWeb3 = async () => {
-    if (!isConnected) {
+ //   if (!isConnected) {
       modal.open();
-    } else {
-      history(`/education`, { replace: true });
-    }
+//    } else {
+ //     history(`/education`, { replace: true });
+  //  }
     
     modal.subscribeEvents(async (event) => {
       if (modal.close() && (event.data.event === 'CONNECT_SUCCESS' || account.isConnected)) {
@@ -104,9 +104,9 @@ const Signin = () => {
           }
 
           const userData = await response.json();
-          const userdata = new URLSearchParams(userData);
+    //      const userdata = new URLSearchParams(userData);
 
-          localStorage.setItem('userData', userdata);
+          localStorage.setItem('userData', userData);
 
           setLink(url);
           console.log(link);
