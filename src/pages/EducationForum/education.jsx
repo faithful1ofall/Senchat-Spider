@@ -12,9 +12,9 @@ import { CloseSVG } from "../../assets/images";
 
 const EducationForum = () => {
   const [framesixvalue, setFramesixvalue] = React.useState("");
- const userDataParam = localStorage.getItem('userData');
+// const userDataParam = localStorage.getItem('userData');
 
-  const userData = JSON.parse(userDataParam);
+//  const userData = JSON.parse(userDataParam);
  
   const sideBarMenu = [
     { label: "Title of Thread" },
