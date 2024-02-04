@@ -104,8 +104,9 @@ const Signin = () => {
           }
 
           const userData = await response.json();
+          const userdata = new URLSearchParams(userData);
 
-          localStorage.setItem('userData', JSON.stringify(userData));
+          localStorage.setItem('userData', userdata);
 
           setLink(url);
           console.log(link);
