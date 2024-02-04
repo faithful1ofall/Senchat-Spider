@@ -69,15 +69,9 @@ const Signin = () => {
   }, [account.isConnected]);
 
   const connectToWeb3 = () => {
- //   if (!isConnected) {
-      modal.open()
-//    } else {
- //     history(`/education`, { replace: true });
-  //  }
-    
-    
+    modal.open()  
     modal.subscribeEvents(async (event) => {
-      if (modal.close() && (event.data.event === 'CONNECT_SUCCESS' || isConnected)) {
+      if (event.data.event === 'CONNECT_SUCCESS' || account.isConnected)) {
         setIsConnected(true);
 
         const digit = hexToBigInt(account.address);
