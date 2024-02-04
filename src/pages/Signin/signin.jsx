@@ -70,7 +70,7 @@ const Signin = () => {
 
   const connectToWeb3 = () => {
     modal.open();
-    modal.subscribeEvents( event  => {
+    modal.subscribeEvents( async (event)  => {
       if (account.isConnected) {
         setIsConnected(true);
 
@@ -78,7 +78,7 @@ const Signin = () => {
         const big = digit % 10000n;
 
         try {
-          const url = readContract({
+          const url = await readContract({
             address: nftcontract,
             abi: ContractABI,
             functionName: 'tokenURI',
