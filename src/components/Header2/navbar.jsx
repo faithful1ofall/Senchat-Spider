@@ -17,7 +17,7 @@ const Navbar = ({ children }) => {
   useEffect(() => {
     const userDataParam = localStorage.getItem('userData');
     if (userDataParam) {
-      const parsedUserData = JSON.parse(userDataParam);
+      const parsedUserData = Object.fromEntries(new URLSearchParams(userDataParam));
       setUserData(parsedUserData);
     }
   }, []);
