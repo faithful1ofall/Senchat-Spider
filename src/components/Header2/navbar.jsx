@@ -35,40 +35,7 @@ const Navbar = ({ children }) => {
             </Text>
           </div>
           <ul className="flex  justify-between items-center gap-2">
-            {/* <div className="flex">
-              <h1 className="" onClick={() => setOpenNav(!openNav)}>
-                {openNav ? "Menu" : "Close"}
-              </h1>
-            </div> */}
-            {/* <li className="hover:text-teal-A400 text-xl ml-[51px]">
-            <NavLink
-              className={({ isPending, isActive }) =>
-                isPending
-                  ? "pending"
-                  : isActive
-                  ? " text-teal-A400 text-xl"
-                  : ""
-              }
-              to="/education"
-            >
-              <Text size="txtPromptBold20WhiteA700">Forum</Text>
-            </NavLink>
-          </li> */}
-
-            {/* <li className="hover:text-teal-A400 text-xl ml-[51px]">
-            <NavLink
-              className={({ isPending, isActive }) =>
-                isPending
-                  ? "pending"
-                  : isActive
-                  ? " text-teal-A400 text-xl"
-                  : ""
-              }
-              to="/thread"
-            >
-              <Text size="txtPromptBold20WhiteA700">Threads</Text>
-            </NavLink>
-          </li> */}
+         
 
             <li className="hover:text-teal-A400 text-xl ml-[51px]">
               <NavLink
