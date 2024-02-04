@@ -1,8 +1,8 @@
 import React from "react";
 import { useNavigate } from 'react-router-dom';
-import { Img, Text } from "components";
+import { Img, Text, Button } from "components";
 import { Link } from "react-router-dom";
-import { configureChains, createConfig, InjectedConnector, getAccount} from '@wagmi/core';
+import { configureChains, createConfig, InjectedConnector} from '@wagmi/core';
 import { publicProvider } from '@wagmi/core/providers/public';
 import { bscTestnet } from "viem/chains";
 import { createWeb3Modal, walletConnectProvider, EIP6963Connector } from '@web3modal/wagmi';
@@ -49,16 +49,13 @@ const User = () => {
     defaultChain: bscTestnet
   });
 
-  const account = getAccount();
-
   const disconnectToWeb3 = () => {
-      modal.open();
-      modal.subscribeEvents(event => {
-        if (modal.close() && account.isConnected) {
-          history('/signin');
-        }
-      });        
-      
+    modal.open();
+    modal.subscribeState(newState => {
+      if (!newState.open) {
+        history('/signin')
+      }
+    })
   }
 
   return (
@@ -169,9 +166,8 @@ const User = () => {
               alt="arrowright_Three"
             />
           </Link>
-           <Link
+           <Button
             onClick={disconnectToWeb3}
-            to="/user"
             className="flex sm:flex-col flex-row sm:gap-5 items-start justify-start w-full"
           >
             <Img
@@ -189,7 +185,7 @@ const User = () => {
               src="images/img_arrowright_blue_gray_900_01.svg"
               alt="arrowright_Four"
             />
-          </Link>
+          </Button>
         </div>
       </div>
     </>
