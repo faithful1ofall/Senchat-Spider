@@ -10,8 +10,17 @@ import { BiSearch } from "react-icons/bi";
 const Navbar = ({ children }) => {
   const [framesixvalue, setFramesixvalue] = React.useState("");
   const [openNav, setOpenNav] = useState(false);
+  const [userData, setUserData] = useState(null);
 
   const location = useLocation();
+
+  useEffect(() => {
+    const userDataParam = localStorage.getItem('userData');
+    if (userDataParam) {
+      const parsedUserData = JSON.parse(userDataParam);
+      setUserData(parsedUserData);
+    }
+  }, []);
 
 //  const userDataParam = localStorage.getItem('userData');
 
