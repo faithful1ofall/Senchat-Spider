@@ -34,7 +34,7 @@ const Navbar = ({ children }) => {
               SENCHAT
             </Text>
           </div>
-          <ul className="flex md:hidden justify-between items-center gap-2">
+          <ul className="flex  justify-between items-center gap-2">
             {/* <div className="flex">
               <h1 className="" onClick={() => setOpenNav(!openNav)}>
                 {openNav ? "Menu" : "Close"}
