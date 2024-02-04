@@ -12,9 +12,9 @@ import { BiSolidRightArrow } from "react-icons/bi";
 
 const EducationForum = () => {
   // const [framesixvalue, setFramesixvalue] = React.useState("");
-// const userDataParam = localStorage.getItem('userData');
+ const userDataParam = localStorage.getItem('userData');
 
-//  const userData = JSON.parse(userDataParam);
+ const userData = JSON.parse(userDataParam);
  
 /*   const sideBarMenu = [
     { label: "Title of Thread" },
@@ -30,14 +30,39 @@ const EducationForum = () => {
         <div className="flex flex-col items-center justify-end sm:justify-center ml-auto mr-[60px] mt-[-16px] md:px-5 w-[69%] sm:w-[80%] sm:mx-auto z-[1]">
           <div className="bg-gray-100 flex flex-col items-center justify-start pl-[19px] py-[19px] w-full">
             <div className="flex flex-col gap-[13px] items-start justify-start mb-0.5 mt-12 w-full">
+              
+              <div className="flex flex-row md:gap-10 items-center justify-between w-full">
               <Text
                 className="sm:text-2xl md:text-[36px] text-[30px] text-black-900"
                 size="txtPromptBold40"
               >
-                Education
+                Feeds
               </Text>
-              <div className="flex flex-row md:gap-10 items-center justify-between w-full">
-                <div className="flex flex-row items-center justify-between w-[11%]">
+                <div className="flex flex-row gap-5 sm:gap-2 items-center justify-between">
+                  <Link to="/message">
+                    <Text
+                      className="text-teal-A400 text-[18px] sm:text-[15px]"
+                      size="txtPromptBold20"
+                    >
+                      New post
+                    </Text>
+                    </Link>
+                    <Link to="/message">
+                  <Img
+                    className="h-[16px] w-[16px] sm:h-[14px] sm:w-[14px]"
+                    src="images/img_edit.svg"
+                    alt="edit"
+                  />
+                  </Link>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+          <div className="flex flex-col items-center justify-start w-full">
+            <ForumCol className="bg-white-A700_cc flex flex-col items-start justify-start max-w-[1039px] py-2.5 rounded-[10px] w-full" />
+          </div>
+          <div className="flex flex-row items-center justify-between w-[11%]">
                   <Button className="bg-black-900 cursor-pointer font-medium h-[31px] leading-[normal] py-1 md:px-3 sm:flex sm:items-center sm:justify-center rounded-[5px] text-[14.55px] text-center text-teal-A400 w-[31px] sm:w-[27px]">
                     1
                   </Button>
@@ -58,27 +83,6 @@ const EducationForum = () => {
                     </h1>
                   </Button>
                 </div>
-                <div className="flex flex-row gap-5 sm:gap-2 items-center justify-between">
-                  <Link to="/message">
-                    <Text
-                      className="text-teal-A400 text-[18px] sm:text-[15px]"
-                      size="txtPromptBold20"
-                    >
-                      New post
-                    </Text>
-                  </Link>
-                  <Img
-                    className="h-[16px] w-[16px] sm:h-[14px] sm:w-[14px]"
-                    src="images/img_edit.svg"
-                    alt="edit"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-col items-center justify-start w-full">
-            <ForumCol className="bg-white-A700_cc flex flex-col items-start justify-start max-w-[1039px] py-2.5 rounded-[10px] w-full" />
-          </div>
         </div>
       </div>
     </>

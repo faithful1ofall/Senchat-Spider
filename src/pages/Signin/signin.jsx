@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Button, Img, Text } from "components";
-import Header from "components/Header/index";
-import { configureChains, createConfig, InjectedConnector, getAccount, readContract } from '@wagmi/core';
+import Header from "components/Header2/navbar";
+// import Header from "components/Header/index";
+import { configureChains, createConfig, InjectedConnector, getAccount, readContract, watchAccount } from '@wagmi/core';
 import { publicProvider } from '@wagmi/core/providers/public';
 import { bscTestnet } from "viem/chains";
 import { hexToBigInt } from 'viem';
@@ -17,7 +18,6 @@ const Signin = () => {
   const projectId = process.env.REACT_APP_PROJECTID;
   const nftcontract = process.env.REACT_APP_NFTCONTRACT;
   const [isConnected, setIsConnected] = useState();
-  const [link, setLink] = useState();
   const [errMessage, seterrMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const history = useNavigate();
@@ -68,12 +68,24 @@ const Signin = () => {
 
   }, [account.isConnected]);
 
-  const connectToWeb3 = () => {
+  const openmodal = () => {
     modal.open();
     modal.subscribeEvents(async (event) => {
-      if (event.data.event === 'CONNECT_SUCCESS' || account.isConnected) {
-
+      if (event.data.event === 'CONNECT_SUCCESS') {
         setIsConnected(true);
+      } 
+      });
+    watchAccount((account) => {
+      if (account.isConnected) {
+        setIsConnected(true);
+      } else {
+        setIsConnected(false);
+      }
+    });
+
+  }
+
+  const connectToWeb3 = async () => {
 
         const digit = hexToBigInt(account.address);
         const big = digit % 10000n;
@@ -85,7 +97,6 @@ const Signin = () => {
             functionName: 'tokenURI',
             args: [`12${big}`]
           });
-          console.log(url);
           const hash = url.replace('ipfs://', '');
           const cloudflareUrl = `https://cloudflare-ipfs.com/ipfs/${hash}`;
 
@@ -100,9 +111,7 @@ const Signin = () => {
           //      const userdata = new URLSearchParams(userData);
 
           localStorage.setItem('userData', JSON.stringify(userData));
-
-          setLink(url);
-          console.log(link);
+          console.log(url);
           setSuccessMessage(`connected succesfully ${cloudflareUrl}`);
           history(`/education`, { replace: true });
 
@@ -111,8 +120,7 @@ const Signin = () => {
           // seterrMessage(`Failed to fetch from IPFS. Status: ${response.status}`); 
           seterrMessage('Account Do not Exist and try to signup');
         }
-      }
-    });
+
 
 
   }
@@ -151,14 +159,23 @@ const Signin = () => {
                 Welcome back! Please connect your wallet.
               </Text>
             </div>
-            <Button
-              onClick={connectToWeb3}
-              /* disabled={isConnected} */
 
+            <Button
+              onClick={openmodal}
+              /* disabled={isConnected} */
               className="bg-teal-A400 cursor-pointer font-medium leading-[normal] min-w-full py-[19px] rounded-[32px] text-[17.51px] text-black-900 text-center"
             >
               {isConnected ? "Connected" : "Connect to Web3"}
             </Button>
+            {isConnected && (
+                <Button
+                onClick={connectToWeb3}
+                /* disabled={isConnected} */
+                className="bg-teal-A400 cursor-pointer font-medium leading-[normal] min-w-full py-[19px] rounded-[32px] text-[17.51px] text-black-900 text-center bg-green-500" // Add your desired class for when connected
+                >
+                Verify and Sign in
+                </Button>
+            )}
             {errMessage && (
               <div className="text-red-600">{errMessage}</div>
             )}

@@ -18,20 +18,16 @@ const Navbar = ({ children }) => {
     const userDataParam = localStorage.getItem('userData');
     if (userDataParam) {
       const parsedUserData = JSON.parse(userDataParam);
-      
       setUserData(parsedUserData);
     }
   }, []);
-
-//  const userDataParam = localStorage.getItem('userData');
-
-//  const userData = JSON.parse(userDataParam);
 
   return (
     <>
       <div className="">
         <header className=" flex justify-around md:justify-between items-center py-3 md:py-5 w-full">
           <div className="flex flex-col gap-[5px] mx-6 items-center md:mt-0 my-[7px] w-[5rem]">
+          <a href="/">
             <Img
               className="h-[43px] md:h-auto object-cover w-[4rem] "
               src="images/img_image3.png"
@@ -43,6 +39,7 @@ const Navbar = ({ children }) => {
             >
               SENCHAT
             </Text>
+            </a>
           </div>
           <ul className="flex md:hidden justify-between items-center gap-2">
             {/* <div className="flex">

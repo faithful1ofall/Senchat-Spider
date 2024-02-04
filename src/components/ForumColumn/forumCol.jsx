@@ -1,9 +1,70 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
 import { Button, Line, List, Text } from "components";
+import ContractABI from '../../utils/contractabi.json';
+import { configureChains, createConfig, InjectedConnector, getAccount, readContract } from '@wagmi/core';
+import { publicProvider } from '@wagmi/core/providers/public';
+import { bscTestnet } from "viem/chains";
+import { hexToBigInt } from 'viem';
+import { walletConnectProvider, EIP6963Connector } from '@web3modal/wagmi';
+import { CoinbaseWalletConnector } from '@wagmi/core/connectors/coinbaseWallet';
+import { WalletConnectConnector } from '@wagmi/core/connectors/walletConnect';
+
+const projectId = process.env.REACT_APP_PROJECTID;
+
+const metadata = {
+  name: 'Senchat',
+  description: 'Senchat web3Modal connector',
+  url: 'https://senchatfront.vercel.app/'
+}
+
+const { chains, publicClient } = configureChains(
+  [bscTestnet],
+  [walletConnectProvider({ projectId }), publicProvider()]
+)
+
+const wagmiConfig = createConfig({
+  autoConnect: true,
+  connectors: [
+    new WalletConnectConnector({ chains, options: { projectId, showQrModal: false, metadata } }),
+    new EIP6963Connector({ chains }),
+    new InjectedConnector({ chains, options: { shimDisconnect: true } }),
+    new CoinbaseWalletConnector({ chains, options: { appName: metadata.name } })
+  ],
+  publicClient
+})
+
+const nftcontract = process.env.REACT_APP_NFTCONTRACT;
+// const account = getAccount();
+const digit = hexToBigInt('0x03');
+const big = digit % 10n;
+
+try {
+  const totalSupply = await readContract({
+    address: nftcontract,
+    abi: ContractABI,
+    functionName: 'totalSupply',
+  });
+
+  for (let i = 0; i <= totalSupply; i++) {
+  const url = await readContract({
+    address: nftcontract,
+    abi: ContractABI,
+    functionName: 'tokenByIndex',
+    args: [`${i}`]
+  });
+  
+  console.log(url);
+}
+
+} catch (error) {
+  console.error(error);
+}
+
 
 const DesktopFourColumnp = (props) => {
+
+
   return (
     <>
       <div className={props.className}>
