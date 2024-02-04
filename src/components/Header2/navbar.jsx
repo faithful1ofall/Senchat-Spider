@@ -18,8 +18,8 @@ const Navbar = ({ children }) => {
     const userDataParam = localStorage.getItem('userData');
     if (userDataParam) {
       const parsedUserData = Object.fromEntries(new URLSearchParams(userDataParam));
-      console.log(userDataParam, parsedUserData);
-      setUserData(parsedUserData);
+      
+      setUserData(userDataParam);
     }
   }, []);
 
