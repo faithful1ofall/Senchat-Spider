@@ -4,18 +4,18 @@ import { Img, Input, Text } from "components";
 
 import { CloseSVG } from "../../assets/images";
 import { Link, NavLink } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { BiSearch } from "react-icons/bi";
 
 const Navbar = ({ children }) => {
   const [framesixvalue, setFramesixvalue] = React.useState("");
   const [openNav, setOpenNav] = useState(false);
 
+  const location = useLocation();
+
   const userDataParam = localStorage.getItem('userData');
 
   const userData = JSON.parse(userDataParam);
-
-
-  console.log(userData.name, userData.image, userData);
 
   return (
     <>
@@ -34,8 +34,41 @@ const Navbar = ({ children }) => {
               SENCHAT
             </Text>
           </div>
-          <ul className="flex  justify-between items-center gap-2">
-         
+          <ul className="flex md:hidden justify-between items-center gap-2">
+            {/* <div className="flex">
+              <h1 className="" onClick={() => setOpenNav(!openNav)}>
+                {openNav ? "Menu" : "Close"}
+              </h1>
+            </div> */}
+            {/* <li className="hover:text-teal-A400 text-xl ml-[51px]">
+            <NavLink
+              className={({ isPending, isActive }) =>
+                isPending
+                  ? "pending"
+                  : isActive
+                  ? " text-teal-A400 text-xl"
+                  : ""
+              }
+              to="/education"
+            >
+              <Text size="txtPromptBold20WhiteA700">Forum</Text>
+            </NavLink>
+          </li> */}
+
+            {/* <li className="hover:text-teal-A400 text-xl ml-[51px]">
+            <NavLink
+              className={({ isPending, isActive }) =>
+                isPending
+                  ? "pending"
+                  : isActive
+                  ? " text-teal-A400 text-xl"
+                  : ""
+              }
+              to="/thread"
+            >
+              <Text size="txtPromptBold20WhiteA700">Threads</Text>
+            </NavLink>
+          </li> */}
 
             <li className="hover:text-teal-A400 text-xl ml-[51px]">
               <NavLink
@@ -43,8 +76,8 @@ const Navbar = ({ children }) => {
                   isPending
                     ? "pending"
                     : isActive
-                      ? " text-teal-A400 text-xl"
-                      : ""
+                    ? " text-teal-A400 text-xl"
+                    : ""
                 }
                 to="/nft-index"
               >
@@ -86,7 +119,7 @@ const Navbar = ({ children }) => {
                 </Text>
               </Link>
               <Text className="text-base " size="txtPromptBold16">
-                now
+                {userData.name}
               </Text>
               <NavLink
                 to="/user"
@@ -140,8 +173,8 @@ const Navbar = ({ children }) => {
                         isPending
                           ? "pending"
                           : isActive
-                            ? " text-teal-A400 text-xl"
-                            : ""
+                          ? " text-teal-A400 text-xl"
+                          : ""
                       }
                       to="/education"
                     >
@@ -155,8 +188,8 @@ const Navbar = ({ children }) => {
                         isPending
                           ? "pending"
                           : isActive
-                            ? " text-teal-A400 text-xl"
-                            : ""
+                          ? " text-teal-A400 text-xl"
+                          : ""
                       }
                       to="/thread"
                     >
@@ -170,8 +203,8 @@ const Navbar = ({ children }) => {
                         isPending
                           ? "pending"
                           : isActive
-                            ? " text-teal-A400 text-xl"
-                            : ""
+                          ? " text-teal-A400 text-xl"
+                          : ""
                       }
                       to="/nft-index"
                     >
@@ -216,7 +249,7 @@ const Navbar = ({ children }) => {
                       </Text>
                     </Link>
                     <Text className="text-base " size="txtPromptBold16">
-                      username
+                      {userData.name}
                     </Text>
                     <NavLink
                       to="/user"
