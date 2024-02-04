@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, Line, List, Text } from "components";
 import ContractABI from '../../utils/contractabi.json';
@@ -9,6 +9,9 @@ import { hexToBigInt } from 'viem';
 import { walletConnectProvider, EIP6963Connector } from '@web3modal/wagmi';
 import { CoinbaseWalletConnector } from '@wagmi/core/connectors/coinbaseWallet';
 import { WalletConnectConnector } from '@wagmi/core/connectors/walletConnect';
+
+
+const [data, setData] = useState();
 
 const projectId = process.env.REACT_APP_PROJECTID;
 
@@ -89,6 +92,7 @@ try {
   }
 
   fetchAllTokenDetails(0, 13).then((allTokenDetails) => {
+    setdata(allTokenDetails);
     console.log('All Token Details:', allTokenDetails);
   });
   const totalSupply = await readContract({
@@ -130,7 +134,7 @@ const DesktopFourColumnp = (props) => {
           >
             <Link to="/thread">
               <Button className="bg-blue_gray-100 cursor-pointer font-prompt font-semibold h-[46px] leading-[normal] py-[7px] rounded-[10px] text-black-900 text-center text-xl w-[46px]">
-                {props?.p}
+                {props?.p}{data}
               </Button>
             </Link>
             <div className="flex md:flex-1 flex-col items-start justify-start w-[79%] md:w-full">
