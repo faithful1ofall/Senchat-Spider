@@ -78,8 +78,9 @@ const Signin = () => {
  //     history(`/education`, { replace: true });
   //  }
     
+    
     modal.subscribeEvents(async (event) => {
-      if (modal.close() && (event.data.event === 'CONNECT_SUCCESS' || account.isConnected)) {
+      if (modal.close() && (event.data.event === 'CONNECT_SUCCESS' || isConnected)) {
         setIsConnected(true);
 
         const digit = hexToBigInt(account.address);
@@ -106,7 +107,7 @@ const Signin = () => {
           const userData = await response.json();
     //      const userdata = new URLSearchParams(userData);
 
-          localStorage.setItem('userData', userData);
+          localStorage.setItem('userData', JSON.stringify(userData));
 
           setLink(url);
           console.log(link);
