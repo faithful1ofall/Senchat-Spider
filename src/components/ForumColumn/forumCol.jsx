@@ -40,6 +40,57 @@ const digit = hexToBigInt('0x03');
 const big = digit % 10n;
 
 try {
+
+  const func = async (index) => {
+    try {
+      const tokenId = await readContract({
+        address: nftcontract,
+        abi: ContractABI,
+        functionName: 'tokenByIndex',
+        args: [index]
+      });
+
+      const tokenURI = await readContract({
+        address: nftcontract,
+        abi: ContractABI,
+        functionName: 'tokenURI',
+        args: [`${tokenId}`]
+      });
+  
+      // Use the fetched details as needed
+/*       console.log('Token ID:', tokenId);
+      console.log('Owner:', owner);
+      console.log('Token URI:', tokenURI); */
+  
+      // Return the details or perform additional actions
+      return {
+        tokenId,
+        tokenURI,
+      };
+    } catch (error) {
+      console.error(`Error fetching details for token at index ${index}:`, error.message);
+      return null; // or throw the error if needed
+    }
+  };
+
+  const fetchAllTokenDetails = async (startIndex, endIndex) => {
+    const allTokenDetails = [];
+  
+    // Create an array of promises for concurrent execution
+    const promises = Array.from({ length: endIndex - startIndex + 1 }, (_, i) => func(i + startIndex));
+  
+    // Use Promise.all to wait for all promises to resolve
+    const results = await Promise.all(promises);
+  
+    // Filter out null results (errors) and add valid results to the array
+    results.filter((result) => result !== null).forEach((result) => allTokenDetails.push(result));
+  
+    return allTokenDetails;
+  }
+
+  fetchAllTokenDetails(0, 13).then((allTokenDetails) => {
+    console.log('All Token Details:', allTokenDetails);
+  });
   const totalSupply = await readContract({
     address: nftcontract,
     abi: ContractABI,
