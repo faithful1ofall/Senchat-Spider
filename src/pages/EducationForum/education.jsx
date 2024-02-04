@@ -1,11 +1,11 @@
 import React from "react";
-//import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
+import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
 import { Button, Img, Text } from "components";
 import ForumCol from "components/ForumColumn/forumCol";
 import { Link } from "react-router-dom";
 import { BiSolidRightArrow } from "react-icons/bi";
 
-// import { CloseSVG } from "../../assets/images";
+ import { CloseSVG } from "../../assets/images";
 
 const EducationForum = () => {
   const userDataParam = localStorage.getItem('userData');
