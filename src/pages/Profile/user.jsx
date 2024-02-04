@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from 'react-router-dom';
 import { Img, Text, Button } from "components";
 import { Link } from "react-router-dom";
-import { configureChains, createConfig, InjectedConnector} from '@wagmi/core';
+import { configureChains, createConfig, InjectedConnector, getAccount} from '@wagmi/core';
 import { publicProvider } from '@wagmi/core/providers/public';
 import { bscTestnet } from "viem/chains";
 import { createWeb3Modal, walletConnectProvider, EIP6963Connector } from '@web3modal/wagmi';
@@ -49,13 +49,16 @@ const User = () => {
     defaultChain: bscTestnet
   });
 
+  const account = getAccount();
+
   const disconnectToWeb3 = () => {
-    modal.open();
-    modal.subscribeState(newState => {
-      if (!newState.open) {
-        history('/signin')
-      }
-    })
+      modal.open();
+      modal.subscribeEvents(event => {
+        if (!modal.open() && account.isConnected) {
+          history('/signin');
+        }
+      });        
+      
   }
 
   return (

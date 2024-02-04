@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import { Button, Img, Text } from "components";
-import Header from "components/Header2/navbar";
+import Header from "components/Header/index";
 import { configureChains, createConfig, InjectedConnector, getAccount, readContract } from '@wagmi/core';
 import { publicProvider } from '@wagmi/core/providers/public';
 import { bscTestnet } from "viem/chains";
@@ -56,14 +56,10 @@ const Signin = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userDataParam = localStorage.getItem('userData');
-        if (account.isConnected && userDataParam) {
+        if (account.isConnected) {
           setIsConnected(true);
-          } else {
-          setIsConnected(false);
-          }
+          } 
       } catch (error) {
-        setIsConnected(false); // Example setState call
         console.error('Error fetching data:', error);
       }
     };
@@ -72,15 +68,11 @@ const Signin = () => {
    
   }, [account.isConnected]);
 
-  const connectToWeb3 = async () => {
-    if (!isConnected) {
-      modal.open();
-    } else {
-      history(`/education`);
-    }
-    
-    modal.subscribeEvents(async (event) => {
-      if (modal.close() && (event.data.event === 'CONNECT_SUCCESS' || account.isConnected)) {
+  const connectToWeb3 = () => {
+    modal.open();
+    modal.subscribeEvents( async (event)  => {
+      if (event.data.event === 'CONNECT_SUCCESS' || account.isConnected) {
+
         setIsConnected(true);
 
         const digit = hexToBigInt(account.address);
@@ -105,13 +97,14 @@ const Signin = () => {
           }
 
           const userData = await response.json();
+    //      const userdata = new URLSearchParams(userData);
 
           localStorage.setItem('userData', JSON.stringify(userData));
 
           setLink(url);
           console.log(link);
           setSuccessMessage(`connected succesfully ${cloudflareUrl}`);
-          history(`/education`);
+          history(`/education`, { replace: true });
 
         } catch (error) {
           console.error(error);
@@ -165,7 +158,7 @@ const Signin = () => {
               className="bg-teal-A400 cursor-pointer font-medium leading-[normal] min-w-full py-[19px] rounded-[32px] text-[17.51px] text-black-900 text-center"
             >
               {isConnected ? "Connected" : "Connect to Web3"}
-            </Button>
+                 </Button>
             {errMessage && (
               <div className="text-red-600">{errMessage}</div>
             )}
