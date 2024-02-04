@@ -12,7 +12,11 @@ import { WalletConnectConnector } from '@wagmi/core/connectors/walletConnect';
 
 
 
-const projectId = process.env.REACT_APP_PROJECTID;
+
+
+const DesktopFourColumnp = (props) => {
+  const [data, setData] = useState();
+  const projectId = process.env.REACT_APP_PROJECTID;
 
 const metadata = {
   name: 'Senchat',
@@ -41,7 +45,7 @@ const nftcontract = process.env.REACT_APP_NFTCONTRACT;
 const digit = hexToBigInt('0x03');
 const big = digit % 10n;
 
-try {
+
 
   const func = async (index) => {
     try {
@@ -91,11 +95,11 @@ try {
   }
 
   fetchAllTokenDetails(0, 13).then((allTokenDetails) => {
-    const [data, setData] = useState();
+    
     setdata(allTokenDetails);
     console.log('All Token Details:', allTokenDetails);
   });
-  const totalSupply = await readContract({
+/*  const totalSupply = await readContract({
     address: nftcontract,
     abi: ContractABI,
     functionName: 'totalSupply',
@@ -110,14 +114,8 @@ try {
   });
   
   console.log(url);
-}
+}*/
 
-} catch (error) {
-  console.error(error);
-}
-
-
-const DesktopFourColumnp = (props) => {
 
 
   return (
