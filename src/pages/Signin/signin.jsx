@@ -71,7 +71,8 @@ const Signin = () => {
   const connectToWeb3 = () => {
     modal.open();
     modal.subscribeEvents( async (event)  => {
-      if (account.isConnected) {
+      if (modal.close() && (event.data.event === 'CONNECT_SUCCESS' || account.isConnected)) {
+
         setIsConnected(true);
 
         const digit = hexToBigInt(account.address);
