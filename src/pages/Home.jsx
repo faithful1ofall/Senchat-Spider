@@ -1,10 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Text, Button, Img, Input } from "components";
-import { CloseSVG } from "assets/images";
+import { Text, Img} from "components";
+//import { CloseSVG } from "assets/images";
 
 const Home = () => {
-  const [framesixvalue, setFramesixvalue] = React.useState("");
 
   return (
     <React.Fragment>

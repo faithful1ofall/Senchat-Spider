@@ -4,7 +4,7 @@ import { Img, Input, Text } from "components";
 
 import { CloseSVG } from "../../assets/images";
 import { Link, NavLink } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+// import { useLocation } from "react-router-dom";
 import { BiSearch } from "react-icons/bi";
 
 const Navbar = ({ children }) => {
@@ -12,7 +12,7 @@ const Navbar = ({ children }) => {
   const [openNav, setOpenNav] = useState(false);
   const [userData, setUserData] = useState();
 
-  const location = useLocation();
+  // const location = useLocation();
 
   useEffect(() => {
     const userDataParam = localStorage.getItem('userData');

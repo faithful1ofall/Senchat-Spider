@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button, Img, Text } from "components";
 import Header from "components/Header/index";
 import { configureChains, createConfig, InjectedConnector, getAccount, readContract } from '@wagmi/core';
@@ -14,8 +14,8 @@ import ContractABI from '../../utils/contractabi.json';
 
 
 const Signin = () => {
-  const projectId = 'ee459e804dfa88ec1036d10ab882c4bf';
-  const nftcontract = "0xe8746f49027FeCF2C9C4a8F6E60af2408e3420CD";
+  const projectId = process.env.REACT_APP_PROJECTID;
+  const nftcontract = process.env.REACT_APP_NFTCONTRACT;
   const [isConnected, setIsConnected] = useState();
   const [link, setLink] = useState();
   const [errMessage, seterrMessage] = useState(null);
@@ -58,19 +58,19 @@ const Signin = () => {
       try {
         if (account.isConnected) {
           setIsConnected(true);
-          } 
+        }
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
-  
+
     fetchData();
-   
+
   }, [account.isConnected]);
 
   const connectToWeb3 = () => {
     modal.open();
-    modal.subscribeEvents( async (event)  => {
+    modal.subscribeEvents(async (event) => {
       if (event.data.event === 'CONNECT_SUCCESS' || account.isConnected) {
 
         setIsConnected(true);
@@ -97,7 +97,7 @@ const Signin = () => {
           }
 
           const userData = await response.json();
-    //      const userdata = new URLSearchParams(userData);
+          //      const userdata = new URLSearchParams(userData);
 
           localStorage.setItem('userData', JSON.stringify(userData));
 
@@ -158,7 +158,7 @@ const Signin = () => {
               className="bg-teal-A400 cursor-pointer font-medium leading-[normal] min-w-full py-[19px] rounded-[32px] text-[17.51px] text-black-900 text-center"
             >
               {isConnected ? "Connected" : "Connect to Web3"}
-                 </Button>
+            </Button>
             {errMessage && (
               <div className="text-red-600">{errMessage}</div>
             )}

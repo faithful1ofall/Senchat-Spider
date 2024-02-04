@@ -1,26 +1,26 @@
 import React from "react";
 
-import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
+// import { Menu, MenuItem, Sidebar } from "react-pro-sidebar";
 
-import { Button, Img, Input, Line, List, Text } from "components";
+import { Button, Img, Text } from "components";
 import ForumCol from "components/ForumColumn/forumCol";
-import Header2 from "components/Header2/navbar";
+// import Header2 from "components/Header2/navbar";
 import { Link } from "react-router-dom";
 import { BiSolidRightArrow } from "react-icons/bi";
 
-import { CloseSVG } from "../../assets/images";
+// import { CloseSVG } from "../../assets/images";
 
 const EducationForum = () => {
-  const [framesixvalue, setFramesixvalue] = React.useState("");
+  // const [framesixvalue, setFramesixvalue] = React.useState("");
 // const userDataParam = localStorage.getItem('userData');
 
 //  const userData = JSON.parse(userDataParam);
  
-  const sideBarMenu = [
+/*   const sideBarMenu = [
     { label: "Title of Thread" },
     { label: "@anasabdin" },
     { label: "Replies 200" },
-  ];
+  ]; */
 
   return (
     <>

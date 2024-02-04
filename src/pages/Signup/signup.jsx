@@ -9,7 +9,7 @@ import { parseGwei, hexToBigInt } from 'viem';
 import { createWeb3Modal, walletConnectProvider, EIP6963Connector } from '@web3modal/wagmi';
 import { CoinbaseWalletConnector } from '@wagmi/core/connectors/coinbaseWallet';
 import { WalletConnectConnector } from '@wagmi/core/connectors/walletConnect';
-import { NFTStorage, File} from 'nft.storage';
+import { NFTStorage, File } from 'nft.storage';
 import ContractABI from '../../utils/contractabi.json';
 
 
@@ -22,11 +22,11 @@ const Signup = () => {
   const [errMessage, seterrMessage] = useState(null);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
-  const projectId = 'ee459e804dfa88ec1036d10ab882c4bf';
-  const nftcontract ="0xe8746f49027FeCF2C9C4a8F6E60af2408e3420CD";
+  const projectId = process.env.REACT_APP_PROJECTID;
+  const nftcontract = process.env.REACT_APP_NFTCONTRACT;
   const chainId = bscTestnet.id;
   const history = useNavigate();
-  
+
 
 
   if (!projectId) {
@@ -63,96 +63,96 @@ const Signup = () => {
     defaultChain: bscTestnet
   });
 
-const account = getAccount();
+  const account = getAccount();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         if (account.isConnected) {
           setIsConnected(true);
-          } else {
+        } else {
           setIsConnected(false);
-          }
+        }
       } catch (error) {
         setIsConnected(false); // Example setState call
         console.error('Error fetching data:', error);
       }
     };
-  
-    fetchData();
-   
-  }, [account.isConnected]);
-  
 
-const connectToWeb3 = async () => {
+    fetchData();
+
+  }, [account.isConnected]);
+
+
+  const connectToWeb3 = async () => {
     modal.open();
 
     modal.subscribeEvents(event => {
       if (event.data.event === 'CONNECT_SUCCESS') {
         setIsConnected(true);
       }
-    });     
-};
+    });
+  };
 
-  
+
   const generateNonceAndSign = async () => {
 
     if (isConnected) {
 
-      const imageOriginUrl = "https://senchatdapp.vercel.app/images/img_image3.png";
+      const imageOriginUrl = process.env.REACT_APP_LOGO;
       const r = await fetch(imageOriginUrl);
       const rb = await r.blob();
 
       const digit = hexToBigInt(account.address);
       const big = digit % 10000n;
-      
-      try{
+
+      try {
         await readContract({
           address: nftcontract,
           abi: ContractABI,
           functionName: 'tokenURI',
           args: [`12${big}`]
         });
-        seterrMessage('Account Alread Exist and verified try signing in'); 
+        seterrMessage('Account Alread Exist and verified try signing in');
       } catch (error) {
 
         const reader = new FileReader();
 
         reader.onload = async () => {
-              const content = reader.result;
-  
-              const image = new File([new Uint8Array(content)], 'senchatlogo.png', { type: 'image/png' });
+          const content = reader.result;
 
-              const nftstorage = new NFTStorage({ token: NFT_STORAGE_KEY });
+          const image = new File([new Uint8Array(content)], 'senchatlogo.png', { type: 'image/png' });
 
-              const signupData = {
-                image,
-                name: username,
-                description: `email: ${email}`,
-                address: account.address,
-                chainId: chainId
-              };
+          const nftstorage = new NFTStorage({ token: NFT_STORAGE_KEY });
 
-              const response = await nftstorage.store(
-                signupData
-              );
+          const signupData = {
+            image,
+            name: username,
+            description: `email: ${email}`,
+            address: account.address,
+            chainId: chainId
+          };
 
-              console.log(response);
+          const response = await nftstorage.store(
+            signupData
+          );
 
-            try{
-           await writeContract({
-            address: nftcontract,
-            abi: ContractABI,
-            functionName: 'userMint',
-            args: [account.address, `12${big}`, `${response.url}`],
-            value: parseGwei('100'),
+          console.log(response);
+
+          try {
+            await writeContract({
+              address: nftcontract,
+              abi: ContractABI,
+              functionName: 'userMint',
+              args: [account.address, `12${big}`, `${response.url}`],
+              value: parseGwei('100'),
             });
-              setSuccessMessage('Successfully signed and verified');
-              history('/signin');
+            setSuccessMessage('Successfully signed and verified');
+            history('/signin');
           } catch (error) {
-          seterrMessage(`Insufficient balance ${response.data} ${response.data.metadata}`);
-          nftstorage.delete(response.ipnft);
-          history('/signup');   
+            seterrMessage(`Insufficient balance ${response.data} ${response.data.metadata}`);
+            nftstorage.delete(response.ipnft);
+            history('/signup');
           };
 
         }
@@ -183,94 +183,94 @@ const connectToWeb3 = async () => {
   }
 
   return (
-      <div className="bg-gray-100 flex flex-col font-prompt gap-[33px] items-end justify-end mx-auto w-full">
-        <div className="flex flex-col items-center w-full">
-          <Header className="bg-white-A700 flex flex-col items-center justify-center md:px-5 w-full" />
+    <div className="bg-gray-100 flex flex-col font-prompt gap-[33px] items-end justify-end mx-auto w-full">
+      <div className="flex flex-col items-center w-full">
+        <Header className="bg-white-A700 flex flex-col items-center justify-center md:px-5 w-full" />
+      </div>
+      <div className="bg-white-A700 flex flex-col items-center justify-start p-[49px] md:px-5 rounded-bl-[70px] rounded-tl-[70px] w-[63%] md:w-full">
+        <div className="flex flex-col gap-[5px] items-center justify-start w-[7%] md:w-full">
+          <Img
+            className="h-[30px] md:h-auto object-cover"
+            src="images/img_image3.png"
+            alt="imageThree_One"
+          />
+          <Text
+            className="text-[14.39px] text-teal-A400"
+            size="txtPromptSemiBold739"
+          >
+            SENCHAT
+          </Text>
         </div>
-        <div className="bg-white-A700 flex flex-col items-center justify-start p-[49px] md:px-5 rounded-bl-[70px] rounded-tl-[70px] w-[63%] md:w-full">
-          <div className="flex flex-col gap-[5px] items-center justify-start w-[7%] md:w-full">
-            <Img
-              className="h-[30px] md:h-auto object-cover"
-              src="images/img_image3.png"
-              alt="imageThree_One"
-            />
+        <div className="flex flex-col gap-11 items-center justify-start w-full">
+          <div className="flex flex-col gap-[17.51px] items-center justify-start w-auto">
             <Text
-              className="text-[14.39px] text-teal-A400"
-              size="txtPromptSemiBold739"
+              className="sm:text-[31.020000000000003px] md:text-[33.02px] text-[35.02px] text-black-900 w-auto"
+              size="txtPromptSemiBold3502"
             >
-              SENCHAT
+              Create Account
+            </Text>
+            <Text
+              className="text-[17.51px] text-gray-600 tracking-[0.18px] w-auto"
+              size="txtPromptRegular1751"
+            >
+              Let’s Get You Started
             </Text>
           </div>
-          <div className="flex flex-col gap-11 items-center justify-start w-full">
-            <div className="flex flex-col gap-[17.51px] items-center justify-start w-auto">
+          <div className="flex flex-col gap-[21.88px] items-start justify-start w-full">
+            <div className="flex flex-col gap-[8.75px] items-start justify-start w-full">
               <Text
-                className="sm:text-[31.020000000000003px] md:text-[33.02px] text-[35.02px] text-black-900 w-auto"
-                size="txtPromptSemiBold3502"
+                className="text-[15.32px] text-gray-800 w-auto"
+                size="txtPromptMedium1532"
               >
-                Create Account
+                Username:
               </Text>
-              <Text
-                className="text-[17.51px] text-gray-600 tracking-[0.18px] w-auto"
-                size="txtPromptRegular1751"
-              >
-                Let’s Get You Started
-              </Text>
+              <Input
+                name="frameFour"
+                placeholder="Choose a username"
+                className="leading-[normal] p-0 placeholder:text-gray-600 sm:pr-5 text-[15.32px] text-gray-600 text-left w-full"
+                wrapClassName="border border-blue_gray-100 border-solid pl-[17px] pr-[35px] py-3 rounded-lg w-full"
+                type="text"
+                onChange={handleChange}
+              ></Input>
             </div>
-            <div className="flex flex-col gap-[21.88px] items-start justify-start w-full">
-              <div className="flex flex-col gap-[8.75px] items-start justify-start w-full">
-                <Text
-                  className="text-[15.32px] text-gray-800 w-auto"
-                  size="txtPromptMedium1532"
-                >
-                  Username:
-                </Text>
-                <Input
-                  name="frameFour"
-                  placeholder="Choose a username"
-                  className="leading-[normal] p-0 placeholder:text-gray-600 sm:pr-5 text-[15.32px] text-gray-600 text-left w-full"
-                  wrapClassName="border border-blue_gray-100 border-solid pl-[17px] pr-[35px] py-3 rounded-lg w-full"
-                  type="text"
-                  onChange={handleChange}  
-                ></Input>
-              </div>
-              <div className="flex flex-col gap-[8.75px] items-start justify-start w-full">
-                <Text
-                  className="text-[15.32px] text-gray-800 w-auto"
-                  size="txtPromptMedium1532"
-                >
-                  Email
-                </Text>
-                <Input
-                  name="frameFour_One"
-                  placeholder="Enter email"
-                  className="leading-[normal] p-0 placeholder:text-gray-600 text-[15.32px] text-gray-600 text-left w-full"
-                  wrapClassName="border border-blue_gray-100 border-solid pl-[17px] pr-3 py-3 rounded-lg w-full"
-                  type="email"
-                  onChange={handleChangeemail}  
-                ></Input>
-              </div>
-              <Button
-                onClick={connectToWeb3}
-                className="bg-teal-A400 cursor-pointer font-medium leading-[normal] min-w-full py-[19px] rounded-[32px] text-[17.51px] text-black-900 text-center"
+            <div className="flex flex-col gap-[8.75px] items-start justify-start w-full">
+              <Text
+                className="text-[15.32px] text-gray-800 w-auto"
+                size="txtPromptMedium1532"
               >
-                {isConnected ? "Connected" : "Connect to Web3"}
-              </Button>
-              <Button 
+                Email
+              </Text>
+              <Input
+                name="frameFour_One"
+                placeholder="Enter email"
+                className="leading-[normal] p-0 placeholder:text-gray-600 text-[15.32px] text-gray-600 text-left w-full"
+                wrapClassName="border border-blue_gray-100 border-solid pl-[17px] pr-3 py-3 rounded-lg w-full"
+                type="email"
+                onChange={handleChangeemail}
+              ></Input>
+            </div>
+            <Button
+              onClick={connectToWeb3}
+              className="bg-teal-A400 cursor-pointer font-medium leading-[normal] min-w-full py-[19px] rounded-[32px] text-[17.51px] text-black-900 text-center"
+            >
+              {isConnected ? "Connected" : "Connect to Web3"}
+            </Button>
+            <Button
               onClick={generateNonceAndSign}
               className="bg-teal-A400 cursor-pointer font-medium leading-[normal] min-w-full py-[19px] rounded-[32px] text-[17.51px] text-black-900 text-center"
-              >
-               
-                Signup and Verify
-                
-              </Button>
-              {successMessage && (
-                <div className="text-green-600">{successMessage}</div>
-              )}
-              {errMessage && (
-                <div className="text-red-600">{errMessage}</div>
-              )}
-              
-              {/* <div className="flex flex-col font-roboto items-start justify-start w-full">
+            >
+
+              Signup and Verify
+
+            </Button>
+            {successMessage && (
+              <div className="text-green-600">{successMessage}</div>
+            )}
+            {errMessage && (
+              <div className="text-red-600">{errMessage}</div>
+            )}
+
+            {/* <div className="flex flex-col font-roboto items-start justify-start w-full">
                 <CheckBox
                   className="font-medium leading-[normal] text-[15.32px] text-gray-800 text-left"
                   inputClassName="border border-blue_gray-100 border-solid h-[15px] mr-[5px] rounded-sm w-[15px]"
@@ -279,8 +279,8 @@ const connectToWeb3 = async () => {
                   label="Accept terms and privacy policy"
                 ></CheckBox>
               </div> */}
-            </div>
-            {/* <div className="flex flex-col gap-[17.51px] h-[148px] md:h-auto items-start justify-start w-full">
+          </div>
+          {/* <div className="flex flex-col gap-[17.51px] h-[148px] md:h-auto items-start justify-start w-full">
               <a
                 href="/education"
                 className="bg-teal-A400 cursor-pointer font-medium leading-[normal] min-w-full py-[19px] rounded-[32px] text-[17.51px] text-black-900 text-center"
@@ -292,23 +292,23 @@ const connectToWeb3 = async () => {
                 </Button>
               </a>
             </div> */}
-          </div>
-          <div className="flex flex-row gap-[4.38px] items-center justify-start mb-4 mt-[27px] w-full">
-            <Text
-              className="text-[15.32px] text-gray-600 w-full text-center"
-              size="txtPromptMedium1532Gray600"
-            >
-              Already have an account?{" "}
-            </Text>
-            <a
-              href="/signin"
-              className="text-[15.32px] text-teal-A400 w-full text-center"
-            >
-              <Text size="txtPromptMedium1532TealA400">Sign in</Text>
-            </a>
-          </div>
+        </div>
+        <div className="flex flex-row gap-[4.38px] items-center justify-start mb-4 mt-[27px] w-full">
+          <Text
+            className="text-[15.32px] text-gray-600 w-full text-center"
+            size="txtPromptMedium1532Gray600"
+          >
+            Already have an account?{" "}
+          </Text>
+          <a
+            href="/signin"
+            className="text-[15.32px] text-teal-A400 w-full text-center"
+          >
+            <Text size="txtPromptMedium1532TealA400">Sign in</Text>
+          </a>
         </div>
       </div>
+    </div>
   );
 };
 
