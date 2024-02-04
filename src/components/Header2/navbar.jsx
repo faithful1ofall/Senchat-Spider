@@ -13,9 +13,9 @@ const Navbar = ({ children }) => {
 
   const location = useLocation();
 
-  const userDataParam = localStorage.getItem('userData');
+//  const userDataParam = localStorage.getItem('userData');
 
-  const userData = JSON.parse(userDataParam);
+//  const userData = JSON.parse(userDataParam);
 
   return (
     <>
@@ -119,7 +119,7 @@ const Navbar = ({ children }) => {
                 </Text>
               </Link>
               <Text className="text-base " size="txtPromptBold16">
-                {userData.name}
+                username 
               </Text>
               <NavLink
                 to="/user"
@@ -249,7 +249,7 @@ const Navbar = ({ children }) => {
                       </Text>
                     </Link>
                     <Text className="text-base " size="txtPromptBold16">
-                      {userData.name}
+                      username1
                     </Text>
                     <NavLink
                       to="/user"
