@@ -10,7 +10,7 @@ import { BiSearch } from "react-icons/bi";
 const Navbar = ({ children }) => {
   const [framesixvalue, setFramesixvalue] = React.useState("");
   const [openNav, setOpenNav] = useState(false);
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState();
 
   const location = useLocation();
 
@@ -258,7 +258,7 @@ const Navbar = ({ children }) => {
                       </Text>
                     </Link>
                     <Text className="text-base " size="txtPromptBold16">
-                      {parsedUserData ? parsedUserData.name : "Guest"}
+                      {userData ? userData.name : "Guest"}
                     </Text>
                     <NavLink
                       to="/user"
