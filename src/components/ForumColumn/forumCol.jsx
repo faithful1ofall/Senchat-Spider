@@ -11,7 +11,6 @@ import { CoinbaseWalletConnector } from '@wagmi/core/connectors/coinbaseWallet';
 import { WalletConnectConnector } from '@wagmi/core/connectors/walletConnect';
 
 
-const [data, setData] = useState();
 
 const projectId = process.env.REACT_APP_PROJECTID;
 
@@ -92,6 +91,7 @@ try {
   }
 
   fetchAllTokenDetails(0, 13).then((allTokenDetails) => {
+    const [data, setData] = useState();
     setdata(allTokenDetails);
     console.log('All Token Details:', allTokenDetails);
   });
