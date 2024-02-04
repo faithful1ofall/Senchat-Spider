@@ -96,7 +96,7 @@ const big = digit % 10n;
 
   fetchAllTokenDetails(0, 13).then((allTokenDetails) => {
     
-    setdata(allTokenDetails);
+    setData(allTokenDetails);
     console.log('All Token Details:', allTokenDetails);
   });
 /*  const totalSupply = await readContract({
