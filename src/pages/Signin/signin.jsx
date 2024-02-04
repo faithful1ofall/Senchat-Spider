@@ -54,7 +54,7 @@ const Signin = () => {
   const account = getAccount();
 
   useEffect(() => {
-    const fetchData = () => {
+    const fetchData = async () => {
       try {
         if (account.isConnected) {
           setIsConnected(true);
@@ -71,7 +71,7 @@ const Signin = () => {
   const connectToWeb3 = () => {
     modal.open()  
     modal.subscribeEvents(async (event) => {
-      if (event.data.event === 'CONNECT_SUCCESS' || account.isConnected)) {
+      if (event.open || account.isConnected)) {
         setIsConnected(true);
 
         const digit = hexToBigInt(account.address);
