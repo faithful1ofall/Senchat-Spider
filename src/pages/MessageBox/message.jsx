@@ -60,13 +60,13 @@ const Message = () => {
 
       <div className="bg-gray-100 flex flex-col font-prompt items-center justify-end mx-auto">
         <div className="flex flex-col gap-[11px] items-center justify-start  mt-[3px] mx-auto pb-[14px] md:px-5 w-full">
-          <div className="bg-gray-100 flex flex-col gap-2.5 justify-center pl-1 py-1 w-full">
-            <Text
-              className="md:ml-[0] ml-[15px] mr-[1044px] mt-[68px] sm:text-4xl md:text-[38px] text-[40px] text-black-900"
-              size="txtPromptBold40"
+          <div className="bg-gray-100 flex flex-col gap-1.5 justify-center pl-1 py-1 w-full">
+           {/*  <Text
+              className="md:ml-[0] ml-[15px] mr-[1044px] mt-[68px] sm:text-4xl md:text-[38px] text-[40px] text-black-100"
+              size="txtPromptBold20"
             >
               Thread your feeling
-            </Text>
+            </Text> */}
             <div className="h-7 md:h-[31px] mt-[3px] w-full">
               <div className="flex px-5 gap-8 sm:gap-[0.6rem] border border-solid border-teal-100 mt-auto mx-auto w-full md:h-7 h-[26px] m-auto">
                 {/* <div className="border border-solid border-teal-100 h-7 mt-auto mx-auto w-full"></div> */}
@@ -141,7 +141,7 @@ const Message = () => {
               value={message}
               modules={modules}
               formats={formats}
-              placeholder="Write something..."
+              placeholder="Whats on your mind..."
               onEditorChange={handleChange}
             />
             <button
