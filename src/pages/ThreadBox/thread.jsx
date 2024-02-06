@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from 'react-router-dom';
 
- import { Menu, MenuItem } from "react-pro-sidebar";
+ // import { Menu, MenuItem } from "react-pro-sidebar";
 
-import { Button, Img, Input, Line, List, Text } from "components";
+import { Img, List, Text } from "components";
 import ThreadColumn from "components/ThreadColumn/threads";
 import Sidebar11 from "components/Sidebar11";
 import { Link } from "react-router-dom";
 import Navbar from "components/Header2/navbar";
 
- import { CloseSVG } from "../../assets/images";
+// import { CloseSVG } from "../../assets/images";
 
 const Thread = () => {
   const { cid } = useParams();
-  const [fdata, setfdata] = useState();
+  const [fdata, setfdata] = useState({});
 
   localStorage.setItem('cid', cid);
   console.log(cid);
@@ -30,7 +30,7 @@ const Thread = () => {
   
               console.log(jsonData);
 
-              setfdata(jsonData.description);
+              setfdata(jsonData);
 
               /* setFetch(() => [
                 { 
@@ -42,11 +42,11 @@ const Thread = () => {
               /* const image = jsonData.image.replace('ipfs://', '');
               const imageurl = `https://cloudflare-ipfs.com/ipfs/${image}`; */
 
-  }
+  };
   
   useEffect(() => {
     data();
-  }, []);
+  });
 
 
   
@@ -77,7 +77,7 @@ const Thread = () => {
                         className="sm:text-4xl md:text-[38px] text-[40px] text-black-900"
                         size="txtPromptBold40"
                       >
-                       {fdata != null ? fdata : ''} Here Now
+                       {fdata.description != null ? fdata.description : ''}
                       </Text>
                       <div className="flex flex-row items-start justify-between w-full">
                         <Img
@@ -89,7 +89,7 @@ const Thread = () => {
                           className="text-[16.8px] text-blue_gray-400"
                           size="txtPromptMedium168"
                         >
-                         {fdata != null ? fdata : ''}
+                         {fdata.name != null ? fdata.name : ''}
                         </Text>
                         <Img
                           className="h-6 w-6"
@@ -147,7 +147,7 @@ const Thread = () => {
                           alt="arrowright_One"
                         />
                       </div>
-                      <div className="flex items-center flex-1">
+                      {/* <div className="flex items-center flex-1">
                         <Text
                           className="text-[16.8px] sm:text-[14px] text-blue_gray-400"
                           size="txtPromptMedium168"
@@ -159,7 +159,7 @@ const Thread = () => {
                           src="images/img_arrowright.svg"
                           alt="arrowright_Two"
                         />
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 </div>

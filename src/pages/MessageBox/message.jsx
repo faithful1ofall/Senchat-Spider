@@ -65,7 +65,7 @@ const Message = () => {
               className="md:ml-[0] ml-[15px] mr-[1044px] mt-[68px] sm:text-4xl md:text-[38px] text-[40px] text-black-900"
               size="txtPromptBold40"
             >
-              Replying Thread
+              Thread your feeling
             </Text>
             <div className="h-7 md:h-[31px] mt-[3px] w-full">
               <div className="flex px-5 gap-8 sm:gap-[0.6rem] border border-solid border-teal-100 mt-auto mx-auto w-full md:h-7 h-[26px] m-auto">
@@ -88,7 +88,7 @@ const Message = () => {
                     className="text-[16.8px] sm:text-[14px] text-blue_gray-400"
                     size="txtPromptMedium168"
                   >
-                    Education
+                    Feeds
                   </Text>
                   <Img
                     className="h-5 sm:h-4"
@@ -96,7 +96,7 @@ const Message = () => {
                     alt="arrowright_One"
                   />
                 </div>
-                <div className="flex items-center flex-1">
+                {/* <div className="flex items-center flex-1">
                   <Text
                     className="text-[16.8px] sm:text-[14px] text-blue_gray-400"
                     size="txtPromptMedium168"
@@ -108,7 +108,7 @@ const Message = () => {
                     src="images/img_arrowright.svg"
                     alt="arrowright_Two"
                   />
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
