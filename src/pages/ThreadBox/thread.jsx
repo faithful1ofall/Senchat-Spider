@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from 'react-router-dom';
 
-import { Menu, MenuItem } from "react-pro-sidebar";
+ import { Menu, MenuItem } from "react-pro-sidebar";
 
 import { Button, Img, Input, Line, List, Text } from "components";
 import ThreadColumn from "components/ThreadColumn/threads";
@@ -8,65 +9,56 @@ import Sidebar11 from "components/Sidebar11";
 import { Link } from "react-router-dom";
 import Navbar from "components/Header2/navbar";
 
-import { CloseSVG } from "../../assets/images";
+ import { CloseSVG } from "../../assets/images";
 
 const Thread = () => {
-  const [framesixvalue, setFramesixvalue] = React.useState("");
+  const { cid } = useParams();
+  const [fdata, setfdata] = useState();
+
+  localStorage.setItem('cid', cid);
+  console.log(cid);
+
+  const data = async () => {
+    const cloudflareUrl = `https://cloudflare-ipfs.com/ipfs/${cid}`;
+              const response = await fetch(cloudflareUrl);
+  
+              if (!response.ok) {
+                throw new Error(`Failed to fetch from IPFS. Status: ${response.status}`);
+              }
+  
+              const jsonData = await response.json();
+  
+              console.log(jsonData);
+
+              setfdata(jsonData.description);
+
+              /* setFetch(() => [
+                { 
+                  desc: jsonData.description, 
+                  name: jsonData.name, 
+                },
+              ]); */
+
+              /* const image = jsonData.image.replace('ipfs://', '');
+              const imageurl = `https://cloudflare-ipfs.com/ipfs/${image}`; */
+
+  }
+  
+  useEffect(() => {
+    data();
+  }, []);
+
+
+  
+
+/*   const [framesixvalue, setFramesixvalue] = React.useState("");
   const sideBarMenu = [
     { label: "Title of Thread" },
     { label: "@anasabdin" },
     { label: "Replies 200" },
-  ];
-  const sideBarMenu1 = [
-    { label: "Title of Thread" },
-    { label: "@anasabdin" },
-    { label: "Replies 200" },
-  ];
-  const sideBarMenu2 = [
-    { label: "Title of Thread" },
-    { label: "@anasabdin" },
-    { label: "Replies 200" },
-  ];
-  const sideBarMenu3 = [
-    { label: "Title of Thread" },
-    { label: "@anasabdin" },
-    { label: "Replies 200" },
-  ];
-  const sideBarMenu4 = [
-    { label: "Title of Thread" },
-    { label: "@anasabdin" },
-    { label: "Replies 200" },
-  ];
-  const sideBarMenu5 = [
-    { label: "Title of Thread" },
-    { label: "@anasabdin" },
-    { label: "Replies 200" },
-  ];
-  const sideBarMenu6 = [
-    { label: "Title of Thread" },
-    { label: "@anasabdin" },
-    { label: "Replies 200" },
-  ];
-  const sideBarMenu7 = [
-    { label: "Title of Thread" },
-    { label: "@anasabdin" },
-    { label: "Replies 200" },
-  ];
-  const sideBarMenu8 = [
-    { label: "Title of Thread" },
-    { label: "@anasabdin" },
-    { label: "Replies 200" },
-  ];
-  const sideBarMenu9 = [
-    { label: "Title of Thread" },
-    { label: "@anasabdin" },
-    { label: "Replies 200" },
-  ];
-  const sideBarMenu10 = [
-    { label: "Title of Thread" },
-    { label: "@anasabdin" },
-    { label: "Replies 200" },
-  ];
+  ]; */
+
+
 
   return (
     <>
@@ -85,7 +77,7 @@ const Thread = () => {
                         className="sm:text-4xl md:text-[38px] text-[40px] text-black-900"
                         size="txtPromptBold40"
                       >
-                        Title of Thread
+                       {fdata != null ? fdata : ''} Here Now
                       </Text>
                       <div className="flex flex-row items-start justify-between w-full">
                         <Img
@@ -97,7 +89,7 @@ const Thread = () => {
                           className="text-[16.8px] text-blue_gray-400"
                           size="txtPromptMedium168"
                         >
-                          @anasabdin
+                         {fdata != null ? fdata : ''}
                         </Text>
                         <Img
                           className="h-6 w-6"
@@ -147,7 +139,7 @@ const Thread = () => {
                           className="text-[16.8px] sm:text-[14px] text-blue_gray-400"
                           size="txtPromptMedium168"
                         >
-                          Education
+                          Feeds
                         </Text>
                         <Img
                           className="h-5 sm:h-4"
@@ -177,7 +169,7 @@ const Thread = () => {
                   className="flex flex-col gap-5 items-start w-auto"
                   orientation="vertical"
                 >
-                  {new Array(3).fill({}).map((props, index) => (
+                  {new Array(1).fill({}).map((props, index) => (
                     <React.Fragment key={`ThreadColumn${index}`}>
                       <ThreadColumn
                         className="flex flex-col items-center justify-start my-0 w-full"

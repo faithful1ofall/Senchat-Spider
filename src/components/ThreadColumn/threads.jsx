@@ -1,28 +1,72 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { Button, Img, Text } from "components";
 import { Link } from "react-router-dom";
 
 const Thread = (props) => {
+  const [thread1, setThread] = useState();
+
+  const cid = localStorage.getItem('cid');
+
+  const data = async () => {
+    const cloudflareUrl = `https://cloudflare-ipfs.com/ipfs/${cid}`;
+              const response = await fetch(cloudflareUrl);
+  
+              if (!response.ok) {
+                throw new Error(`Failed to fetch from IPFS. Status: ${response.status}`);
+              }
+  
+              const jsonData = await response.json();
+  
+              console.log(jsonData);
+
+              const image = jsonData.image.replace('ipfs://', '');
+              const imageurl = `https://cloudflare-ipfs.com/ipfs/${image}`;
+
+              setThread(() => [
+                { 
+                  data: imageurl, 
+                  titleofprops: jsonData.description, 
+                  anasabdin: jsonData.name, 
+                  education: 'Feeds', 
+                  time: 'Time', 
+                  repliescounter13: 'Replies Counter',
+                  anasabdinone10: 'Anas Abdin One',
+                },
+              ]);
+  }
+  
+  useEffect(() => {
+    data();
+  }, []);
+
+
   return (
     <>
       <div className={props.className}>
-        <div className="flex md:flex-col flex-row md:gap-5 items-center justify-evenly w-full">
+      {Array.isArray(thread1) ? (
+        thread1.map((thread, index) => (
+        <div key={index} className="flex md:flex-col flex-row md:gap-5 items-center justify-evenly w-full">
           <div className="bg-gray-200 flex md:flex-1 flex-col items-center justify-start p-10 sm:px-5 w-[23%] md:w-full">
-            <Button className="bg-gray-600_01 cursor-pointer font-prompt font-semibold h-[73px] leading-[normal] mt-[35px] py-[21px] rounded-[5px] text-center text-white-A700 text-xl w-[73px]">
+            {/* <Button className="bg-gray-600_01 cursor-pointer font-prompt font-semibold h-[73px] leading-[normal] mt-[35px] py-[21px] rounded-[5px] text-center text-white-A700 text-xl w-[73px]">
               {props?.b}
-            </Button>
+            </Button> */}
+            <Img
+                  src={thread?.data}
+                  alt="Image Alt Text"
+                  className="cursor-pointer h-[46px] w-[46px] rounded-[10px]"
+                />
             <Text
               className="mt-[11px] text-black-900 text-xl"
               size="txtPromptMedium20"
             >
-              {props?.anasabdin}
+              {thread?.anasabdin}
             </Text>
             <Text
               className="mb-[330px] text-teal-A400 text-xl"
               size="txtPromptSemiBold20"
             >
-              {props?.seniormember}
+              {thread?.seniormember}
             </Text>
           </div>
           <div className="flex md:flex-1 flex-col items-center justify-start w-[78%] md:w-full">
@@ -31,7 +75,7 @@ const Thread = (props) => {
                 className="text-[17px] text-teal-A400"
                 size="txtPromptMedium17TealA400"
               >
-                {props?.time}
+                {thread?.time}
               </Text>
               <div className="flex flex-row items-start justify-center mr-4">
                 <Img
@@ -48,7 +92,7 @@ const Thread = (props) => {
                   className="ml-5 sm:text-[17px] md:text-[19px] text-[21px] text-teal-A400"
                   size="txtPromptMedium21"
                 >
-                  {props?.one}
+                  {thread?.one}
                 </Text>
               </div>
             </div>
@@ -57,7 +101,7 @@ const Thread = (props) => {
                 className="text-2xl md:text-[22px] text-black-900 sm:text-xl"
                 size="txtPromptRegular24"
               >
-                {props?.description}
+                {thread?.description}
               </Text>
               <div className="flex sm:flex-col flex-row sm:gap-5 items-center justify-start w-[51%] md:w-full">
                 <Button
@@ -69,7 +113,7 @@ const Thread = (props) => {
                   }
                 >
                   <div className="font-medium font-prompt leading-[normal] text-left text-lg text-white-A700">
-                    {props?.like}
+                    {thread?.like}
                   </div>
                 </Button>
                 <Button
@@ -85,7 +129,7 @@ const Thread = (props) => {
                   }
                 >
                   <div className="font-medium font-prompt leading-[normal] text-left text-lg text-white-A700">
-                    {props?.quote}
+                    {thread?.quote}
                   </div>
                 </Button>
                 <Link to="/desktoptwelve">
@@ -98,7 +142,7 @@ const Thread = (props) => {
                     }
                   >
                     <div className="font-medium font-prompt leading-[normal] text-left text-lg text-white-A700">
-                      {props?.reply}
+                      {thread?.reply}
                     </div>
                   </Button>
                 </Link>
@@ -106,6 +150,10 @@ const Thread = (props) => {
             </div>
           </div>
         </div>
+          ))
+          ) : (
+            <div>No Feeds available</div>
+          )}
       </div>
     </>
   );

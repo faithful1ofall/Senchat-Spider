@@ -72,7 +72,7 @@ const ProjectRoutes = () => {
           <Route path="/desktopseven" element={<DesktopSeven />} />
           <Route path="/desktopeight" element={<DesktopEight />} />
           <Route path="/desktopnine" element={<DesktopNine />} />
-          <Route path="/thread" element={<ThreadBox />} />
+          <Route path="/thread/:cid" element={<ThreadBox />} />
           <Route path="/desktopeleven" element={<DesktopEleven />} />
           <Route
             path="/message"

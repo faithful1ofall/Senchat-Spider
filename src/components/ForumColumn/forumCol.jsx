@@ -11,7 +11,6 @@ import { WalletConnectConnector } from '@wagmi/core/connectors/walletConnect';
 
 
 const DesktopFourColumnp = (props) => {
-  //  const [data, setData] = useState();
   const [threadData1, setthreadData] = useState([]);
   const projectId = process.env.REACT_APP_PROJECTID;
 
@@ -113,6 +112,8 @@ const DesktopFourColumnp = (props) => {
         if (startsWithb3) {
           try {
             const hash = tokenDetail.tokenURI.replace('ipfs://', '');
+
+
             const cloudflareUrl = `https://cloudflare-ipfs.com/ipfs/${hash}`;
             const response = await fetch(cloudflareUrl);
 
@@ -135,6 +136,7 @@ const DesktopFourColumnp = (props) => {
                 anasabdin: jsonData.name, 
                 education: 'Feeds', 
                 time: 'Time', 
+                cid: hash,
                 repliescounter13: 'Replies Counter',
                 anasabdinone10: 'Anas Abdin One',
               },
@@ -163,7 +165,7 @@ const DesktopFourColumnp = (props) => {
             <div>{thread.titleofthread}</div>
             <div>{thread.anasabdin}</div>
             <Link
-              to="/thread"
+              to={`/thread/${encodeURIComponent(thread.cid)}`}
               className="flex flex-1 md:flex-col flex-row gap-[16px] items-start justify-start max-w-[1039px] px-5 py-[15px] w-full"
             >
               <Link to="/thread">
