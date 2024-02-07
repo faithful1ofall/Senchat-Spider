@@ -189,7 +189,7 @@ const Navbar = ({ children }) => {
                     </NavLink>
                   </li>
 
-                /*  <li className="hover:text-teal-A400 text-xl">
+                  {/*  <li className="hover:text-teal-A400 text-xl">
                     <NavLink
                       className={({ isPending, isActive }) =>
                         isPending
@@ -202,9 +202,9 @@ const Navbar = ({ children }) => {
                     >
                       <Text size="txtPromptBold20WhiteA700">Threads</Text>
                     </NavLink>
-                  </li> */
+                  </li>
 
-               /*   <li className=" hover:text-teal-A400 text-xl">
+                 <li className=" hover:text-teal-A400 text-xl">
                     <NavLink
                       className={({ isPending, isActive }) =>
                         isPending
@@ -217,7 +217,7 @@ const Navbar = ({ children }) => {
                     >
                       <Text size="txtPromptBold20">NFT</Text>
                     </NavLink>
-                  </li> */
+                  </li> */}
 
                   <Input
                     name="frameSix"
