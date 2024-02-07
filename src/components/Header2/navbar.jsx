@@ -126,7 +126,7 @@ const Navbar = ({ children }) => {
                 </Text>
               </Link>
               <Text className="text-base " size="txtPromptBold16">
-                username 
+                {userData ? userData.name : "Guest"} 
               </Text>
               <NavLink
                 to="/user"
