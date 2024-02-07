@@ -13,6 +13,7 @@ import { config } from "./MessageEditor";
 import { CloseSVG } from "../../assets/images";
 
 const Message = () => {
+  const [images, setImages] = useState([]);
   const [message, setMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -31,9 +32,24 @@ const Message = () => {
       e.target.children[0].childNodes[1].firstElementChild.innerHTML;
     setMessage(messageValue);
     console.log(messageValue);
+    const quill = quillRef.current.getEditor();
+    const delta = quill.getContents();
+    const imageUrls = extractImageUrls(delta.ops);
+    setImages(imageUrls);
   };
 
-  const handleSubmit = (e) => {
+  const extractImageUrls = (ops) => {
+    // Extract image URLs from the Delta object
+    const urls = [];
+    for (const op of ops) {
+      if (op.insert && typeof op.insert === "object" && op.insert.image) {
+        urls.push(op.insert.image);
+      }
+    }
+    return urls;
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const messageValue =
       e.target.children[0].childNodes[1].firstElementChild.textContent;
@@ -54,6 +70,83 @@ const Message = () => {
       setMessage("");
     }
   };
+
+
+  const handleImageUpload = () => {
+
+    const input = document.createElement('input');
+
+    console.log('input:', input);
+
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', 'image/*');
+    input.click();
+
+    input.onchange = async () => {
+      const file = input.files[0];
+      console.log('file', file);
+     /*  const formData = new FormData();
+      formData.append('image', file); */
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        const imageUrl = reader.result;
+        console.log(imageUrl);
+        insertImage(imageUrl);
+      };
+    };
+  };
+
+  const insertImage = (url) => {
+    const quill = quillRef.current.getEditor();
+    const range = quill.getSelection();
+    quill.insertEmbed(range.index, "image", url);
+  };
+
+  const quillRef = React.useRef();
+
+  const deleteImage = () => {
+    const quill = quillRef.current.getEditor();
+    const range = quill.getSelection();
+    const [block, offset] = quill.scroll.descendant(
+      "image",
+      range.index,
+      true
+    );
+
+    if (block) {
+      quill.deleteText(range.index, 1);
+    }
+  };
+
+  const renderImages = () => {
+    // Render each image with a delete button
+    return images.map((imageUrl) => (
+      <div key={imageUrl} className="image-container">
+        <img src={imageUrl} alt="Uploaded" />
+        <button onClick={() => deleteImage(imageUrl)}>X</button>
+      </div>
+    ));
+  };
+
+  const modules = {
+    toolbar: {
+      container: [
+      ['link', 'image'],
+      ["delete-image"]
+      ],
+      handlers: {
+        image: handleImageUpload,
+        "delete-image": deleteImage
+      },
+  },
+    
+    clipboard: {
+      // toggle to add extra line breaks when pasting HTML:
+      matchVisual: false,
+    },
+  };
+
   return (
     <>
       {/* <Navbar className="flex md:flex-col flex-row md:gap-5 items-center justify-center mb-0.5 md:px-5 w-full" /> */}
@@ -137,6 +230,7 @@ const Message = () => {
             className="flex flex-col sm:w-full w-[50rem]"
           >
             <ReactQuill
+              ref={quillRef}
               theme="snow"
               value={message}
               modules={modules}
@@ -150,6 +244,7 @@ const Message = () => {
             >
               Submit
             </button>
+            <div className="image-list">{renderImages()}</div>
           </form>
         </div>
       </div>
