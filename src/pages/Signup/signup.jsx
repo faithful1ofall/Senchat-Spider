@@ -14,8 +14,7 @@ import { NFTStorage, File } from 'nft.storage';
 import ContractABI from '../../utils/contractabi.json';
 
 
-const NFT_STORAGE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweGZkZjE1M0U2ODEzZWZFNDRCNTEyMzU2REFGMjQ1NGE0YzAwYTMwN0IiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTcwNjgzMjU5NzAzNiwibmFtZSI6IjFzdCBrZXkifQ._nwCM9oIRCYSLv4MW8_8Mtb6R0Lvr7XwsQrpCu0cSLg'
-
+const NFT_STORAGE_KEY = process.env.REACT_APP_NFT_STORAGE_KEY;
 
 const Signup = () => {
   const [isConnected, setIsConnected] = useState();
@@ -36,8 +35,8 @@ const Signup = () => {
 
   const metadata = {
     name: 'Senchat',
-    description: 'Senchat web3Modal connector',
-    url: 'https://senchatfront.vercel.app/'
+    description: 'Senchat Decentralized Social media',
+    url: 'https://senchatdapp.vercel.app/'
   }
 
   //create wagmi config
