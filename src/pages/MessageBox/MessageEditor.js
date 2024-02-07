@@ -5,4 +5,5 @@
 export const formats = [
   "link",
   "image",
+  "delete-image"
 ];
