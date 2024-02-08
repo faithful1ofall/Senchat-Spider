@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Button, Img, Text } from "components";
-import Header from "components/Header2/navbar";
-// import Header from "components/Header/index";
+// import Header from "components/Header2/navbar";
+import Header from "components/Header/index";
 import { configureChains, createConfig, InjectedConnector, getAccount, readContract, watchAccount } from '@wagmi/core';
 import { publicProvider } from '@wagmi/core/providers/public';
 import { bscTestnet } from "viem/chains";
@@ -95,7 +95,7 @@ const Signin = () => {
             address: nftcontract,
             abi: ContractABI,
             functionName: 'tokenURI',
-            args: [`12${big}`]
+            args: [`1${big}`]
           });
           const hash = url.replace('ipfs://', '');
           const cloudflareUrl = `https://cloudflare-ipfs.com/ipfs/${hash}`;

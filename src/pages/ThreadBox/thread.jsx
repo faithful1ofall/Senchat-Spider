@@ -67,7 +67,7 @@ const Thread = () => {
       <div className="bg-gray-100 flex flex-col font-prompt items-center justify-end mx-auto w-full">
         <div className="flex flex-col items-center justify-end w-full">
           <div className="flex md:flex-col flex-row gap-5 items-start justify-between mx-auto md:px-5 w-full">
-            <Sidebar11 className="!sticky !w-[392px] bg-gray-100 flex h-screen md:hidden justify-start overflow-auto top-[0]" />
+            {/* <Sidebar11 className="!sticky !w-[392px] bg-gray-100 flex h-screen md:hidden justify-start overflow-auto top-[0]" /> */}
             <div className="flex flex-1 flex-col gap-2.5 items-center justify-start pl-[9px] w-full">
               <div className="bg-gray-100 flex flex-col items-center justify-end pr-[17px] py-[17px] w-full">
                 <div className="flex flex-col items-center justify-start mt-[50px] w-[98%] md:w-full">

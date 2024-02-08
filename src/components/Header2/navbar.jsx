@@ -11,6 +11,7 @@ const Navbar = ({ children }) => {
   const [framesixvalue, setFramesixvalue] = React.useState("");
   const [openNav, setOpenNav] = useState(false);
   const [userData, setUserData] = useState();
+  const [userimage, setUserimage] = useState();
 
   // const location = useLocation();
 
@@ -19,6 +20,9 @@ const Navbar = ({ children }) => {
     if (userDataParam) {
       const parsedUserData = JSON.parse(userDataParam);
       setUserData(parsedUserData);
+      const image = parsedUserData.image.replace('ipfs://', '');
+      const imageurl = `https://cloudflare-ipfs.com/ipfs/${image}`;
+      setUserimage(imageurl);
     }
   }, []);
 
@@ -42,43 +46,10 @@ const Navbar = ({ children }) => {
             </a>
           </div>
           <ul className="flex md:hidden justify-between items-center gap-2">
-            {/* <div className="flex">
-              <h1 className="" onClick={() => setOpenNav(!openNav)}>
-                {openNav ? "Menu" : "Close"}
-              </h1>
-            </div> */}
-            {/* <li className="hover:text-teal-A400 text-xl ml-[51px]">
-            <NavLink
-              className={({ isPending, isActive }) =>
-                isPending
-                  ? "pending"
-                  : isActive
-                  ? " text-teal-A400 text-xl"
-                  : ""
-              }
-              to="/education"
-            >
-              <Text size="txtPromptBold20WhiteA700">Forum</Text>
-            </NavLink>
-          </li> */}
-
-            {/* <li className="hover:text-teal-A400 text-xl ml-[51px]">
-            <NavLink
-              className={({ isPending, isActive }) =>
-                isPending
-                  ? "pending"
-                  : isActive
-                  ? " text-teal-A400 text-xl"
-                  : ""
-              }
-              to="/thread"
-            >
-              <Text size="txtPromptBold20WhiteA700">Threads</Text>
-            </NavLink>
-          </li> */}
+            
 
             <li className="hover:text-teal-A400 text-xl ml-[51px]">
-              <NavLink
+               <NavLink
                 className={({ isPending, isActive }) =>
                   isPending
                     ? "pending"
@@ -86,13 +57,13 @@ const Navbar = ({ children }) => {
                     ? " text-teal-A400 text-xl"
                     : ""
                 }
-                to="/nft-index"
+                to="/education"
               >
-                <Text size="txtPromptBold20">NFT</Text>
-              </NavLink>
+                <Text size="txtPromptBold20"> Feeds </Text>
+              </NavLink> 
             </li>
 
-            <Input
+            {/* <Input
               name="frameSix"
               placeholder="Search...."
               value={framesixvalue}
@@ -118,7 +89,7 @@ const Navbar = ({ children }) => {
                   viewBox="0 0 17 17"
                 />
               }
-            ></Input>
+            ></Input> */}
             <div className="flex items-center gap-4">
               <Link to="/message">
                 <Text className="text-[17px]" size="txtPromptBold20WhiteA700">
@@ -132,13 +103,13 @@ const Navbar = ({ children }) => {
                 to="/user"
                 className="flex items-center h-[35px] rounded-[50%] w-[35px]"
               >
-                <Img src="images/img_ellipse42.png" alt="ellipseFortyTwo" />
+                <Img src={userimage} alt="userimage" />
               </NavLink>
-              <Img
+             {/*  <Img
                 className="h-[23px] "
                 src="images/img_notification.svg"
                 alt="notification"
-              />
+              /> */}
             </div>
           </ul>
 
@@ -219,7 +190,7 @@ const Navbar = ({ children }) => {
                     </NavLink>
                   </li> */}
 
-                  <Input
+                  {/*<Input
                     name="frameSix"
                     placeholder="Search...."
                     value={framesixvalue}
@@ -245,7 +216,7 @@ const Navbar = ({ children }) => {
                         viewBox="0 0 17 17"
                       />
                     }
-                  ></Input>
+                  ></Input>*/}
                   <div className="flex items-center justify-self-end gap-4">
                     <Link to="/message">
                       <Text
@@ -263,15 +234,15 @@ const Navbar = ({ children }) => {
                       className="flex items-center h-[25px] rounded-[50%] w-[25px]"
                     >
                       <Img
-                        src="images/img_ellipse42.png"
-                        alt="ellipseFortyTwo"
+                        src={userimage}
+                        alt="userimage"
                       />
                     </NavLink>
-                    <Img
+                    {/* <Img
                       className="h-[21px] "
                       src="images/img_notification.svg"
                       alt="notification"
-                    />
+                    /> */}
                   </div>
                 </ul>
               </>

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Button, Img, Input, Text } from "components";
-// import Header from "components/Header/index";
-import Header from "components/Header2/navbar";
+import Header from "components/Header/index";
+// import Header from "components/Header2/navbar";
 import { configureChains, createConfig, InjectedConnector, getAccount, readContract, writeContract } from '@wagmi/core';
 import { publicProvider } from '@wagmi/core/providers/public';
 import { bscTestnet } from "viem/chains";
@@ -14,7 +14,7 @@ import { NFTStorage, File } from 'nft.storage';
 import ContractABI from '../../utils/contractabi.json';
 
 
-const NFT_STORAGE_KEY = process.env.REACT_APP_NFT_STORAGE_KEY;
+
 
 const Signup = () => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -25,6 +25,7 @@ const Signup = () => {
   const [errMessage, seterrMessage] = useState(null);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
+  const NFT_STORAGE_KEY = process.env.REACT_APP_NFT_STORAGE_KEY;
   const projectId = process.env.REACT_APP_PROJECTID;
   const nftcontract = process.env.REACT_APP_NFTCONTRACT;
   const chainId = bscTestnet.id;
@@ -136,24 +137,17 @@ const Signup = () => {
           address: nftcontract,
           abi: ContractABI,
           functionName: 'tokenURI',
-          args: [`13${big}`]
+          args: [`1${big}`]
         });
         seterrMessage('Account Alread Exist and verified try signing in');
       } catch (error) {
-        console.log(selectedFile);
-
         const reader = new FileReader();
 
         reader.onload = async () => {
 
-          console.log(selectedFile);
-
           const content = reader.result;
-          console.log(content);
 
           const image = new File([new Uint8Array(content)], filename, { type: filetype });
-
-          console.log(image);
 
           const nftstorage = new NFTStorage({ token: NFT_STORAGE_KEY });
 
@@ -168,8 +162,6 @@ const Signup = () => {
           const response = await nftstorage.store(
             signupData
           );
-
-          console.log(response);
 
           try {
             await writeContract({

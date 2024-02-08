@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CKEditor from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import ReactQuill from "react-quill";
@@ -11,6 +11,16 @@ import Navbar from "components/Header2/navbar";
 import { config } from "./MessageEditor";
 
 import { CloseSVG } from "../../assets/images";
+import { post } from "utils/request";
+import { configureChains, createConfig, InjectedConnector, getAccount, readContract, writeContract } from '@wagmi/core';
+import { publicProvider } from '@wagmi/core/providers/public';
+import { bscTestnet } from "viem/chains";
+import { parseGwei, hexToBigInt } from 'viem';
+import { createWeb3Modal, walletConnectProvider, EIP6963Connector } from '@web3modal/wagmi';
+import { CoinbaseWalletConnector } from '@wagmi/core/connectors/coinbaseWallet';
+import { WalletConnectConnector } from '@wagmi/core/connectors/walletConnect';
+import { NFTStorage, File } from 'nft.storage';
+import ContractABI from '../../utils/contractabi.json';
 
 const Message = () => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -20,8 +30,52 @@ const Message = () => {
   const [message, setMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const projectId = process.env.REACT_APP_PROJECTID;
+  const nftcontract = process.env.REACT_APP_NFTCONTRACT;
+  const NFT_STORAGE_KEY = process.env.REACT_APP_NFT_STORAGE_KEY;
+  const chainId = bscTestnet.id;
+  const [count, setCount] = useState(0);
 
-  console.log(message);
+
+  if (!projectId) {
+    throw new Error('please check the PROJECT_ID env variable');
+  }
+
+  const metadata = {
+    name: 'Senchat',
+    description: 'Senchat Decentralized Social media',
+    url: 'https://senchatdapp.vercel.app/'
+  }
+
+  //create wagmi config
+  const { chains, publicClient } = configureChains(
+    [bscTestnet],
+    [walletConnectProvider({ projectId }), publicProvider()]
+  )
+
+  const wagmiConfig = createConfig({
+    autoConnect: true,
+    connectors: [
+      new WalletConnectConnector({ chains, options: { projectId, showQrModal: false, metadata } }),
+      new EIP6963Connector({ chains }),
+      new InjectedConnector({ chains, options: { shimDisconnect: true } }),
+      new CoinbaseWalletConnector({ chains, options: { appName: metadata.name } })
+    ],
+    publicClient
+  })
+
+  const modal = createWeb3Modal({
+    wagmiConfig,
+    projectId,
+    chains,
+    defaultChain: bscTestnet
+  });
+
+  const account = getAccount();
+
+  const userDataParam = localStorage.getItem('userData');
+
+  const userData = JSON.parse(userDataParam);
 
   // const handleAlert = () => {
   //   setAlertMessage("Your post has been sent!");
@@ -30,26 +84,52 @@ const Message = () => {
   //   }, 3000);
   // };
 
+  const digit = hexToBigInt(account.address);
+  const big = digit % 10000n;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await readContract({
+          address: nftcontract,
+          abi: ContractABI,
+          functionName: 'tokenURI',
+          args: [`2${big}${count}`]
+        });
+        setCount(prevCount => prevCount + 1);
+      } catch (error) {
+        console.log(count);
+        
+      }
+    };
+    fetchData();
+  }, [count]);
+
   const handleChange = (e) => {
     const messageValue =
       e.target.children[0].childNodes[1].firstElementChild.innerHTML;
     setMessage(messageValue);
-    console.log(messageValue);
-    const quill = quillRef.current.getEditor();
-    const delta = quill.getContents();
-    const imageUrls = extractImageUrls(delta.ops);
-    setImages(imageUrls);
   };
 
-  const extractImageUrls = (ops) => {
-    // Extract image URLs from the Delta object
-    const urls = [];
-    for (const op of ops) {
-      if (op.insert && typeof op.insert === "object" && op.insert.image) {
-        urls.push(op.insert.image);
-      }
-    }
-    return urls;
+  useEffect(() => {
+    const fetchData = async () => {
+        if (!selectedFile && !filename) {
+          const imageOriginUrl = process.env.REACT_APP_LOGO;
+          const r = await fetch(imageOriginUrl);
+          const rb = await r.blob();
+          setSelectedFile(rb);
+          setFilename('senchatlogo.png');
+          setFiletype('image/png');
+        }
+      };
+      fetchData();
+    });
+
+  const handleFileChange = () => {
+    const doc = document.querySelector('input[type="file"]');
+    setSelectedFile(doc.files[0]);
+    setFilename(doc.files[0].name);
+    setFiletype(doc.files[0].type);
   };
 
   const handleSubmit = async (e) => {
@@ -65,56 +145,71 @@ const Message = () => {
       }, 3000);
     } else {
       console.log(messageValue);
+      console.log(count);
 
+      const currentDate = new Date();
+      const formattedDate = currentDate.toISOString(); // Convert to ISO string format
+      console.log("Current Date and Time:", formattedDate);
+
+      if (account.isConnected) {
+
+
+  
+          const reader = new FileReader();
+  
+          reader.onload = async () => {
+  
+            const content = reader.result;
+  
+            const image = new File([new Uint8Array(content)], filename, { type: filetype });
+  
+            const nftstorage = new NFTStorage({ token: NFT_STORAGE_KEY });
+  
+            const postData = {
+              image,
+              name: `SEN_CHAT_POST`,
+              username: userData.name,
+              description: messageValue,
+              date: formattedDate,
+              address: account.address,
+              chainId: chainId,
+
+            };
+  
+            const response = await nftstorage.store(
+              postData
+            );
+
+            console.log(response);
+  
+            try {
+              await writeContract({
+                address: nftcontract,
+                abi: ContractABI,
+                functionName: 'userMint',
+                args: [account.address, `2${big}${count}`, `${response.url}`],
+                value: parseGwei('100'),
+              });
+              setSuccessMessage('Successfully minted the post');
+            } catch (error) {
+              setErrorMessage(`Insufficient balance/Rejected Transaction`);
+              nftstorage.delete(response.ipnft);
+            };
+  
+          }
+          reader.readAsArrayBuffer(selectedFile);  
+  
+      } else {
+        setErrorMessage('Account Not Connected')
+        console.error('Account not connected');
+      }
       setSuccessMessage("Your post has been sent!");
-      setTimeout(() => {
+      /* setTimeout(() => {
         setSuccessMessage("");
       }, 3000);
-      setMessage("");
+      setMessage(""); */
     }
   };
-
-  const handleFileChange = () => {
-    const doc = document.querySelector('input[type="file"]');
-    setSelectedFile(doc.files[0]);
-    
-    setFilename(doc.files[0].name);
-    setFiletype(doc.files[0].type);
-  };
-
-
-  const handleImageUpload = () => {
-
-    const input = document.createElement('input');
-
-    console.log('input:', input);
-
-    input.setAttribute('type', 'file');
-    input.setAttribute('accept', 'image/*');
-    input.click();
-
-    input.onchange = async () => {
-      const file = input.files[0];
-      console.log('file', file);
-     /*  const formData = new FormData();
-      formData.append('image', file); */
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        const imageUrl = reader.result;
-        console.log(imageUrl);
-        insertImage(imageUrl);
-      };
-    };
-  };
-
-  const insertImage = (url) => {
-    const quill = quillRef.current.getEditor();
-    const range = quill.getSelection();
-    quill.insertEmbed(range.index, "image", url);
-  };
-
-  const quillRef = React.useRef();
 
   const modules = {
     toolbar: {
@@ -165,19 +260,6 @@ const Message = () => {
                     alt="arrowright_One"
                   />
                 </div>
-                {/* <div className="flex items-center flex-1">
-                  <Text
-                    className="text-[16.8px] sm:text-[14px] text-blue_gray-400"
-                    size="txtPromptMedium168"
-                  >
-                    Thread topic
-                  </Text>
-                  <Img
-                    className="h-5 sm:h-4"
-                    src="images/img_arrowright.svg"
-                    alt="arrowright_Two"
-                  />
-                </div> */}
               </div>
             </div>
           </div>
@@ -206,7 +288,6 @@ const Message = () => {
             className="flex flex-col sm:w-full w-[50rem]"
           >
             <ReactQuill
-              ref={quillRef}
               theme="snow"
               value={message}
               modules={modules}

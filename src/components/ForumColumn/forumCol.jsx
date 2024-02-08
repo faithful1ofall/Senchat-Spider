@@ -54,7 +54,7 @@ const DesktopFourColumnp = (props) => {
         args: [`${tokenId}`]
       });
 
-      const startsWithB2 = tokenId.toString().startsWith("1")
+      const startsWithB2 = tokenId.toString().startsWith("2")
 
       if (startsWithB2) {
         console.log(tokenId, tokenURI);
@@ -76,7 +76,7 @@ const DesktopFourColumnp = (props) => {
     const allTokenDetails = [];
 
     // Create an array of promises for concurrent execution
-    const promises = Array.from({ length: endIndex - startIndex + 1 }, (_, i) => func(i + startIndex));
+    const promises = Array.from({ length: endIndex - startIndex + 1 }, (_, i) => func(endIndex - i));
 
     // Use Promise.all to wait for all promises to resolve
     const results = await Promise.all(promises);
@@ -128,17 +128,22 @@ const DesktopFourColumnp = (props) => {
             const image = jsonData.image.replace('ipfs://', '');
             const imageurl = `https://cloudflare-ipfs.com/ipfs/${image}`;
 
+            const dateObject = new Date(jsonData.date);
+            const hours = dateObject.getHours();
+            const minutes = dateObject.getMinutes();
+            const date = dateObject.toLocaleDateString([], { year: 'numeric', month: '2-digit', day: '2-digit' });
+          
             setthreadData((prevData) => [
               ...prevData,
               { 
                 data: imageurl, 
-                titleofprops: jsonData.description, 
-                anasabdin: jsonData.name, 
+                titleofprops: jsonData.username, 
+                anasabdin: jsonData.description, 
                 education: 'Feeds', 
-                time: 'Time', 
+                time: `${hours}:${minutes} ${date}`, 
                 cid: hash,
                 repliescounter13: 'Replies Counter',
-                anasabdinone10: 'Anas Abdin One',
+                anasabdinone10: jsonData.username,
               },
             ]);
 
@@ -163,7 +168,7 @@ const DesktopFourColumnp = (props) => {
         threadData1.map((thread, index) => (
           <div key={index} className="flex flex-col gap-[20px] items-center w-full shadow-xl">
             <div>{thread.titleofthread}</div>
-            <div>{thread.anasabdin}</div>
+            {/* <div>{thread.anasabdin}</div> */}
             <Link
               to={`/thread/${encodeURIComponent(thread.cid)}`}
               className="flex flex-1 md:flex-col flex-row gap-[16px] items-start justify-start max-w-[1039px] px-5 py-[15px] w-full"
@@ -208,6 +213,7 @@ const DesktopFourColumnp = (props) => {
                     size="txtPromptMedium14"
                   >
                     {thread?.time}
+                    
                   </Text>
                 </div>
               </div>
