@@ -249,6 +249,8 @@ const Signup = () => {
                 onChange={handleChangeemail}
               ></Input>
             </div>
+            <Input type="file" />
+            <Button >Upload Profile pics</Button>
             <Button
               onClick={connectToWeb3}
               className="bg-teal-A400 cursor-pointer font-medium leading-[normal] min-w-full py-[19px] rounded-[32px] text-[17.51px] text-black-900 text-center"
