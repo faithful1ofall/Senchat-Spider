@@ -17,6 +17,9 @@ import ContractABI from '../../utils/contractabi.json';
 const NFT_STORAGE_KEY = process.env.REACT_APP_NFT_STORAGE_KEY;
 
 const Signup = () => {
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [filename, setFilename] = useState(null);
+  const [filetype, setFiletype] = useState(null);
   const [isConnected, setIsConnected] = useState();
   const [successMessage, setSuccessMessage] = useState(null);
   const [errMessage, seterrMessage] = useState(null);
@@ -95,13 +98,35 @@ const Signup = () => {
   };
 
 
+
+  useEffect(() => {
+    const fetchData = async () => {
+        if (!selectedFile && !filename) {
+          const imageOriginUrl = process.env.REACT_APP_LOGO;
+          const r = await fetch(imageOriginUrl);
+          const rb = await r.blob();
+          setSelectedFile(rb);
+          setFilename('senchatlogo.png');
+          setFiletype('image/png');
+        }
+      };
+      fetchData();
+    });
+
+
+  const handleFileChange = () => {
+    const doc = document.querySelector('input[type="file"]');
+    setSelectedFile(doc.files[0]);
+    setFilename(doc.files[0].name);
+    setFiletype(doc.files[0].type);
+  };
+
+
+
+
   const generateNonceAndSign = async () => {
 
     if (isConnected) {
-
-      const imageOriginUrl = process.env.REACT_APP_LOGO;
-      const r = await fetch(imageOriginUrl);
-      const rb = await r.blob();
 
       const digit = hexToBigInt(account.address);
       const big = digit % 10000n;
@@ -111,17 +136,24 @@ const Signup = () => {
           address: nftcontract,
           abi: ContractABI,
           functionName: 'tokenURI',
-          args: [`12${big}`]
+          args: [`13${big}`]
         });
         seterrMessage('Account Alread Exist and verified try signing in');
       } catch (error) {
+        console.log(selectedFile);
 
         const reader = new FileReader();
 
         reader.onload = async () => {
-          const content = reader.result;
 
-          const image = new File([new Uint8Array(content)], 'senchatlogo.png', { type: 'image/png' });
+          console.log(selectedFile);
+
+          const content = reader.result;
+          console.log(content);
+
+          const image = new File([new Uint8Array(content)], filename, { type: filetype });
+
+          console.log(image);
 
           const nftstorage = new NFTStorage({ token: NFT_STORAGE_KEY });
 
@@ -150,13 +182,13 @@ const Signup = () => {
             setSuccessMessage('Successfully signed and verified');
             history('/signin');
           } catch (error) {
-            seterrMessage(`Insufficient balance ${response.data} ${response.data.metadata}`);
+            seterrMessage(`Insufficient balance`);
             nftstorage.delete(response.ipnft);
             history('/signup');
           };
 
         }
-        reader.readAsArrayBuffer(rb);
+        reader.readAsArrayBuffer(selectedFile);
       };
 
 
@@ -249,8 +281,23 @@ const Signup = () => {
                 onChange={handleChangeemail}
               ></Input>
             </div>
-            <Input type="file" />
-            <Button >Upload Profile pics</Button>
+            <Text
+                className="text-[15.32px] text-gray-800 w-auto"
+                size="txtPromptMedium1532"
+              >
+                Choose Profile Picture (optional i.e Senchat Logo will be choosed instead)
+              </Text>
+              <label className="text-[15.32px] text-gray-800 w-auto relative overflow-hidden border border-gray-300 px-3 py-2 rounded cursor-pointer">
+                <span>Select a file</span>
+                <input
+                  type="file"
+                  className="absolute inset-0 opacity-0"
+                  onChange={handleFileChange}
+                />
+              </label>
+              <p>{filename}</p>
+            {/* <Input type="file" className="text-[15.32px] text-gray-800 w-auto"
+                size="txtPromptMedium1532" onChange={handleFileChange} placeholder="Select a file" /> */}
             <Button
               onClick={connectToWeb3}
               className="bg-teal-A400 cursor-pointer font-medium leading-[normal] min-w-full py-[19px] rounded-[32px] text-[17.51px] text-black-900 text-center"

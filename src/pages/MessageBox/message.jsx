@@ -13,6 +13,9 @@ import { config } from "./MessageEditor";
 import { CloseSVG } from "../../assets/images";
 
 const Message = () => {
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [filename, setFilename] = useState(null);
+  const [filetype, setFiletype] = useState(null);
   const [images, setImages] = useState([]);
   const [message, setMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -71,6 +74,14 @@ const Message = () => {
     }
   };
 
+  const handleFileChange = () => {
+    const doc = document.querySelector('input[type="file"]');
+    setSelectedFile(doc.files[0]);
+    
+    setFilename(doc.files[0].name);
+    setFiletype(doc.files[0].type);
+  };
+
 
   const handleImageUpload = () => {
 
@@ -105,40 +116,11 @@ const Message = () => {
 
   const quillRef = React.useRef();
 
-  const deleteImage = () => {
-    const quill = quillRef.current.getEditor();
-    const range = quill.getSelection();
-    const [block, offset] = quill.scroll.descendant(
-      "image",
-      range.index,
-      true
-    );
-
-    if (block) {
-      quill.deleteText(range.index, 1);
-    }
-  };
-
-  const renderImages = () => {
-    // Render each image with a delete button
-    return images.map((imageUrl) => (
-      <div key={imageUrl} className="image-container">
-        <img src={imageUrl} alt="Uploaded" />
-        <button onClick={() => deleteImage(imageUrl)}>X</button>
-      </div>
-    ));
-  };
-
   const modules = {
     toolbar: {
       container: [
-      ['link', 'image'],
-      ["delete-image"]
+      ['link'],
       ],
-      handlers: {
-        image: handleImageUpload,
-        "delete-image": deleteImage
-      },
   },
     
     clipboard: {
@@ -154,12 +136,6 @@ const Message = () => {
       <div className="bg-gray-100 flex flex-col font-prompt items-center justify-end mx-auto">
         <div className="flex flex-col gap-[11px] items-center justify-start  mt-[3px] mx-auto pb-[14px] md:px-5 w-full">
           <div className="bg-gray-100 flex flex-col gap-1.5 justify-center pl-1 py-1 w-full">
-           {/*  <Text
-              className="md:ml-[0] ml-[15px] mr-[1044px] mt-[68px] sm:text-4xl md:text-[38px] text-[40px] text-black-100"
-              size="txtPromptBold20"
-            >
-              Thread your feeling
-            </Text> */}
             <div className="h-7 md:h-[31px] mt-[3px] w-full">
               <div className="flex px-5 gap-8 sm:gap-[0.6rem] border border-solid border-teal-100 mt-auto mx-auto w-full md:h-7 h-[26px] m-auto">
                 {/* <div className="border border-solid border-teal-100 h-7 mt-auto mx-auto w-full"></div> */}
@@ -238,13 +214,21 @@ const Message = () => {
               placeholder="Whats on your mind..."
               onEditorChange={handleChange}
             />
+            <label className="text-[15.32px] text-gray-800 w-auto relative overflow-hidden border border-gray-300 px-3 py-2 rounded cursor-pointer">
+                <span>Select a file</span>
+                <input
+                  type="file"
+                  className="absolute inset-0 opacity-0"
+                  onChange={handleFileChange}
+                />
+              </label>
+              <p>{filename}</p>
             <button
               type="submit"
               className="bg-cyan-300 py-2 px-3 rounded-md mt-5 "
             >
               Submit
             </button>
-            <div className="image-list">{renderImages()}</div>
           </form>
         </div>
       </div>
