@@ -17,29 +17,57 @@ const Thread = (props) => {
               }
   
               const jsonData = await response.json();
-  
-              console.log(jsonData);
+
 
               const image = jsonData.image.replace('ipfs://', '');
               const imageurl = `https://cloudflare-ipfs.com/ipfs/${image}`;
 
+              /* const userimage = jsonData.userimage.replace('ipfs://', '');
+              const userimageurl = `https://cloudflare-ipfs.com/ipfs/${userimage}`; */
+
+              const dateObject = new Date(jsonData.date);
+              const hours = dateObject.getHours();
+              const minutes = dateObject.getMinutes();
+              const date = dateObject.toLocaleDateString([], { year: 'numeric', month: '2-digit', day: '2-digit' });
+            
+
               setThread(() => [
                 { 
                   data: imageurl, 
+                  /* userimage: userimageurl, */
                   titleofprops: jsonData.description, 
-                  anasabdin: jsonData.name, 
+                  description: jsonData.description,
+                  anasabdin: jsonData.username, 
                   education: 'Feeds', 
-                  time: 'Time', 
+                  time: `${hours}:${minutes} ${date}`, 
                   repliescounter13: 'Replies Counter',
                   anasabdinone10: 'Anas Abdin One',
+                  like: "Like",
+                  quote: "Quote",
+                  reply: "Reply",
                 },
               ]);
   }
-  
+
   useEffect(() => {
     data();
   }, []);
 
+
+    const handleShare = async () => {
+      try {
+        if (navigator.share) {
+          const item = thread1[0];
+          await navigator.share({title: item.anasabdin, text: thread1[0].description, url: thread1[0].data  });
+          console.log('Shared successfully');
+        } else {
+          console.log('Web Share API not supported');
+        }
+      } catch (error) {
+        console.error('Error sharing:', error.message);
+      }
+    };
+  
 
   return (
     <>
@@ -54,7 +82,7 @@ const Thread = (props) => {
             <Img
                   src={thread?.data}
                   alt="Image Alt Text"
-                  className="cursor-pointer h-[46px] w-[46px] rounded-[10px]"
+                  className="h-[46px] w-[46px] rounded-[10px]"
                 />
             <Text
               className="mt-[11px] text-black-900 text-xl"
@@ -66,7 +94,7 @@ const Thread = (props) => {
               className="mb-[330px] text-teal-A400 text-xl"
               size="txtPromptSemiBold20"
             >
-              {thread?.seniormember}
+              {thread?.anasabdin}
             </Text>
           </div>
           <div className="flex md:flex-1 flex-col items-center justify-start w-[78%] md:w-full">
@@ -77,23 +105,24 @@ const Thread = (props) => {
               >
                 {thread?.time}
               </Text>
-              <div className="flex flex-row items-start justify-center mr-4">
+              <div className="flex flex-row items-start justify-center mr-4" onClick={handleShare}>
                 <Img
-                  className="h-[22px] mt-[3px]"
-                  src="images/img_search_teal_a400.svg"
-                  alt="search"
+                  onClick={handleShare}
+                  className="h-[22px] mt-[3px] cursor-pointer"
+                  src="../images/img_search_teal_a400.svg"
+                  alt="share"
                 />
-                <Img
+                {/* <Img
                   className="h-[22px] ml-[23px] mt-1"
-                  src="images/img_bookmark.svg"
+                  src="../images/img_bookmark.svg"
                   alt="bookmark"
-                />
-                <Text
+                /> */}
+                {/* <Text
                   className="ml-5 sm:text-[17px] md:text-[19px] text-[21px] text-teal-A400"
                   size="txtPromptMedium21"
                 >
                   {thread?.one}
-                </Text>
+                </Text> */}
               </div>
             </div>
             <div className="bg-white-A700 flex flex-col gap-6 items-start justify-start max-w-[808px] p-5 w-full">
@@ -103,12 +132,17 @@ const Thread = (props) => {
               >
                 {thread?.description}
               </Text>
+              <Img
+                  src={thread?.data}
+                  alt="Image Alt Text"
+                  className="cursor-pointer h-[260px] w-[260px]"
+                />
               <div className="flex sm:flex-col flex-row sm:gap-5 items-center justify-start w-[51%] md:w-full">
                 <Button
                   className="bg-black-900 cursor-pointer flex items-center justify-center min-w-[109px] px-5 py-3.5 rounded-[7px]"
                   leftIcon={
-                    <div className="mr-[7px] bg-white-A700 my-[3px]">
-                      <Img src="images/img_edit_white_a700.svg" alt="edit" />
+                    <div className="mr-[7px] bg-dark-A700 my-[3px]">
+                      <Img src="../images/img_edit_white_a700.svg" alt="edit" />
                     </div>
                   }
                 >
@@ -119,10 +153,10 @@ const Thread = (props) => {
                 <Button
                   className="bg-black-900 cursor-pointer flex items-center justify-center min-w-[108px] sm:ml-[0] ml-[30px] px-3 py-3.5 rounded-[7px]"
                   leftIcon={
-                    <div className="h-[21px] mr-[7px] w-[21px] bg-white-A700 my-[3px]">
+                    <div className="h-[21px] mr-[7px] w-[21px] bg-dark-A700 my-[3px]">
                       <Img
                         className="h-[21px]"
-                        src="images/img_grid.svg"
+                        src="../images/img_grid.svg"
                         alt="grid"
                       />
                     </div>
@@ -132,12 +166,12 @@ const Thread = (props) => {
                     {thread?.quote}
                   </div>
                 </Button>
-                <Link to="/desktoptwelve">
+                
                   <Button
                     className="bg-teal-A400 cursor-pointer flex items-center justify-center min-w-[108px] sm:ml-[0] ml-[31px] pl-[15px] pr-[11px] py-3.5 rounded-[7px]"
                     leftIcon={
-                      <div className="mt-px mb-[5px] mr-[7px] bg-white-A700">
-                        <Img src="images/img_reply.svg" alt="reply" />
+                      <div className="mt-px mb-[5px] mr-[7px] bg-dark-A700">
+                        <Img src="../images/img_reply.svg" alt="reply" />
                       </div>
                     }
                   >
@@ -145,7 +179,7 @@ const Thread = (props) => {
                       {thread?.reply}
                     </div>
                   </Button>
-                </Link>
+               
               </div>
             </div>
           </div>
@@ -159,7 +193,7 @@ const Thread = (props) => {
   );
 };
 
-Thread.defaultProps = {
+/* Thread.defaultProps = {
   b: "B",
   anasabdin: "@anasabdin",
   seniormember: "Senior member",
@@ -181,6 +215,6 @@ Thread.defaultProps = {
   like: "Like",
   quote: "Quote",
   reply: "Reply",
-};
+}; */
 
 export default Thread;

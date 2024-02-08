@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from 'react-router-dom';
 
- // import { Menu, MenuItem } from "react-pro-sidebar";
+// import { Menu, MenuItem } from "react-pro-sidebar";
 
 import { Img, List, Text } from "components";
 import ThreadColumn from "components/ThreadColumn/threads";
-import Sidebar11 from "components/Sidebar11";
+// import Sidebar11 from "components/Sidebar11";
 import { Link } from "react-router-dom";
 import Navbar from "components/Header2/navbar";
 
@@ -14,49 +14,55 @@ import Navbar from "components/Header2/navbar";
 const Thread = () => {
   const { cid } = useParams();
   const [fdata, setfdata] = useState({});
+  const [time, settime] = useState();
 
   localStorage.setItem('cid', cid);
-  console.log(cid);
 
   const data = async () => {
     const cloudflareUrl = `https://cloudflare-ipfs.com/ipfs/${cid}`;
-              const response = await fetch(cloudflareUrl);
-  
-              if (!response.ok) {
-                throw new Error(`Failed to fetch from IPFS. Status: ${response.status}`);
-              }
-  
-              const jsonData = await response.json();
-  
-              console.log(jsonData);
+    const response = await fetch(cloudflareUrl);
 
-              setfdata(jsonData);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch from IPFS. Status: ${response.status}`);
+    }
 
-              /* setFetch(() => [
-                { 
-                  desc: jsonData.description, 
-                  name: jsonData.name, 
-                },
-              ]); */
+    const jsonData = await response.json();
 
-              /* const image = jsonData.image.replace('ipfs://', '');
-              const imageurl = `https://cloudflare-ipfs.com/ipfs/${image}`; */
+    setfdata(jsonData);
+
+    const dateObject = new Date(jsonData.date);
+    const hours = dateObject.getHours();
+    const minutes = dateObject.getMinutes();
+    const date = dateObject.toLocaleDateString([], { year: 'numeric', month: '2-digit', day: '2-digit' });
+    
+  
+    settime(` ${hours}:${minutes} ${date} `);
+
+    /* setFetch(() => [
+      { 
+        desc: jsonData.description, 
+        name: jsonData.name, 
+      },
+    ]); */
+
+    /* const image = jsonData.image.replace('ipfs://', '');
+    const imageurl = `https://cloudflare-ipfs.com/ipfs/${image}`; */
 
   };
-  
+
   useEffect(() => {
     data();
-  });
+  }, []);
 
 
-  
 
-/*   const [framesixvalue, setFramesixvalue] = React.useState("");
-  const sideBarMenu = [
-    { label: "Title of Thread" },
-    { label: "@anasabdin" },
-    { label: "Replies 200" },
-  ]; */
+
+  /*   const [framesixvalue, setFramesixvalue] = React.useState("");
+    const sideBarMenu = [
+      { label: "Title of Thread" },
+      { label: "@anasabdin" },
+      { label: "Replies 200" },
+    ]; */
 
 
 
@@ -73,50 +79,51 @@ const Thread = () => {
                 <div className="flex flex-col items-center justify-start mt-[50px] w-[98%] md:w-full">
                   <div className="flex sm:flex-col flex-row md:gap-10 items-start justify-between w-[99%] md:w-full">
                     <div className="flex flex-col gap-[5px] items-center justify-start">
-                      <Text
+                     {/*  <Text
                         className="sm:text-4xl md:text-[38px] text-[40px] text-black-900"
                         size="txtPromptBold40"
                       >
-                       {fdata.description != null ? fdata.description : ''}
-                      </Text>
+                        {fdata.description != null ? fdata.description : ''}
+                      </Text> */}
                       <div className="flex flex-row items-start justify-between w-full">
                         <Img
                           className="h-5 mt-0.5 w-5"
-                          src="images/img_user.svg"
+                          src="../images/img_user.svg"
                           alt="user"
                         />
                         <Text
                           className="text-[16.8px] text-blue_gray-400"
                           size="txtPromptMedium168"
                         >
-                         {fdata.name != null ? fdata.name : ''}
+                          {fdata.username != null ? ` ${fdata.username} ` : ''}
                         </Text>
+                      
                         <Img
                           className="h-6 w-6"
-                          src="images/img_clock.svg"
+                          src="../images/img_clock.svg"
                           alt="clock"
                         />
                         <Text
                           className="text-[16.8px] text-blue_gray-400"
                           size="txtPromptMedium168"
                         >
-                          Today at 9pm
+                            {time}
                         </Text>
                       </div>
                     </div>
-                    <Link
+                    {/* <Link
                       to="/message"
                       className="bg-teal-A400 cursor-pointer flex items-center justify-center mb-[5px] min-w-[108px] sm:mt-0 mt-[31px] pl-[15px] pr-[11px] py-3.5 rounded-[7px]"
                       leftIcon={
-                        <div className="mt-px mb-[5px] mr-[7px] bg-white-A700">
-                          <Img src="images/img_reply.svg" alt="reply" />
-                        </div>
+                         <div className="mt-px mb-[5px] mr-[7px] bg-white-A700">
+                          <Img src="../images/img_reply.svg" alt="reply" />
+                        </div> 
                       }
                     >
                       <div className="font-medium leading-[normal] text-left text-lg text-white-A700">
                         Reply
                       </div>
-                    </Link>
+                    </Link> */}
                   </div>
                   <div className="h-7 md:h-[31px] mt-[3px] w-full">
                     <div className="flex px-5 gap-8 sm:gap-[0.6rem] border border-solid border-teal-100 mt-auto mx-auto w-full md:h-7 h-[26px] m-auto">
@@ -130,7 +137,7 @@ const Thread = () => {
                         </Text>
                         <Img
                           className="h-5 sm:h-4"
-                          src="images/img_arrowright.svg"
+                          src="../images/img_arrowright.svg"
                           alt="arrowright"
                         />
                       </div>
@@ -143,7 +150,7 @@ const Thread = () => {
                         </Text>
                         <Img
                           className="h-5 sm:h-4"
-                          src="images/img_arrowright.svg"
+                          src="../images/img_arrowright.svg"
                           alt="arrowright_One"
                         />
                       </div>

@@ -34,7 +34,7 @@ const Navbar = ({ children }) => {
           <a href="/">
             <Img
               className="h-[43px] md:h-auto object-cover w-[4rem] "
-              src="images/img_image3.png"
+              src="../images/img_image3.png"
               alt="imageThree"
             />
             <Text

@@ -170,6 +170,7 @@ const Message = () => {
               name: `SEN_CHAT_POST`,
               username: userData.name,
               description: messageValue,
+              userimage: userData.image,
               date: formattedDate,
               address: account.address,
               chainId: chainId,
