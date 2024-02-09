@@ -1,17 +1,11 @@
 import React, { useState, useEffect } from "react";
-import CKEditor from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { modules, formats } from "./MessageEditor";
+import { formats } from "./MessageEditor";
 import "./messageEditor.css";
 
-import { Button, Img, Input, Text } from "components";
-import Navbar from "components/Header2/navbar";
-import { config } from "./MessageEditor";
+import { Img, Text } from "components";
 
-import { CloseSVG } from "../../assets/images";
-import { post } from "utils/request";
 import { configureChains, createConfig, InjectedConnector, getAccount, readContract, writeContract } from '@wagmi/core';
 import { publicProvider } from '@wagmi/core/providers/public';
 import { bscTestnet } from "viem/chains";
@@ -26,7 +20,6 @@ const Message = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [filename, setFilename] = useState(null);
   const [filetype, setFiletype] = useState(null);
-  const [images, setImages] = useState([]);
   const [message, setMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -99,34 +92,34 @@ const Message = () => {
         setCount(prevCount => prevCount + 1);
       } catch (error) {
         console.log(count);
-        
+
       }
     };
     fetchData();
   }, [count]);
 
-  const handleChange = (e) => {
-    const messageValue =
-      e.target.children[0].childNodes[1].firstElementChild.innerHTML;
-    setMessage(messageValue);
-  };
+  /*   const handleChange = () => {
+      const messageValue = e.target.children[0].childNodes[1].firstElementChild.textContent;
+      setMessage(messageValue);
+      console.log(messageValue);
+    }; */
 
   useEffect(() => {
     const fetchData = async () => {
-        if (!selectedFile && !filename) {
-          const imageOriginUrl = process.env.REACT_APP_LOGO;
-          const r = await fetch(imageOriginUrl);
-          const rb = await r.blob();
-          setSelectedFile(rb);
-          setFilename('senchatlogo.png');
-          setFiletype('image/png');
-        }
-      };
-      fetchData();
-    });
+      if (!selectedFile && !filename) {
+        const imageOriginUrl = process.env.REACT_APP_LOGO;
+        const r = await fetch(imageOriginUrl);
+        const rb = await r.blob();
+        setSelectedFile(rb);
+        setFilename('senchatlogo.png');
+        setFiletype('image/png');
+      }
+    };
+    fetchData();
+  }, [selectedFile, filename]);
 
   const handleFileChange = () => {
-    const doc = document.querySelector('input[type="file"]');
+    const doc = document.querySelector('#fileInput');
     setSelectedFile(doc.files[0]);
     setFilename(doc.files[0].name);
     setFiletype(doc.files[0].type);
@@ -134,77 +127,73 @@ const Message = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const messageValue =
-      e.target.children[0].childNodes[1].firstElementChild.textContent;
-    setMessage(messageValue);
-    if (messageValue == "") {
+    const messageValue = e.target.children[0].childNodes[1].firstElementChild.textContent;
+    setMessage(messageValue)
+    if (messageValue.trim() === "") {
       console.log(messageValue);
       setErrorMessage("This field cant be empty!");
       setTimeout(() => {
         setErrorMessage("");
       }, 3000);
     } else {
+
       console.log(messageValue);
-      console.log(count);
 
       const currentDate = new Date();
-      const formattedDate = currentDate.toISOString(); // Convert to ISO string format
-      console.log("Current Date and Time:", formattedDate);
+      const formattedDate = currentDate.toISOString();
 
       if (account.isConnected) {
 
+        const reader = new FileReader();
 
-  
-          const reader = new FileReader();
-  
-          reader.onload = async () => {
-  
-            const content = reader.result;
-  
-            const image = new File([new Uint8Array(content)], filename, { type: filetype });
-  
-            const nftstorage = new NFTStorage({ token: NFT_STORAGE_KEY });
-  
-            const postData = {
-              image,
-              name: `SEN_CHAT_POST`,
-              username: userData.name,
-              description: messageValue,
-              userimage: userData.image,
-              date: formattedDate,
-              address: account.address,
-              chainId: chainId,
+        reader.onload = async () => {
 
-            };
-  
-            const response = await nftstorage.store(
-              postData
-            );
+          const content = reader.result;
 
-            console.log(response);
-  
-            try {
-              await writeContract({
-                address: nftcontract,
-                abi: ContractABI,
-                functionName: 'userMint',
-                args: [account.address, `2${big}${count}`, `${response.url}`],
-                value: parseGwei('100'),
-              });
-              setSuccessMessage('Successfully minted the post');
-            } catch (error) {
-              setErrorMessage(`Insufficient balance/Rejected Transaction`);
-              nftstorage.delete(response.ipnft);
-            };
-  
-          }
-          reader.readAsArrayBuffer(selectedFile);  
-  
+          const image = new File([new Uint8Array(content)], filename, { type: filetype });
+
+          const nftstorage = new NFTStorage({ token: NFT_STORAGE_KEY });
+
+          const postData = {
+            image,
+            name: `SEN_CHAT_POST`,
+            username: userData.name,
+            description: messageValue,
+            userimage: userData.image,
+            date: formattedDate,
+            address: account.address,
+            chainId: chainId,
+
+          };
+
+          const response = await nftstorage.store(
+            postData
+          );
+
+          console.log(response);
+
+          try {
+            await writeContract({
+              address: nftcontract,
+              abi: ContractABI,
+              functionName: 'userMint',
+              args: [account.address, `2${big}${count}`, `${response.url}`],
+              value: parseGwei('100'),
+            });
+            setSuccessMessage('Successfully minted the post');
+          } catch (error) {
+            setErrorMessage(`Insufficient balance/Rejected Transaction`);
+            nftstorage.delete(response.ipnft);
+          };
+
+        }
+        reader.readAsArrayBuffer(selectedFile);
+
       } else {
         setErrorMessage('Account Not Connected')
         console.error('Account not connected');
       }
-      setSuccessMessage("Your post has been sent!");
+      setSuccessMessage("Your post has been sent! for minting");
       /* setTimeout(() => {
         setSuccessMessage("");
       }, 3000);
@@ -215,10 +204,10 @@ const Message = () => {
   const modules = {
     toolbar: {
       container: [
-      ['link'],
+        ['link'],
       ],
-  },
-    
+    },
+
     clipboard: {
       // toggle to add extra line breaks when pasting HTML:
       matchVisual: false,
@@ -294,17 +283,17 @@ const Message = () => {
               modules={modules}
               formats={formats}
               placeholder="Whats on your mind..."
-              onEditorChange={handleChange}
             />
             <label className="text-[15.32px] text-gray-800 w-auto relative overflow-hidden border border-gray-300 px-3 py-2 rounded cursor-pointer">
-                <span>Select a file</span>
-                <input
-                  type="file"
-                  className="absolute inset-0 opacity-0"
-                  onChange={handleFileChange}
-                />
-              </label>
-              <p>{filename}</p>
+              <span>Select a file</span>
+              <input
+                type="file"
+                id="fileInput"
+                className="absolute inset-0 opacity-0"
+                onChange={handleFileChange}
+              />
+            </label>
+            <p>{filename}</p>
             <button
               type="submit"
               className="bg-cyan-300 py-2 px-3 rounded-md mt-5 "

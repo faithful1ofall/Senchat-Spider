@@ -22,9 +22,12 @@ const Thread = (props) => {
               const image = jsonData.image.replace('ipfs://', '');
               const imageurl = `https://cloudflare-ipfs.com/ipfs/${image}`;
 
-              /* const userimage = jsonData.userimage.replace('ipfs://', '');
-              const userimageurl = `https://cloudflare-ipfs.com/ipfs/${userimage}`; */
+              let userImageUrl = '';
+              if (jsonData.userimage) {
+                const userimage = jsonData.userimage.replace('ipfs://', '');
+                userImageUrl = `https://cloudflare-ipfs.com/ipfs/${userimage}`;
 
+                }
               const dateObject = new Date(jsonData.date);
               const hours = dateObject.getHours();
               const minutes = dateObject.getMinutes();
@@ -34,7 +37,7 @@ const Thread = (props) => {
               setThread(() => [
                 { 
                   data: imageurl, 
-                  /* userimage: userimageurl, */
+                  userimage: userImageUrl,
                   titleofprops: jsonData.description, 
                   description: jsonData.description,
                   anasabdin: jsonData.username, 
@@ -80,7 +83,7 @@ const Thread = (props) => {
               {props?.b}
             </Button> */}
             <Img
-                  src={thread?.data}
+                  src={thread?.userimage}
                   alt="Image Alt Text"
                   className="h-[46px] w-[46px] rounded-[10px]"
                 />

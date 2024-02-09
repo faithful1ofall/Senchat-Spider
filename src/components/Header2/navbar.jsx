@@ -91,11 +91,19 @@ const Navbar = ({ children }) => {
               }
             ></Input> */}
             <div className="flex items-center gap-4">
-              <Link to="/message">
-                <Text className="text-[17px]" size="txtPromptBold20WhiteA700">
+              <NavLink  
+              className={({ isPending, isActive }) =>
+                  isPending
+                    ? "pending"
+                    : isActive
+                    ? " text-teal-A400 text-xl"
+                    : ""
+                }
+                to="/message">
+                <Text size="txtPromptBold20WhiteA700">
                   Post
                 </Text>
-              </Link>
+              </NavLink>
               <Text className="text-base " size="txtPromptBold16">
                 {userData ? userData.name : "Guest"} 
               </Text>
@@ -218,7 +226,14 @@ const Navbar = ({ children }) => {
                     }
                   ></Input>*/}
                   <div className="flex items-center justify-self-end gap-4">
-                    <Link to="/message">
+                    <Link className={({ isPending, isActive }) =>
+                        isPending
+                          ? "pending"
+                          : isActive
+                          ? " text-teal-A400 text-xl"
+                          : ""
+                      }
+                      to="/message">
                       <Text
                         className="text-[17px]"
                         size="txtPromptBold20WhiteA700"

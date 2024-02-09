@@ -57,7 +57,6 @@ const DesktopFourColumnp = (props) => {
       const startsWithB2 = tokenId.toString().startsWith("2")
 
       if (startsWithB2) {
-        console.log(tokenId, tokenURI);
         return {
           tokenId,
           tokenURI,
@@ -87,7 +86,7 @@ const DesktopFourColumnp = (props) => {
     return allTokenDetails;
   }
 
-  const total = async () => {
+  const Total = async () => {
     
 
     const totalSupply = await readContract({
@@ -99,7 +98,7 @@ const DesktopFourColumnp = (props) => {
     const totalSupplyNumber = parseInt(totalSupply, 10);
 
     const allTokenDetails = await fetchAllTokenDetails(0, totalSupplyNumber - 1);
-    console.log('All Token Details:', allTokenDetails);
+
 
     //const threadData = [];
 
@@ -123,10 +122,17 @@ const DesktopFourColumnp = (props) => {
 
             const jsonData = await response.json();
 
-            console.log(jsonData);
 
             const image = jsonData.image.replace('ipfs://', '');
             const imageurl = `https://cloudflare-ipfs.com/ipfs/${image}`;
+
+
+            let userImageUrl = '';
+              if (jsonData.userimage) {
+                const userimage = jsonData.userimage.replace('ipfs://', '');
+                userImageUrl = `https://cloudflare-ipfs.com/ipfs/${userimage}`;
+                }
+            
 
             const dateObject = new Date(jsonData.date);
             const hours = dateObject.getHours();
@@ -139,10 +145,11 @@ const DesktopFourColumnp = (props) => {
                 data: imageurl, 
                 titleofprops: jsonData.username, 
                 anasabdin: jsonData.description, 
-                education: 'Feeds', 
+                education: 'Feeds',
+                userimage: userImageUrl,
                 time: `${hours}:${minutes} ${date}`, 
                 cid: hash,
-                repliescounter13: 'Replies Counter',
+                repliescounter13: '',
                 anasabdinone10: jsonData.username,
               },
             ]);
@@ -157,10 +164,9 @@ const DesktopFourColumnp = (props) => {
   };
 
   useEffect(() => {
-    total();
+    Total();
   }, []);
 
-  console.log(threadData1);
 
   return (
     <div className={props.className}>
@@ -178,7 +184,7 @@ const DesktopFourColumnp = (props) => {
                   {thread?.p}
                 </Button> */}
                 <Img
-                  src={thread?.data}
+                  src={thread?.userimage}
                   alt="Image Alt Text"
                   className="cursor-pointer h-[46px] w-[46px] rounded-[10px]"
                 />

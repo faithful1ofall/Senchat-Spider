@@ -87,8 +87,13 @@ const Signin = () => {
 
   const connectToWeb3 = async () => {
 
-        const digit = hexToBigInt(account.address);
-        const big = digit % 10000n;
+    if (!account.isConnected) {
+      seterrMessage('Account Not Connected');
+      return;
+    }
+
+    const digit = hexToBigInt(account.address);
+    const big = digit % 10000n;
 
         try {
           const url = await readContract({

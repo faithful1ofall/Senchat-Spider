@@ -168,15 +168,15 @@ const Signup = () => {
               address: nftcontract,
               abi: ContractABI,
               functionName: 'userMint',
-              args: [account.address, `12${big}`, `${response.url}`],
+              args: [account.address, `1${big}`, `${response.url}`],
               value: parseGwei('100'),
             });
             setSuccessMessage('Successfully signed and verified');
-            history('/signin');
+            history('/signin', { replace: true });
           } catch (error) {
             seterrMessage(`Insufficient balance`);
             nftstorage.delete(response.ipnft);
-            history('/signup');
+            history('/signup', { replace: true });
           };
 
         }

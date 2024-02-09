@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Img, Text, Button } from "components";
 import { Link } from "react-router-dom";
@@ -13,8 +13,18 @@ import { WalletConnectConnector } from '@wagmi/core/connectors/walletConnect';
 
 const User = () => {
   const userDataParam = localStorage.getItem('userData');
+  const [userimage, setUserimage] = useState();
   const userData = JSON.parse(userDataParam);
-  console.log('JSON Data', userData);
+
+
+
+
+useEffect(() => {
+  const image = userData.image.replace('ipfs://', '');
+  const imageurl = `https://cloudflare-ipfs.com/ipfs/${image}`;
+  setUserimage(imageurl);
+  }, []);
+
 
   const projectId = process.env.REACT_APP_PROJECTID;
   const history = useNavigate();
@@ -54,12 +64,14 @@ const User = () => {
   const disconnectToWeb3 = () => {
     modal.open();
     modal.subscribeEvents(event => {
-      if (!modal.open() && account.isConnected) {
-        history('/signin');
+      if ( account.isConnected) {
+        history('/signin', { replace: true });
       }
     });
 
   }
+
+
 
   return (
     <>
@@ -69,7 +81,7 @@ const User = () => {
         <div className="bg-white-A700 flex flex-col gap-10 items-end justify-start p-5 md:px-5 w-auto sm:w-full">
           <Img
             className="h-7 w-7"
-            src="images/img_frame228.svg"
+            src={userimage}
             alt="frame228"
           />
           <Link
@@ -95,7 +107,7 @@ const User = () => {
           >
             <Img
               className="h-7 w-7 md:h-auto rounded-[50%]"
-              src="images/img_ellipse42.png"
+              src={userimage}
               alt="ellipseFortyTwo_One"
             />
             <Text
