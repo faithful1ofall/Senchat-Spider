@@ -91,6 +91,7 @@ const Navbar = ({ children }) => {
               }
             ></Input> */}
             <div className="flex items-center gap-4">
+            <li className="hover:text-teal-A400 text-xl">
               <NavLink  
               className={({ isPending, isActive }) =>
                   isPending
@@ -104,12 +105,13 @@ const Navbar = ({ children }) => {
                   Post
                 </Text>
               </NavLink>
+              </li>
               <Text className="text-base " size="txtPromptBold16">
                 {userData ? userData.name : "Guest"} 
               </Text>
               <NavLink
-                to="/user"
                 className="flex items-center h-[35px] rounded-[50%] w-[35px]"
+                to="/user"
               >
                 <Img src={userimage} alt="userimage" />
               </NavLink>
@@ -226,7 +228,9 @@ const Navbar = ({ children }) => {
                     }
                   ></Input>*/}
                   <div className="flex items-center justify-self-end gap-4">
-                    <Link className={({ isPending, isActive }) =>
+                  <li className="hover:text-teal-A400 text-xl">
+                    <NavLink
+                    className={({ isPending, isActive }) =>
                         isPending
                           ? "pending"
                           : isActive
@@ -240,7 +244,8 @@ const Navbar = ({ children }) => {
                       >
                         Post
                       </Text>
-                    </Link>
+                    </NavLink>
+                    </li>
                     <Text className="text-base " size="txtPromptBold16">
                       {userData ? userData.name : "Guest"}
                     </Text>

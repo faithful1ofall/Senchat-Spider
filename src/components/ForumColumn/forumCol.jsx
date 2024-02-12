@@ -167,12 +167,12 @@ const DesktopFourColumnp = (props) => {
     Total();
   }, []);
 
-   // Function to extract the first paragraph of text
-   const extractFirstParagraph = (text) => {
+  
+   const extracttext = (text) => {
     if (text.length <= 350) {
       return text;
     } else {
-      return text.substring(0, 350) + "..."; // Append ellipsis if text is longer than 250 characters
+      return text.substring(0, 350) + "...";
     }
   };
 
@@ -214,7 +214,7 @@ const DesktopFourColumnp = (props) => {
                       className="text-gray-500_02 text-sm"
                       size="txtPromptMedium14"
                     >
-                      {extractFirstParagraph(thread?.anasabdin)}
+                      {extracttext(thread?.anasabdin)}
                      
                     </Text>
                     {/* <Text

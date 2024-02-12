@@ -137,11 +137,11 @@ const Portfolio = () => {
                 <div className="flex flex-col gap-2.5 items-center justify-start pb-[15px] w-full">
                   <div className="bg-white-A700 flex md:flex-col flex-row gap-[21.88px] items-center justify-start max-w-[1041px] px-2.5 py-[5px] rounded-[15px] w-full">
                     <div className="flex flex-col h-[77px] items-center justify-start w-[77px]">
-                      <Img
+                     {/*  <Img
                         className="h-[77px] md:h-auto object-cover rounded-bl-[10px] rounded-br-[10px] w-[77px]"
                         src="images/img_rectangle1_18.png"
                         alt="rectangleOne"
-                      />
+                      /> */}
                     </div>
                     <div className="flex md:flex-1 flex-col sm:pt-36 items-center justify-start w-[90%] md:w-full">
                       <div className="flex flex-col md:gap-5 sm:gap-10 items-center justify-start w-full">
@@ -696,7 +696,7 @@ const Portfolio = () => {
                     >
                       All
                     </Link>
-                    <Link
+                    {/* <Link
                       to="/coming-soon"
                       className="border-2 border-blue_gray-400 border-solid cursor-pointer font-semibold h-[60px] leading-[normal] py-[15px] rounded-[30px] text-[19.27px] text-blue_gray-400 text-center w-full"
                     >
@@ -713,7 +713,7 @@ const Portfolio = () => {
                       className="border-2 border-blue_gray-400 border-solid cursor-pointer font-semibold h-[60px] leading-[normal] py-[15px] rounded-[30px] text-[19.27px] text-blue_gray-400 text-center w-full"
                     >
                       Illustration
-                    </Link>
+                    </Link> */}
                   </div>
                   <div className="flex flex-col items-start justify-start mt-[46px] p-1 w-full">
                     <Text
@@ -748,15 +748,15 @@ const Portfolio = () => {
                         className="sm:text-[21.5px] md:text-[23.5px] text-[25.5px] text-blue_gray-400"
                         size="txtPromptSemiBold255Bluegray400"
                       >
-                        2,000.02 ETH
+                        2,000.02
                       </Text>
                     </div>
-                    <Button className="bg-teal-A400 cursor-pointer font-semibold leading-[normal] mb-1 min-w-[146px] md:ml-[0] ml-[54px] md:mt-0 mt-[35px] py-3 rounded-[15px] text-[16.34px] text-black-900 text-center tracking-[-0.49px]">
+                    {/* <Button className="bg-teal-A400 cursor-pointer font-semibold leading-[normal] mb-1 min-w-[146px] md:ml-[0] ml-[54px] md:mt-0 mt-[35px] py-3 rounded-[15px] text-[16.34px] text-black-900 text-center tracking-[-0.49px]">
                       DEPOSIT
                     </Button>
                     <Button className="border border-blue_gray-400 border-solid cursor-pointer font-semibold leading-[normal] mb-1 min-w-[146px] ml-4 md:ml-[0] md:mt-0 mt-[35px] py-3 rounded-[15px] text-[16.34px] text-blue_gray-400 text-center tracking-[-0.49px]">
                       WITHDRAWAL
-                    </Button>
+                    </Button> */}
                   </div>
                   <Line className="bg-teal-100 h-[3px] mt-7 w-full" />
                 </div>

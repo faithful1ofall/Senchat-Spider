@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Img, Text, Button } from "components";
 import { Link } from "react-router-dom";
-import { configureChains, createConfig, InjectedConnector, getAccount } from '@wagmi/core';
+import { configureChains, createConfig, InjectedConnector, watchAccount} from '@wagmi/core';
 import { publicProvider } from '@wagmi/core/providers/public';
 import { bscTestnet } from "viem/chains";
 import { createWeb3Modal, walletConnectProvider, EIP6963Connector } from '@web3modal/wagmi';
@@ -59,14 +59,12 @@ useEffect(() => {
     defaultChain: bscTestnet
   });
 
-  const account = getAccount();
-
   const disconnectToWeb3 = () => {
     modal.open();
-    modal.subscribeEvents(event => {
-      if ( account.isConnected) {
-        history('/signin', { replace: true });
-      }
+      watchAccount((account) => {
+        if (!account.isConnected) {
+          history('/signin', { replace: true });
+        }
     });
 
   }
@@ -110,7 +108,7 @@ useEffect(() => {
               src={userimage}
               alt="ellipseFortyTwo_One"
             />
-            <Text
+           {/*  <Text
               className="sm:ml-[0] ml-[50px] sm:text-[19px] md:text-[18px] text-[19px] text-black-900"
               size="txtPromptSemiBold23"
             >
@@ -120,10 +118,10 @@ useEffect(() => {
               className="h-[19px] sm:ml-[0] ml-[295px] sm:mt-0 mt-[9px]"
               src="images/img_arrowright_blue_gray_900_01.svg"
               alt="arrowright"
-            />
+            /> */}
           </Link>
           <Link
-            to="/portfolio"
+            to="/coming-soon"
             className="flex sm:flex-col flex-row sm:gap-5 items-start justify-start w-full"
           >
             <Img className="h-7 w-7" src="images/img_frame.svg" alt="frame" />

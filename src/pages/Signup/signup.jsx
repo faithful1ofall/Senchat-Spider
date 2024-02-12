@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Img, Input, Text } from "components";
 import Header from "components/Header/index";
 // import Header from "components/Header2/navbar";
-import { configureChains, createConfig, InjectedConnector, getAccount, readContract, writeContract } from '@wagmi/core';
+import { configureChains, createConfig, InjectedConnector, getAccount, readContract, writeContract, watchAccount } from '@wagmi/core';
 import { publicProvider } from '@wagmi/core/providers/public';
 import { bscTestnet } from "viem/chains";
 import { parseGwei, hexToBigInt } from 'viem';
@@ -94,6 +94,11 @@ const Signup = () => {
     modal.subscribeEvents(event => {
       if (event.data.event === 'CONNECT_SUCCESS') {
         setIsConnected(true);
+      }
+    });
+    watchAccount((account) => {
+      if (!account.isConnected) {
+        setIsConnected(false);
       }
     });
   };

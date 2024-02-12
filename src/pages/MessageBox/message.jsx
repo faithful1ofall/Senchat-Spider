@@ -204,7 +204,7 @@ const Message = () => {
   const modules = {
     toolbar: {
       container: [
-        ['link'],
+       
       ],
     },
 
