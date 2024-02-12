@@ -167,6 +167,15 @@ const DesktopFourColumnp = (props) => {
     Total();
   }, []);
 
+   // Function to extract the first paragraph of text
+   const extractFirstParagraph = (text) => {
+    if (text.length <= 350) {
+      return text;
+    } else {
+      return text.substring(0, 350) + "..."; // Append ellipsis if text is longer than 250 characters
+    }
+  };
+
 
   return (
     <div className={props.className}>
@@ -191,7 +200,7 @@ const DesktopFourColumnp = (props) => {
 
               </Link>
               <div className="flex md:flex-1 flex-col items-start justify-start w-[79%] md:w-full">
-                <div className="flex flex-col items-start justify-start w-[21%] md:w-full">
+                <div className="flex flex-col items-start justify-start w-[71%] md:w-full">
                   <div className="flex flex-col items-center justify-start">
                     <Text
                       className="text-[17px] text-black-900"
@@ -205,14 +214,15 @@ const DesktopFourColumnp = (props) => {
                       className="text-gray-500_02 text-sm"
                       size="txtPromptMedium14"
                     >
-                      {thread?.anasabdin}
+                      {extractFirstParagraph(thread?.anasabdin)}
+                     
                     </Text>
-                    <Text
+                    {/* <Text
                       className="text-teal-A400 text-sm"
                       size="txtPromptMedium14"
                     >
                       {thread?.education}
-                    </Text>
+                    </Text> */}
                   </div>
                   <Text
                     className="text-gray-500_02 text-sm"
