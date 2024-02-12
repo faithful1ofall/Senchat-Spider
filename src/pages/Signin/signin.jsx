@@ -5,7 +5,7 @@ import { Button, Img, Text } from "components";
 import Header from "components/Header/index";
 import { configureChains, createConfig, InjectedConnector, getAccount, readContract, watchAccount } from '@wagmi/core';
 import { publicProvider } from '@wagmi/core/providers/public';
-import { bscTestnet } from "viem/chains";
+import { bsc } from "viem/chains";
 import { hexToBigInt } from 'viem';
 import { createWeb3Modal, walletConnectProvider, EIP6963Connector } from '@web3modal/wagmi';
 import { CoinbaseWalletConnector } from '@wagmi/core/connectors/coinbaseWallet';
@@ -29,7 +29,7 @@ const Signin = () => {
   }
 
   const { chains, publicClient } = configureChains(
-    [bscTestnet],
+    [bsc],
     [walletConnectProvider({ projectId }), publicProvider()]
   )
 
@@ -48,7 +48,7 @@ const Signin = () => {
     wagmiConfig,
     projectId,
     chains,
-    defaultChain: bscTestnet
+    defaultChain: bsc
   });
 
   const account = getAccount();
@@ -73,8 +73,8 @@ const Signin = () => {
     modal.subscribeEvents(async (event) => {
       if (event.data.event === 'CONNECT_SUCCESS') {
         setIsConnected(true);
-      } 
-      });
+      }
+    });
     watchAccount((account) => {
       if (account.isConnected) {
         setIsConnected(true);
@@ -95,36 +95,36 @@ const Signin = () => {
     const digit = hexToBigInt(account.address);
     const big = digit % 10000n;
 
-        try {
-          const url = await readContract({
-            address: nftcontract,
-            abi: ContractABI,
-            functionName: 'tokenURI',
-            args: [`1${big}`]
-          });
-          const hash = url.replace('ipfs://', '');
-          const cloudflareUrl = `https://cloudflare-ipfs.com/ipfs/${hash}`;
+    try {
+      const url = await readContract({
+        address: nftcontract,
+        abi: ContractABI,
+        functionName: 'tokenURI',
+        args: [`1${big}`]
+      });
+      const hash = url.replace('ipfs://', '');
+      const cloudflareUrl = `https://cloudflare-ipfs.com/ipfs/${hash}`;
 
-          const response = await fetch(cloudflareUrl);
+      const response = await fetch(cloudflareUrl);
 
-          if (!response.ok) {
-            seterrMessage(`Failed to fetch from IPFS. Status: ${response.status}`);
-            throw new Error(`Failed to fetch from IPFS. Status: ${response.status}`);
-          }
+      if (!response.ok) {
+        seterrMessage(`Failed to fetch from IPFS. Status: ${response.status}`);
+        throw new Error(`Failed to fetch from IPFS. Status: ${response.status}`);
+      }
 
-          const userData = await response.json();
-          //      const userdata = new URLSearchParams(userData);
+      const userData = await response.json();
+      //      const userdata = new URLSearchParams(userData);
 
-          localStorage.setItem('userData', JSON.stringify(userData));
-          console.log(url);
-          setSuccessMessage(`connected succesfully ${cloudflareUrl}`);
-          history(`/education`, { replace: true });
+      localStorage.setItem('userData', JSON.stringify(userData));
+      console.log(url);
+      setSuccessMessage(`connected succesfully ${cloudflareUrl}`);
+      history(`/education`, { replace: true });
 
-        } catch (error) {
-          console.error(error);
-          // seterrMessage(`Failed to fetch from IPFS. Status: ${response.status}`); 
-          seterrMessage('Account Do not Exist and try to signup');
-        }
+    } catch (error) {
+      console.error(error);
+      // seterrMessage(`Failed to fetch from IPFS. Status: ${response.status}`); 
+      seterrMessage('Account Do not Exist and try to signup');
+    }
 
 
 
@@ -173,13 +173,13 @@ const Signin = () => {
               {isConnected ? "Connected" : "Connect to Web3"}
             </Button>
             {isConnected && (
-                <Button
+              <Button
                 onClick={connectToWeb3}
                 /* disabled={isConnected} */
                 className="bg-teal-A400 cursor-pointer font-medium leading-[normal] min-w-full py-[19px] rounded-[32px] text-[17.51px] text-black-900 text-center bg-green-500" // Add your desired class for when connected
-                >
+              >
                 Verify and Sign in
-                </Button>
+              </Button>
             )}
             {errMessage && (
               <div className="text-red-600">{errMessage}</div>

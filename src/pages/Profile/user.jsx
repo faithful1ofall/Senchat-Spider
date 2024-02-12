@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Img, Text, Button } from "components";
 import { Link } from "react-router-dom";
-import { configureChains, createConfig, InjectedConnector, watchAccount} from '@wagmi/core';
+import { configureChains, createConfig, InjectedConnector, watchAccount } from '@wagmi/core';
 import { publicProvider } from '@wagmi/core/providers/public';
-import { bscTestnet } from "viem/chains";
+import { bsc } from "viem/chains";
 import { createWeb3Modal, walletConnectProvider, EIP6963Connector } from '@web3modal/wagmi';
 import { CoinbaseWalletConnector } from '@wagmi/core/connectors/coinbaseWallet';
 import { WalletConnectConnector } from '@wagmi/core/connectors/walletConnect';
@@ -19,10 +19,10 @@ const User = () => {
 
 
 
-useEffect(() => {
-  const image = userData.image.replace('ipfs://', '');
-  const imageurl = `https://cloudflare-ipfs.com/ipfs/${image}`;
-  setUserimage(imageurl);
+  useEffect(() => {
+    const image = userData.image.replace('ipfs://', '');
+    const imageurl = `https://cloudflare-ipfs.com/ipfs/${image}`;
+    setUserimage(imageurl);
   }, []);
 
 
@@ -37,7 +37,7 @@ useEffect(() => {
   }
 
   const { chains, publicClient } = configureChains(
-    [bscTestnet],
+    [bsc],
     [walletConnectProvider({ projectId }), publicProvider()]
   )
 
@@ -56,15 +56,15 @@ useEffect(() => {
     wagmiConfig,
     projectId,
     chains,
-    defaultChain: bscTestnet
+    defaultChain: bsc
   });
 
   const disconnectToWeb3 = () => {
     modal.open();
-      watchAccount((account) => {
-        if (!account.isConnected) {
-          history('/signin', { replace: true });
-        }
+    watchAccount((account) => {
+      if (!account.isConnected) {
+        history('/signin', { replace: true });
+      }
     });
 
   }
@@ -108,7 +108,7 @@ useEffect(() => {
               src={userimage}
               alt="ellipseFortyTwo_One"
             />
-           {/*  <Text
+            {/*  <Text
               className="sm:ml-[0] ml-[50px] sm:text-[19px] md:text-[18px] text-[19px] text-black-900"
               size="txtPromptSemiBold23"
             >

@@ -5,7 +5,7 @@ import Header from "components/Header/index";
 // import Header from "components/Header2/navbar";
 import { configureChains, createConfig, InjectedConnector, getAccount, readContract, writeContract, watchAccount } from '@wagmi/core';
 import { publicProvider } from '@wagmi/core/providers/public';
-import { bscTestnet } from "viem/chains";
+import { bsc } from "viem/chains";
 import { parseGwei, hexToBigInt } from 'viem';
 import { createWeb3Modal, walletConnectProvider, EIP6963Connector } from '@web3modal/wagmi';
 import { CoinbaseWalletConnector } from '@wagmi/core/connectors/coinbaseWallet';
@@ -28,7 +28,7 @@ const Signup = () => {
   const NFT_STORAGE_KEY = process.env.REACT_APP_NFT_STORAGE_KEY;
   const projectId = process.env.REACT_APP_PROJECTID;
   const nftcontract = process.env.REACT_APP_NFTCONTRACT;
-  const chainId = bscTestnet.id;
+  const chainId = bsc.id;
   const history = useNavigate();
 
 
@@ -45,7 +45,7 @@ const Signup = () => {
 
   //create wagmi config
   const { chains, publicClient } = configureChains(
-    [bscTestnet],
+    [bsc],
     [walletConnectProvider({ projectId }), publicProvider()]
   )
 
@@ -64,7 +64,7 @@ const Signup = () => {
     wagmiConfig,
     projectId,
     chains,
-    defaultChain: bscTestnet
+    defaultChain: bsc
   });
 
   const account = getAccount();
@@ -107,17 +107,17 @@ const Signup = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-        if (!selectedFile && !filename) {
-          const imageOriginUrl = process.env.REACT_APP_LOGO;
-          const r = await fetch(imageOriginUrl);
-          const rb = await r.blob();
-          setSelectedFile(rb);
-          setFilename('senchatlogo.png');
-          setFiletype('image/png');
-        }
-      };
-      fetchData();
-    });
+      if (!selectedFile && !filename) {
+        const imageOriginUrl = process.env.REACT_APP_LOGO;
+        const r = await fetch(imageOriginUrl);
+        const rb = await r.blob();
+        setSelectedFile(rb);
+        setFilename('senchatlogo.png');
+        setFiletype('image/png');
+      }
+    };
+    fetchData();
+  });
 
 
   const handleFileChange = () => {
@@ -279,20 +279,20 @@ const Signup = () => {
               ></Input>
             </div>
             <Text
-                className="text-[15.32px] text-gray-800 w-auto"
-                size="txtPromptMedium1532"
-              >
-                Choose Profile Picture (optional i.e Senchat Logo will be choosed instead)
-              </Text>
-              <label className="text-[15.32px] text-gray-800 w-auto relative overflow-hidden border border-gray-300 px-3 py-2 rounded cursor-pointer">
-                <span>Select a file</span>
-                <input
-                  type="file"
-                  className="absolute inset-0 opacity-0"
-                  onChange={handleFileChange}
-                />
-              </label>
-              <p>{filename}</p>
+              className="text-[15.32px] text-gray-800 w-auto"
+              size="txtPromptMedium1532"
+            >
+              Choose Profile Picture (optional i.e Senchat Logo will be choosed instead)
+            </Text>
+            <label className="text-[15.32px] text-gray-800 w-auto relative overflow-hidden border border-gray-300 px-3 py-2 rounded cursor-pointer">
+              <span>Select a file</span>
+              <input
+                type="file"
+                className="absolute inset-0 opacity-0"
+                onChange={handleFileChange}
+              />
+            </label>
+            <p>{filename}</p>
             {/* <Input type="file" className="text-[15.32px] text-gray-800 w-auto"
                 size="txtPromptMedium1532" onChange={handleFileChange} placeholder="Select a file" /> */}
             <Button

@@ -8,9 +8,9 @@ import { Img, Text } from "components";
 
 import { configureChains, createConfig, InjectedConnector, getAccount, readContract, writeContract } from '@wagmi/core';
 import { publicProvider } from '@wagmi/core/providers/public';
-import { bscTestnet } from "viem/chains";
+import { bsc } from "viem/chains";
 import { parseGwei, hexToBigInt } from 'viem';
-import { createWeb3Modal, walletConnectProvider, EIP6963Connector } from '@web3modal/wagmi';
+import {  walletConnectProvider, EIP6963Connector } from '@web3modal/wagmi';
 import { CoinbaseWalletConnector } from '@wagmi/core/connectors/coinbaseWallet';
 import { WalletConnectConnector } from '@wagmi/core/connectors/walletConnect';
 import { NFTStorage, File } from 'nft.storage';
@@ -26,8 +26,12 @@ const Message = () => {
   const projectId = process.env.REACT_APP_PROJECTID;
   const nftcontract = process.env.REACT_APP_NFTCONTRACT;
   const NFT_STORAGE_KEY = process.env.REACT_APP_NFT_STORAGE_KEY;
-  const chainId = bscTestnet.id;
+  const chainId = bsc.id;
   const [count, setCount] = useState(0);
+
+
+
+
 
 
   if (!projectId) {
@@ -42,11 +46,11 @@ const Message = () => {
 
   //create wagmi config
   const { chains, publicClient } = configureChains(
-    [bscTestnet],
+    [bsc],
     [walletConnectProvider({ projectId }), publicProvider()]
   )
 
-  const wagmiConfig = createConfig({
+ createConfig({
     autoConnect: true,
     connectors: [
       new WalletConnectConnector({ chains, options: { projectId, showQrModal: false, metadata } }),
@@ -56,13 +60,6 @@ const Message = () => {
     ],
     publicClient
   })
-
-  const modal = createWeb3Modal({
-    wagmiConfig,
-    projectId,
-    chains,
-    defaultChain: bscTestnet
-  });
 
   const account = getAccount();
 
@@ -77,8 +74,8 @@ const Message = () => {
   //   }, 3000);
   // };
 
-  const digit = hexToBigInt(account.address);
-  const big = digit % 10000n;
+ const digit = hexToBigInt(account.address);
+ const big = digit % 10000n;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -92,11 +89,10 @@ const Message = () => {
         setCount(prevCount => prevCount + 1);
       } catch (error) {
         console.log(count);
-
       }
     };
     fetchData();
-  }, [count]);
+  }, [count, big, nftcontract]);
 
   /*   const handleChange = () => {
       const messageValue = e.target.children[0].childNodes[1].firstElementChild.textContent;
@@ -204,7 +200,7 @@ const Message = () => {
   const modules = {
     toolbar: {
       container: [
-       
+
       ],
     },
 

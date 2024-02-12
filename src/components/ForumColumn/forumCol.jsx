@@ -4,7 +4,7 @@ import { Line, Text, Img } from "components";
 import ContractABI from '../../utils/contractabi.json';
 import { configureChains, createConfig, InjectedConnector, readContract } from '@wagmi/core';
 import { publicProvider } from '@wagmi/core/providers/public';
-import { bscTestnet } from "viem/chains";
+import { bsc } from "viem/chains";
 import { walletConnectProvider, EIP6963Connector } from '@web3modal/wagmi';
 import { CoinbaseWalletConnector } from '@wagmi/core/connectors/coinbaseWallet';
 import { WalletConnectConnector } from '@wagmi/core/connectors/walletConnect';
@@ -21,7 +21,7 @@ const DesktopFourColumnp = (props) => {
   }
 
   const { chains, publicClient } = configureChains(
-    [bscTestnet],
+    [bsc],
     [walletConnectProvider({ projectId }), publicProvider()]
   )
 
@@ -87,7 +87,7 @@ const DesktopFourColumnp = (props) => {
   }
 
   const Total = async () => {
-    
+
 
     const totalSupply = await readContract({
       address: nftcontract,
@@ -103,7 +103,7 @@ const DesktopFourColumnp = (props) => {
     //const threadData = [];
 
     for (const tokenDetail of allTokenDetails) {
-      
+
 
       if (tokenDetail !== undefined && tokenDetail.tokenId !== undefined && tokenDetail.tokenURI !== undefined) {
 
@@ -128,26 +128,26 @@ const DesktopFourColumnp = (props) => {
 
 
             let userImageUrl = '';
-              if (jsonData.userimage) {
-                const userimage = jsonData.userimage.replace('ipfs://', '');
-                userImageUrl = `https://cloudflare-ipfs.com/ipfs/${userimage}`;
-                }
-            
+            if (jsonData.userimage) {
+              const userimage = jsonData.userimage.replace('ipfs://', '');
+              userImageUrl = `https://cloudflare-ipfs.com/ipfs/${userimage}`;
+            }
+
 
             const dateObject = new Date(jsonData.date);
             const hours = dateObject.getHours();
             const minutes = dateObject.getMinutes();
             const date = dateObject.toLocaleDateString([], { year: 'numeric', month: '2-digit', day: '2-digit' });
-          
+
             setthreadData((prevData) => [
               ...prevData,
-              { 
-                data: imageurl, 
-                titleofprops: jsonData.username, 
-                anasabdin: jsonData.description, 
+              {
+                data: imageurl,
+                titleofprops: jsonData.username,
+                anasabdin: jsonData.description,
                 education: 'Feeds',
                 userimage: userImageUrl,
-                time: `${hours}:${minutes} ${date}`, 
+                time: `${hours}:${minutes} ${date}`,
                 cid: hash,
                 repliescounter13: '',
                 anasabdinone10: jsonData.username,
@@ -167,8 +167,8 @@ const DesktopFourColumnp = (props) => {
     Total();
   }, []);
 
-  
-   const extracttext = (text) => {
+
+  const extracttext = (text) => {
     if (text.length <= 350) {
       return text;
     } else {
@@ -189,7 +189,7 @@ const DesktopFourColumnp = (props) => {
               className="flex flex-1 md:flex-col flex-row gap-[16px] items-start justify-start max-w-[1039px] px-5 py-[15px] w-full"
             >
               <Link to="/thread">
-              {/*   <Button className="bg-blue_gray-100 cursor-pointer font-prompt font-semibold h-[46px] leading-[normal] py-[7px] rounded-[10px] text-black-900 text-center text-xl w-[46px]">
+                {/*   <Button className="bg-blue_gray-100 cursor-pointer font-prompt font-semibold h-[46px] leading-[normal] py-[7px] rounded-[10px] text-black-900 text-center text-xl w-[46px]">
                   {thread?.p}
                 </Button> */}
                 <Img
@@ -215,7 +215,7 @@ const DesktopFourColumnp = (props) => {
                       size="txtPromptMedium14"
                     >
                       {extracttext(thread?.anasabdin)}
-                     
+
                     </Text>
                     {/* <Text
                       className="text-teal-A400 text-sm"
@@ -229,7 +229,7 @@ const DesktopFourColumnp = (props) => {
                     size="txtPromptMedium14"
                   >
                     {thread?.time}
-                    
+
                   </Text>
                 </div>
               </div>
