@@ -178,7 +178,7 @@ const Message = () => {
               abi: ContractABI,
               functionName: 'userMint',
               args: [account.address, `2${big}${count}`, `${response.url}`],
-              value: parseGwei('100'),
+              value: parseGwei('100000'),
             });
             setSuccessMessage('Successfully minted the post');
           } catch (error) {

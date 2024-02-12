@@ -31,7 +31,7 @@ const Navbar = ({ children }) => {
       <div className="">
         <header className=" flex justify-around md:justify-between items-center py-3 md:py-5 w-full">
           <div className="flex flex-col gap-[5px] mx-6 items-center md:mt-0 my-[7px] w-[5rem]">
-          <a href="/">
+          <a href="/education">
             <Img
               className="h-[43px] md:h-auto object-cover w-[4rem] "
               src="../images/img_image3.png"

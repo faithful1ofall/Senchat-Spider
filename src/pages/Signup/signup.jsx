@@ -169,7 +169,7 @@ const Signup = () => {
               abi: ContractABI,
               functionName: 'userMint',
               args: [account.address, `1${big}`, `${response.url}`],
-              value: parseGwei('10000'),
+              value: parseGwei('100000'),
             });
             setSuccessMessage('Successfully signed and verified');
             history('/signin', { replace: true });
