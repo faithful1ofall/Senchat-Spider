@@ -19,12 +19,15 @@ const Thread = (props) => {
               const jsonData = await response.json();
 
 
+
+             if (jsonData.image) {
               const image = jsonData.image.replace('ipfs://', '');
               const imageurl = `https://cloudflare-ipfs.com/ipfs/${image}`;
-
+             }
+             if (jsonData.video) {
               const video = jsonData.video.replace('ipfs://', '');
               const videourl = `https://cloudflare-ipfs.com/ipfs/${video}`;
-
+             }
               let userImageUrl = '';
               if (jsonData.userimage) {
                 const userimage = jsonData.userimage.replace('ipfs://', '');
@@ -139,13 +142,13 @@ const Thread = (props) => {
               >
                 {thread?.description}
               </Text>
-              <Img
+              {/* <Img
                   src={thread?.image}
                   alt="Image Alt Text"
                   className="cursor-pointer h-[260px] w-[260px]"
-                /> 
-              {/*    {thread.video && <video controls src={thread.video} className="cursor-pointer h-[260px] w-[260px]" />}
-              {thread.image && <Img src={thread.image} alt="Image Alt Text" className="cursor-pointer h-[260px] w-[260px]" />} */}
+                /> */}
+                 {thread?.video && <video controls src={thread?.video} className="cursor-pointer h-[260px] w-[260px]" />}
+              {thread?.image && <Img src={thread?.image} alt="Image Alt Text" className="cursor-pointer h-[260px] w-[260px]" />}
               <div className="flex sm:flex-col flex-row sm:gap-5 items-center justify-start w-[51%] md:w-full">
                 <Button
                   className="bg-black-900 cursor-pointer flex items-center justify-center min-w-[109px] px-5 py-3.5 rounded-[7px]"
