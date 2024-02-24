@@ -42,8 +42,8 @@ const Thread = (props) => {
 
               setThread(() => [
                 { 
-                  image: imageurl,
-                  video: videourl,
+                  image: imageurl || false,
+                  video: videourl || false,
                   userimage: userImageUrl,
                   titleofprops: jsonData.description, 
                   description: jsonData.description,
