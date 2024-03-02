@@ -6,12 +6,14 @@ import Header from "components/Header/index";
 import { configureChains, createConfig, InjectedConnector, getAccount, readContract, writeContract, watchAccount } from '@wagmi/core';
 import { publicProvider } from '@wagmi/core/providers/public';
 import { bsc } from "viem/chains";
-import { parseGwei, hexToBigInt } from 'viem';
+import { parseGwei } from 'viem';
 import { createWeb3Modal, walletConnectProvider, EIP6963Connector } from '@web3modal/wagmi';
 import { CoinbaseWalletConnector } from '@wagmi/core/connectors/coinbaseWallet';
 import { WalletConnectConnector } from '@wagmi/core/connectors/walletConnect';
 import { NFTStorage, File } from 'nft.storage';
 import ContractABI from '../../utils/contractabi.json';
+import { sha256 } from 'js-sha256';
+
 
 
 
@@ -127,6 +129,20 @@ const Signup = () => {
     setFiletype(doc.files[0].type);
   };
 
+  const hashAccount = (account) => {
+    const hashedAccount = sha256(account.toString());
+    return hashedAccount;
+  };
+
+  const extractDigits = (text) => {
+    const numericalCharacters = text.match(/\d/g);
+    if (!numericalCharacters) return '';
+    return numericalCharacters.join('');
+  };
+
+  const getFirst10Digits = (text) => {
+    return text.substring(0, 10);
+  };
 
 
 
@@ -134,8 +150,10 @@ const Signup = () => {
 
     if (isConnected) {
 
-      const digit = hexToBigInt(account.address);
-      const big = digit % 10000n;
+      const hashedAccount = hashAccount(account.address);
+      const numericalCharacters = extractDigits(hashedAccount);
+      const big = getFirst10Digits(numericalCharacters);
+      console.log(numericalCharacters, big);
 
       try {
         await readContract({
