@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Button, Img, Input, Text } from "components";
 import Header from "components/Header/index";
-// import Header from "components/Header2/navbar";
 import { configureChains, createConfig, InjectedConnector, getAccount, readContract, writeContract, watchAccount } from '@wagmi/core';
 import { publicProvider } from '@wagmi/core/providers/public';
 import { bsc } from "viem/chains";

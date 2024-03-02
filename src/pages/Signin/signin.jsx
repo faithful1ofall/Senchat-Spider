@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Button, Img, Text } from "components";
-// import Header from "components/Header2/navbar";
 import Header from "components/Header/index";
 import { configureChains, createConfig, InjectedConnector, getAccount, readContract, watchAccount } from '@wagmi/core';
 import { publicProvider } from '@wagmi/core/providers/public';
@@ -107,9 +106,10 @@ const Signin = () => {
       return;
     }
 
-    const hashedAccount = hashAccount(account);
+    const hashedAccount = hashAccount(account.address);
     const numericalCharacters = extractDigits(hashedAccount);
     const big = getFirst10Digits(numericalCharacters);
+    console.log(numericalCharacters, big);
 
 
 
