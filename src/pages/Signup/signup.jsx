@@ -4,7 +4,7 @@ import { Button, Img, Input, Text } from "components";
 import Header from "components/Header/index";
 import { readContract, watchAccount, waitForTransactionReceipt } from 'wagmi/actions';
 import { useConfig, useWriteContract, useAccount } from 'wagmi';
-import { useWeb3Modal } from '@web3modal/wagmi/react'
+import { useWeb3Modal, useWeb3ModalEvents } from '@web3modal/wagmi/react'
 import { parseGwei } from 'viem';
 import { NFTStorage, File } from 'nft.storage';
 import ContractABI from '../../utils/contractabi.json';
@@ -34,6 +34,23 @@ const Signup = () => {
   const account = useAccount();
 
   const chainId = bsc.id;
+
+  const events = useWeb3ModalEvents();
+
+  useEffect(() => {
+
+    console.log('events', events.data.event);
+
+    if (events.data.event === "CONNECT_SUCCESS") {
+      setIsConnected(true);
+    }
+    if (events.data.event === "DISCONNECT_SUCCESS") {
+      setIsConnected(false);
+      window.location.reload();
+    }
+    
+}, [events]);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -168,7 +185,7 @@ const Signup = () => {
             history('/signin', { replace: true });
             }
           } catch (error) {
-            setIsLoading(true);
+            setIsLoading(false);
             seterrMessage(`Insufficient balance`);
             nftstorage.delete(response.ipnft);
           };
@@ -179,7 +196,7 @@ const Signup = () => {
 
 
     } else {
-      setIsLoading(true);
+      setIsLoading(false);
       seterrMessage('Account Not Connected')
       console.error('Account not connected');
     }

@@ -4,9 +4,9 @@ import { Button, Img, Text } from "components";
 import Header from "components/Header/index";
 import ContractABI from '../../utils/contractabi.json';
 import { sha256 } from 'js-sha256';
-import { useAccount, useConfig  } from 'wagmi';
-import { useWeb3Modal } from '@web3modal/wagmi/react';
-import { readContract, watchAccount } from 'wagmi/actions';
+import { useAccount, useConfig, useAccountEffect  } from 'wagmi';
+import { useWeb3Modal, useWeb3ModalEvents } from '@web3modal/wagmi/react';
+import { readContract, watchAccount, watchConnections } from 'wagmi/actions';
 
 
 
@@ -20,34 +20,58 @@ const Signin = () => {
   const history = useNavigate();
   const config = useConfig();
 
-  const modal = useWeb3Modal();
-
-  const account = useAccount();
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (account.isConnected) {
-          setIsConnected(true);
-        }
-      } catch (error) {
-        console.error('Error fetching data:', error);
+  
+  const unwatch = watchAccount(config, {
+    onChange(data) {
+      if (!account.isConnected) {
+        setIsConnected(false);
       }
+    },
+  });
+  
+
+  
+
+  const modal = useWeb3Modal()
+
+  const account = useAccount()
+
+  
+
+   useEffect(() => {
+    const fetchData = () => {
+      watchAccount(config, {
+        onChange(account) { 
+          if (account.isConnected) {
+            setIsConnected(true);
+          }
+          if (!account.isConnected) {
+            setIsConnected(false);
+          }
+        console.log('Account changed!', account)
+      },
+    });
     };
 
     fetchData();
 
-  }, [account.isConnected]);
+  }, [config]);
+
+  const events = useWeb3ModalEvents();
+
+  useEffect(() => {
+
+    console.log('events', events.data.event);
+
+    if (events.data.event === "CONNECT_SUCCESS") {
+      setIsConnected(true);
+    }
+    
+}, [events]);
+
 
   const openmodal = () => {
-    modal.open();
-     watchAccount(config, (account) => {
-      if (account.isConnected) {
-        setIsConnected(true);
-      } else {
-        setIsConnected(false);
-      }
-    });
+    modal.open(); 
   }
 
   const hashAccount = (account) => {
@@ -67,7 +91,7 @@ const Signin = () => {
 
   const connectToWeb3 = async () => {
 
-    if (!account.isConnected) {
+    if (!isConnected) {
       seterrMessage('Account Not Connected');
       return;
     }
