@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Img, Text, Button } from "components";
 import { Link } from "react-router-dom";
-import { watchAccount } from '@wagmi/core';
 import { useWeb3Modal } from '@web3modal/wagmi/react'
+import { watchAccount } from 'wagmi/actions';
+import { useConfig  } from 'wagmi';
 
 
 
@@ -12,6 +13,7 @@ const User = () => {
   const userDataParam = localStorage.getItem('userData');
   const [userimage, setUserimage] = useState();
   const userData = JSON.parse(userDataParam);
+  const config = useConfig();
 
 
 
@@ -20,15 +22,14 @@ const User = () => {
     const image = userData.image.replace('ipfs://', '');
     const imageurl = `https://cloudflare-ipfs.com/ipfs/${image}`;
     setUserimage(imageurl);
-  }, []);
+  }, [userData.image]);
 
   const history = useNavigate();
   const modal = useWeb3Modal();
 
   const disconnectToWeb3 = () => {
-
     modal.open();
-    watchAccount((account) => {
+    watchAccount(config, (account) => {
       if (!account.isConnected) {
         history('/signin', { replace: true });
       }

@@ -12,9 +12,11 @@ const Portfolio = () => {
   const config = useConfig();
   const nftcontract = process.env.REACT_APP_NFTCONTRACT;
   const account = useAccount();
+  console.log(account);
 
 
 useEffect(() => {
+  if (account.address) {
 
   const func = async (index) => {
 
@@ -68,7 +70,6 @@ useEffect(() => {
         abi: ContractABI,
         functionName: 'balanceOf',
         args: [account.address]
-
     });
 
     const totalSupplyNumber = parseInt(totalSupply, 10);
@@ -77,7 +78,10 @@ useEffect(() => {
 
     setCount(all.length);
   };
+
+
   Total();
+}
 }, [nftcontract, account.address, config, ]);
 
   return (

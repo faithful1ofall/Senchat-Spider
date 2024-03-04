@@ -5,8 +5,6 @@ import ContractABI from '../../utils/contractabi.json';
 import { useConfig  } from 'wagmi';
 import { readContract } from 'wagmi/actions';
 
-
-
 const DesktopFourColumnp = (props) => {
   const [threadData1, setthreadData] = useState([]);
   const nftcontract = process.env.REACT_APP_NFTCONTRACT;

@@ -56,7 +56,7 @@ const Message = () => {
     return text.substring(0, 10);
   };
 
-  const hashedAccount = hashAccount(account.address);
+  const hashedAccount = hashAccount(account.address.toString());
   const numericalCharacters = extractDigits(hashedAccount);
   const big = getFirst10Digits(numericalCharacters);
 
@@ -64,7 +64,7 @@ const Message = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        readContract(config, {
+        await readContract(config, {
           address: nftcontract,
           abi: ContractABI,
           functionName: 'tokenURI',
@@ -75,6 +75,7 @@ const Message = () => {
         console.log(count);
       }
     };
+
     fetchData();
   }, [count, big, nftcontract, config]);
 
