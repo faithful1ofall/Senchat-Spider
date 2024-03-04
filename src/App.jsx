@@ -8,18 +8,16 @@ import { walletConnect, injected } from 'wagmi/connectors'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 function App() {
-  // 0. Setup queryClient
+
 const queryClient = new QueryClient();
 
-// 1. Get projectId at https://cloud.walletconnect.com
 const projectId = process.env.REACT_APP_PROJECTID;
 
-// 2. Create wagmiConfig
 const metadata = {
-  name: 'Web3Modal',
-  description: 'Web3Modal Example',
-  url: 'https://web3modal.com', // origin must match your domain & subdomain
-  icons: ['https://avatars.githubusercontent.com/u/37784886']
+  name: 'Senchat',
+  description: 'Senchat a decentralized social media',
+  url: 'https://senchatdapp.vercel.app', 
+  icons: [process.env.REACT_APP_LOGO]
 }
 
 const config = createConfig({
@@ -37,7 +35,6 @@ const config = createConfig({
   ]
 })
 
-// 3. Create modal
 createWeb3Modal({
   wagmiConfig: config,
   projectId,
