@@ -23,7 +23,7 @@ const metadata = {
 const config = createConfig({
   chains: [bsc],
   transports: {
-    [bsc.id]: http()
+    [bsc.id]: http('https://binance.llamarpc.com')
   },
   connectors: [
     walletConnect({ projectId, metadata, showQrModal: false }),

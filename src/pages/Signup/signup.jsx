@@ -9,6 +9,7 @@ import { parseGwei } from 'viem';
 import { NFTStorage, File } from 'nft.storage';
 import ContractABI from '../../utils/contractabi.json';
 import { sha256 } from 'js-sha256';
+import { bsc } from 'wagmi/chains';
 
 
 
@@ -34,7 +35,7 @@ const Signup = () => {
 
   const account = useAccount();
 
-  const chainId = account.chain.id;
+  const chainId = bsc.id;
 
   useEffect(() => {
     const fetchData = async () => {
