@@ -2,170 +2,142 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Line, Text, Img } from "components";
 import ContractABI from '../../utils/contractabi.json';
-import { configureChains, createConfig, InjectedConnector, readContract } from '@wagmi/core';
-import { publicProvider } from '@wagmi/core/providers/public';
-import { bsc } from "viem/chains";
-import { walletConnectProvider, EIP6963Connector } from '@web3modal/wagmi';
-import { CoinbaseWalletConnector } from '@wagmi/core/connectors/coinbaseWallet';
-import { WalletConnectConnector } from '@wagmi/core/connectors/walletConnect';
+import { useConfig  } from 'wagmi';
+import { readContract } from 'wagmi/actions';
+
 
 
 const DesktopFourColumnp = (props) => {
   const [threadData1, setthreadData] = useState([]);
-  const projectId = process.env.REACT_APP_PROJECTID;
-
-  const metadata = {
-    name: 'Senchat',
-    description: 'Senchat web3Modal connector',
-    url: 'https://senchatfront.vercel.app/'
-  }
-
-  const { chains, publicClient } = configureChains(
-    [bsc],
-    [walletConnectProvider({ projectId }), publicProvider()]
-  )
-
-  const wagmiConfig = createConfig({
-    autoConnect: true,
-    connectors: [
-      new WalletConnectConnector({ chains, options: { projectId, showQrModal: false, metadata } }),
-      new EIP6963Connector({ chains }),
-      new InjectedConnector({ chains, options: { shimDisconnect: true } }),
-      new CoinbaseWalletConnector({ chains, options: { appName: metadata.name } })
-    ],
-    publicClient
-  })
-
   const nftcontract = process.env.REACT_APP_NFTCONTRACT;
-
-  const func = async (index) => {
-    try {
-      const tokenId = await readContract({
-        address: nftcontract,
-        abi: ContractABI,
-        functionName: 'tokenByIndex',
-        args: [index]
-      });
-
-      const tokenURI = await readContract({
-        address: nftcontract,
-        abi: ContractABI,
-        functionName: 'tokenURI',
-        args: [`${tokenId}`]
-      });
-
-      const startsWithB2 = tokenId.toString().startsWith("2")
-
-      if (startsWithB2) {
-        return {
-          tokenId,
-          tokenURI,
-        };
-      }
-
-      // Return the details or perform additional actions
-
-    } catch (error) {
-      console.error(`Error fetching details for token at index ${index}:`, error.message);
-      return null; // or throw the error if needed
-    }
-  };
-
-  const fetchAllTokenDetails = async (startIndex, endIndex) => {
-    const allTokenDetails = [];
-
-    // Create an array of promises for concurrent execution
-    const promises = Array.from({ length: endIndex - startIndex + 1 }, (_, i) => func(endIndex - i));
-
-    // Use Promise.all to wait for all promises to resolve
-    const results = await Promise.all(promises);
-
-    // Filter out null results (errors) and add valid results to the array
-    results.filter((result) => result !== null).forEach((result) => allTokenDetails.push(result));
-
-    return allTokenDetails;
-  }
-
-  const Total = async () => {
-
-
-    const totalSupply = await readContract({
-      address: nftcontract,
-      abi: ContractABI,
-      functionName: 'totalSupply',
-    });
-
-    const totalSupplyNumber = parseInt(totalSupply, 10);
-
-    const allTokenDetails = await fetchAllTokenDetails(0, totalSupplyNumber - 1);
-
-
-    //const threadData = [];
-
-    for (const tokenDetail of allTokenDetails) {
-
-
-      if (tokenDetail !== undefined && tokenDetail.tokenId !== undefined && tokenDetail.tokenURI !== undefined) {
-
-        const startsWithb3 = tokenDetail.tokenURI.startsWith("ipfs://")
-        if (startsWithb3) {
-          try {
-            const hash = tokenDetail.tokenURI.replace('ipfs://', '');
-
-
-            const cloudflareUrl = `https://cloudflare-ipfs.com/ipfs/${hash}`;
-            const response = await fetch(cloudflareUrl);
-
-            if (!response.ok) {
-              throw new Error(`Failed to fetch from IPFS. Status: ${response.status}`);
-            }
-
-            const jsonData = await response.json();
-
-
-            const image = jsonData.image.replace('ipfs://', '');
-            const imageurl = `https://cloudflare-ipfs.com/ipfs/${image}`;
-
-
-            let userImageUrl = '';
-            if (jsonData.userimage) {
-              const userimage = jsonData.userimage.replace('ipfs://', '');
-              userImageUrl = `https://cloudflare-ipfs.com/ipfs/${userimage}`;
-            }
-
-
-            const dateObject = new Date(jsonData.date);
-            const hours = dateObject.getHours();
-            const minutes = dateObject.getMinutes();
-            const date = dateObject.toLocaleDateString([], { year: 'numeric', month: '2-digit', day: '2-digit' });
-
-            setthreadData((prevData) => [
-              ...prevData,
-              {
-                data: imageurl,
-                titleofprops: jsonData.username,
-                anasabdin: jsonData.description,
-                education: 'Feeds',
-                userimage: userImageUrl,
-                time: `${hours}:${minutes} ${date}`,
-                cid: hash,
-                repliescounter13: '',
-                anasabdinone10: jsonData.username,
-              },
-            ]);
-
-          } catch (error) {
-            console.error(`Error fetching from IPFS: ${error.message}`);
-          }
-        }
-      }
-    };
-
-  };
+  const config = useConfig(); 
 
   useEffect(() => {
+
+    const func = async (index) => {
+      try {
+        const tokenId = await readContract(config, {
+          address: nftcontract,
+          abi: ContractABI,
+          functionName: 'tokenByIndex',
+          args: [index]
+        });
+  
+        const tokenURI = await readContract(config, {
+          address: nftcontract,
+          abi: ContractABI,
+          functionName: 'tokenURI',
+          args: [`${tokenId}`]
+        });
+  
+        const startsWithB2 = tokenId.toString().startsWith("2")
+  
+        if (startsWithB2) {
+          return {
+            tokenId,
+            tokenURI,
+          };
+        }
+  
+        // Return the details or perform additional actions
+  
+      } catch (error) {
+        console.error(`Error fetching details for token at index ${index}:`, error.message);
+        return null; // or throw the error if needed
+      }
+    };
+  
+    const fetchAllTokenDetails = async (startIndex, endIndex) => {
+      const allTokenDetails = [];
+  
+      // Create an array of promises for concurrent execution
+      const promises = Array.from({ length: endIndex - startIndex + 1 }, (_, i) => func(endIndex - i));
+  
+      // Use Promise.all to wait for all promises to resolve
+      const results = await Promise.all(promises);
+  
+      // Filter out null results (errors) and add valid results to the array
+      results.filter((result) => result !== null).forEach((result) => allTokenDetails.push(result));
+  
+      return allTokenDetails;
+    }
+  
+    const Total = async () => {
+  
+  
+      const totalSupply = await readContract(config, {
+        address: nftcontract,
+        abi: ContractABI,
+        functionName: 'totalSupply',
+      });
+  
+      const totalSupplyNumber = parseInt(totalSupply, 10);
+  
+      const allTokenDetails = await fetchAllTokenDetails(0, totalSupplyNumber - 1);
+  
+      for (const tokenDetail of allTokenDetails) {
+  
+  
+        if (tokenDetail !== undefined && tokenDetail.tokenId !== undefined && tokenDetail.tokenURI !== undefined) {
+  
+          const startsWithb3 = tokenDetail.tokenURI.startsWith("ipfs://")
+          if (startsWithb3) {
+            try {
+              const hash = tokenDetail.tokenURI.replace('ipfs://', '');
+  
+  
+              const cloudflareUrl = `https://cloudflare-ipfs.com/ipfs/${hash}`;
+              const response = await fetch(cloudflareUrl);
+  
+              if (!response.ok) {
+                throw new Error(`Failed to fetch from IPFS. Status: ${response.status}`);
+              }
+  
+              const jsonData = await response.json();
+  
+  
+              const image = jsonData.image.replace('ipfs://', '');
+              const imageurl = `https://cloudflare-ipfs.com/ipfs/${image}`;
+  
+  
+              let userImageUrl = '';
+              if (jsonData.userimage) {
+                const userimage = jsonData.userimage.replace('ipfs://', '');
+                userImageUrl = `https://cloudflare-ipfs.com/ipfs/${userimage}`;
+              }
+  
+  
+              const dateObject = new Date(jsonData.date);
+              const hours = dateObject.getHours();
+              const minutes = dateObject.getMinutes();
+              const date = dateObject.toLocaleDateString([], { year: 'numeric', month: '2-digit', day: '2-digit' });
+  
+              setthreadData((prevData) => [
+                ...prevData,
+                {
+                  data: imageurl,
+                  titleofprops: jsonData.username,
+                  anasabdin: jsonData.description,
+                  education: 'Feeds',
+                  userimage: userImageUrl,
+                  time: `${hours}:${minutes} ${date}`,
+                  cid: hash,
+                  repliescounter13: '',
+                  anasabdinone10: jsonData.username,
+                },
+              ]);
+  
+            } catch (error) {
+              console.error(`Error fetching from IPFS: ${error.message}`);
+            }
+          }
+        }
+      };
+  
+    };
+
     Total();
-  }, []);
+  }, [config, nftcontract]);
 
 
   const extracttext = (text) => {

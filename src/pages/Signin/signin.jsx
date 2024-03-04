@@ -2,55 +2,27 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Button, Img, Text } from "components";
 import Header from "components/Header/index";
-import { configureChains, createConfig, InjectedConnector, getAccount, readContract, watchAccount } from '@wagmi/core';
-import { publicProvider } from '@wagmi/core/providers/public';
-import { bsc } from "viem/chains";
-import { createWeb3Modal, walletConnectProvider, EIP6963Connector } from '@web3modal/wagmi';
-import { CoinbaseWalletConnector } from '@wagmi/core/connectors/coinbaseWallet';
-import { WalletConnectConnector } from '@wagmi/core/connectors/walletConnect';
 import ContractABI from '../../utils/contractabi.json';
 import { sha256 } from 'js-sha256';
+import { useAccount, useConfig  } from 'wagmi';
+import { useWeb3Modal } from '@web3modal/wagmi/react';
+import { readContract, watchAccount } from 'wagmi/actions';
+
+
 
 
 
 const Signin = () => {
-  const projectId = process.env.REACT_APP_PROJECTID;
   const nftcontract = process.env.REACT_APP_NFTCONTRACT;
   const [isConnected, setIsConnected] = useState();
   const [errMessage, seterrMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const history = useNavigate();
+  const config = useConfig();
 
-  const metadata = {
-    name: 'Senchat',
-    description: 'Senchat web3Modal connector',
-    url: 'https://senchatfront.vercel.app/'
-  }
+  const modal = useWeb3Modal();
 
-  const { chains, publicClient } = configureChains(
-    [bsc],
-    [walletConnectProvider({ projectId }), publicProvider()]
-  )
-
-  const wagmiConfig = createConfig({
-    autoConnect: true,
-    connectors: [
-      new WalletConnectConnector({ chains, options: { projectId, showQrModal: false, metadata } }),
-      new EIP6963Connector({ chains }),
-      new InjectedConnector({ chains, options: { shimDisconnect: true } }),
-      new CoinbaseWalletConnector({ chains, options: { appName: metadata.name } })
-    ],
-    publicClient
-  })
-
-  const modal = createWeb3Modal({
-    wagmiConfig,
-    projectId,
-    chains,
-    defaultChain: bsc
-  });
-
-  const account = getAccount();
+  const account = useAccount();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -69,19 +41,13 @@ const Signin = () => {
 
   const openmodal = () => {
     modal.open();
-    modal.subscribeEvents(async (event) => {
-      if (event.data.event === 'CONNECT_SUCCESS') {
-        setIsConnected(true);
-      }
-    });
-    watchAccount((account) => {
+     watchAccount(config, (account) => {
       if (account.isConnected) {
         setIsConnected(true);
       } else {
         setIsConnected(false);
       }
     });
-
   }
 
   const hashAccount = (account) => {
@@ -109,12 +75,11 @@ const Signin = () => {
     const hashedAccount = hashAccount(account.address);
     const numericalCharacters = extractDigits(hashedAccount);
     const big = getFirst10Digits(numericalCharacters);
-    console.log(numericalCharacters, big);
 
 
 
     try {
-      const url = await readContract({
+      const url = await readContract(config, {
         address: nftcontract,
         abi: ContractABI,
         functionName: 'tokenURI',

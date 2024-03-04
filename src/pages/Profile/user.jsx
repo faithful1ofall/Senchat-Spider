@@ -2,12 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Img, Text, Button } from "components";
 import { Link } from "react-router-dom";
-import { configureChains, createConfig, InjectedConnector, watchAccount } from '@wagmi/core';
-import { publicProvider } from '@wagmi/core/providers/public';
-import { bsc } from "viem/chains";
-import { createWeb3Modal, walletConnectProvider, EIP6963Connector } from '@web3modal/wagmi';
-import { CoinbaseWalletConnector } from '@wagmi/core/connectors/coinbaseWallet';
-import { WalletConnectConnector } from '@wagmi/core/connectors/walletConnect';
+import { watchAccount } from '@wagmi/core';
+import { useWeb3Modal } from '@web3modal/wagmi/react'
+
 
 
 
@@ -25,41 +22,11 @@ const User = () => {
     setUserimage(imageurl);
   }, []);
 
-
-  const projectId = process.env.REACT_APP_PROJECTID;
   const history = useNavigate();
-
-
-  const metadata = {
-    name: 'Senchat',
-    description: 'Senchat web3Modal connector',
-    url: 'https://senchatfront.vercel.app/'
-  }
-
-  const { chains, publicClient } = configureChains(
-    [bsc],
-    [walletConnectProvider({ projectId }), publicProvider()]
-  )
-
-  const wagmiConfig = createConfig({
-    autoConnect: true,
-    connectors: [
-      new WalletConnectConnector({ chains, options: { projectId, showQrModal: false, metadata } }),
-      new EIP6963Connector({ chains }),
-      new InjectedConnector({ chains, options: { shimDisconnect: true } }),
-      new CoinbaseWalletConnector({ chains, options: { appName: metadata.name } })
-    ],
-    publicClient
-  })
-
-  const modal = createWeb3Modal({
-    wagmiConfig,
-    projectId,
-    chains,
-    defaultChain: bsc
-  });
+  const modal = useWeb3Modal();
 
   const disconnectToWeb3 = () => {
+
     modal.open();
     watchAccount((account) => {
       if (!account.isConnected) {
@@ -121,7 +88,7 @@ const User = () => {
             /> */}
           </Link>
           <Link
-            to="/coming-soon"
+            to="/portfolio"
             className="flex sm:flex-col flex-row sm:gap-5 items-start justify-start w-full"
           >
             <Img className="h-7 w-7" src="images/img_frame.svg" alt="frame" />

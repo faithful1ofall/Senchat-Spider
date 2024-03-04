@@ -2,13 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Button, Img, Input, Text } from "components";
 import Header from "components/Header/index";
-import { configureChains, createConfig, InjectedConnector, getAccount, readContract, writeContract, watchAccount } from '@wagmi/core';
-import { publicProvider } from '@wagmi/core/providers/public';
-import { bsc } from "viem/chains";
+import { readContract, watchAccount, waitForTransactionReceipt } from 'wagmi/actions';
+import { useConfig, useWriteContract, useAccount } from 'wagmi';
+import { useWeb3Modal } from '@web3modal/wagmi/react'
 import { parseGwei } from 'viem';
-import { createWeb3Modal, walletConnectProvider, EIP6963Connector } from '@web3modal/wagmi';
-import { CoinbaseWalletConnector } from '@wagmi/core/connectors/coinbaseWallet';
-import { WalletConnectConnector } from '@wagmi/core/connectors/walletConnect';
 import { NFTStorage, File } from 'nft.storage';
 import ContractABI from '../../utils/contractabi.json';
 import { sha256 } from 'js-sha256';
@@ -27,48 +24,17 @@ const Signup = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const NFT_STORAGE_KEY = process.env.REACT_APP_NFT_STORAGE_KEY;
-  const projectId = process.env.REACT_APP_PROJECTID;
   const nftcontract = process.env.REACT_APP_NFTCONTRACT;
-  const chainId = bsc.id;
+
   const history = useNavigate();
+  const { writeContract } = useWriteContract();
+  const config = useConfig();
 
+  const modal = useWeb3Modal();
 
+  const account = useAccount();
 
-  if (!projectId) {
-    throw new Error('please check the PROJECT_ID env variable');
-  }
-
-  const metadata = {
-    name: 'Senchat',
-    description: 'Senchat Decentralized Social media',
-    url: 'https://senchatdapp.vercel.app/'
-  }
-
-  //create wagmi config
-  const { chains, publicClient } = configureChains(
-    [bsc],
-    [walletConnectProvider({ projectId }), publicProvider()]
-  )
-
-  const wagmiConfig = createConfig({
-    autoConnect: true,
-    connectors: [
-      new WalletConnectConnector({ chains, options: { projectId, showQrModal: false, metadata } }),
-      new EIP6963Connector({ chains }),
-      new InjectedConnector({ chains, options: { shimDisconnect: true } }),
-      new CoinbaseWalletConnector({ chains, options: { appName: metadata.name } })
-    ],
-    publicClient
-  })
-
-  const modal = createWeb3Modal({
-    wagmiConfig,
-    projectId,
-    chains,
-    defaultChain: bsc
-  });
-
-  const account = getAccount();
+  const chainId = account.chain.id;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -92,14 +58,11 @@ const Signup = () => {
   const connectToWeb3 = async () => {
     modal.open();
 
-    modal.subscribeEvents(event => {
-      if (event.data.event === 'CONNECT_SUCCESS') {
-        setIsConnected(true);
-      }
-    });
-    watchAccount((account) => {
+     watchAccount(config, (account) => {
       if (!account.isConnected) {
         setIsConnected(false);
+      } else {
+        setIsConnected(true);
       }
     });
   };
@@ -186,19 +149,24 @@ const Signup = () => {
           );
 
           try {
-            await writeContract({
+             const txhash = writeContract({
               address: nftcontract,
               abi: ContractABI,
               functionName: 'userMint',
               args: [account.address, `1${big}`, `${response.url}`],
               value: parseGwei('100000'),
             });
+            const transactionReceipt = await waitForTransactionReceipt(config, {
+              confirmations: 3, 
+              hash: txhash,
+            });
+            if (transactionReceipt) {
             setSuccessMessage('Successfully signed and verified');
             history('/signin', { replace: true });
+            }
           } catch (error) {
             seterrMessage(`Insufficient balance`);
             nftstorage.delete(response.ipnft);
-            history('/signup', { replace: true });
           };
 
         }

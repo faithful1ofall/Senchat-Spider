@@ -3,18 +3,14 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { formats } from "./MessageEditor";
 import "./messageEditor.css";
-
 import { Img, Text } from "components";
-
-import { configureChains, createConfig, InjectedConnector, getAccount, readContract, writeContract } from '@wagmi/core';
-import { publicProvider } from '@wagmi/core/providers/public';
-import { bsc } from "viem/chains";
-import { parseGwei, hexToBigInt } from 'viem';
-import {  walletConnectProvider, EIP6963Connector } from '@web3modal/wagmi';
-import { CoinbaseWalletConnector } from '@wagmi/core/connectors/coinbaseWallet';
-import { WalletConnectConnector } from '@wagmi/core/connectors/walletConnect';
+import { readContract } from 'wagmi/actions';
+import { useAccount, useConfig  } from 'wagmi';
+import { useWriteContract } from 'wagmi';
+import { parseGwei } from 'viem';
 import { NFTStorage, File } from 'nft.storage';
 import ContractABI from '../../utils/contractabi.json';
+import { sha256 } from 'js-sha256';
 
 const Message = () => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -23,45 +19,16 @@ const Message = () => {
   const [message, setMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const projectId = process.env.REACT_APP_PROJECTID;
   const nftcontract = process.env.REACT_APP_NFTCONTRACT;
   const NFT_STORAGE_KEY = process.env.REACT_APP_NFT_STORAGE_KEY;
-  const chainId = bsc.id;
+  
   const [count, setCount] = useState(0);
 
+  const { writeContract } = useWriteContract();
+  const config = useConfig();
 
-
-
-
-
-  if (!projectId) {
-    throw new Error('please check the PROJECT_ID env variable');
-  }
-
-  const metadata = {
-    name: 'Senchat',
-    description: 'Senchat Decentralized Social media',
-    url: 'https://senchatdapp.vercel.app/'
-  }
-
-  //create wagmi config
-  const { chains, publicClient } = configureChains(
-    [bsc],
-    [walletConnectProvider({ projectId }), publicProvider()]
-  )
-
- createConfig({
-    autoConnect: true,
-    connectors: [
-      new WalletConnectConnector({ chains, options: { projectId, showQrModal: false, metadata } }),
-      new EIP6963Connector({ chains }),
-      new InjectedConnector({ chains, options: { shimDisconnect: true } }),
-      new CoinbaseWalletConnector({ chains, options: { appName: metadata.name } })
-    ],
-    publicClient
-  })
-
-  const account = getAccount();
+  const account = useAccount();
+  const chainId = account.chain.id;
 
   const userDataParam = localStorage.getItem('userData');
 
@@ -74,13 +41,30 @@ const Message = () => {
   //   }, 3000);
   // };
 
- const digit = hexToBigInt(account.address);
- const big = digit % 10000n;
+  const hashAccount = (account) => {
+    const hashedAccount = sha256(account.toString());
+    return hashedAccount;
+  };
+
+  const extractDigits = (text) => {
+    const numericalCharacters = text.match(/\d/g);
+    if (!numericalCharacters) return '';
+    return numericalCharacters.join('');
+  };
+
+  const getFirst10Digits = (text) => {
+    return text.substring(0, 10);
+  };
+
+  const hashedAccount = hashAccount(account.address);
+  const numericalCharacters = extractDigits(hashedAccount);
+  const big = getFirst10Digits(numericalCharacters);
+
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await readContract({
+        readContract(config, {
           address: nftcontract,
           abi: ContractABI,
           functionName: 'tokenURI',
@@ -92,7 +76,7 @@ const Message = () => {
       }
     };
     fetchData();
-  }, [count, big, nftcontract]);
+  }, [count, big, nftcontract, config]);
 
   /*   const handleChange = () => {
       const messageValue = e.target.children[0].childNodes[1].firstElementChild.textContent;
@@ -169,7 +153,7 @@ const Message = () => {
           console.log(response);
 
           try {
-            await writeContract({
+             writeContract({
               address: nftcontract,
               abi: ContractABI,
               functionName: 'userMint',
