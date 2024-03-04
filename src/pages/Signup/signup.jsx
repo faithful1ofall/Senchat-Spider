@@ -12,11 +12,9 @@ import { sha256 } from 'js-sha256';
 import { bsc } from 'wagmi/chains';
 
 
-
-
-
 const Signup = () => {
   const [selectedFile, setSelectedFile] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [filename, setFilename] = useState(null);
   const [filetype, setFiletype] = useState(null);
   const [isConnected, setIsConnected] = useState();
@@ -59,11 +57,14 @@ const Signup = () => {
   const connectToWeb3 = async () => {
     modal.open();
 
+    if (!account.isConnected) {
+      setIsConnected(false);
+    } else {
+      setIsConnected(true);
+    }
      watchAccount(config, (account) => {
       if (!account.isConnected) {
         setIsConnected(false);
-      } else {
-        setIsConnected(true);
       }
     });
   };
@@ -111,6 +112,7 @@ const Signup = () => {
 
   const generateNonceAndSign = async () => {
 
+    setIsLoading(true);
     if (isConnected) {
 
       const hashedAccount = hashAccount(account.address);
@@ -166,6 +168,7 @@ const Signup = () => {
             history('/signin', { replace: true });
             }
           } catch (error) {
+            setIsLoading(true);
             seterrMessage(`Insufficient balance`);
             nftstorage.delete(response.ipnft);
           };
@@ -176,6 +179,7 @@ const Signup = () => {
 
 
     } else {
+      setIsLoading(true);
       seterrMessage('Account Not Connected')
       console.error('Account not connected');
     }
@@ -292,7 +296,13 @@ const Signup = () => {
               className="bg-teal-A400 cursor-pointer font-medium leading-[normal] min-w-full py-[19px] rounded-[32px] text-[17.51px] text-black-900 text-center"
             >
 
-              Signup and Verify
+              {isLoading ? (
+                <div className="flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-gray-900"></div>
+                </div>
+              ) : (
+                'Signup and Verify'
+              )}              
 
             </Button>
             {successMessage && (
