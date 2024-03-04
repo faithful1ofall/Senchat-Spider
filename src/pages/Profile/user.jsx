@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Img, Text, Button } from "components";
 import { Link } from "react-router-dom";
-import { useWeb3Modal } from '@web3modal/wagmi/react'
-import { watchAccount } from 'wagmi/actions';
-import { useConfig  } from 'wagmi';
+import { useDisconnect  } from 'wagmi';
 
 
 
@@ -13,8 +11,8 @@ const User = () => {
   const userDataParam = localStorage.getItem('userData');
   const [userimage, setUserimage] = useState();
   const userData = JSON.parse(userDataParam);
-  const config = useConfig();
 
+  const { disconnect } = useDisconnect()
 
 
 
@@ -25,24 +23,15 @@ const User = () => {
   }, [userData.image]);
 
   const history = useNavigate();
-  const modal = useWeb3Modal();
 
   const disconnectToWeb3 = () => {
-    modal.open();
-    watchAccount(config, (account) => {
-      if (!account.isConnected) {
-        history('/signin', { replace: true });
-      }
-    });
-
+    disconnect();
+    history('/signin', { replace: true });
   }
-
-
 
   return (
     <>
-      {/* <Navbar className="flex md:flex-col flex-row md:gap-5 items-center justify-center md:px-5 w-full" /> */}
-      <div className="bg-gray-100 flex flex-col font-prompt items-end justify-start mx-auto w-full">
+     <div className="bg-gray-100 flex flex-col font-prompt items-end justify-start mx-auto w-full">
         <div className="flex flex-col items-center w-full"></div>
         <div className="bg-white-A700 flex flex-col gap-10 items-end justify-start p-5 md:px-5 w-auto sm:w-full">
           <Img
@@ -76,17 +65,6 @@ const User = () => {
               src={userimage}
               alt="ellipseFortyTwo_One"
             />
-            {/*  <Text
-              className="sm:ml-[0] ml-[50px] sm:text-[19px] md:text-[18px] text-[19px] text-black-900"
-              size="txtPromptSemiBold23"
-            >
-              Edit Profile
-            </Text>
-            <Img
-              className="h-[19px] sm:ml-[0] ml-[295px] sm:mt-0 mt-[9px]"
-              src="images/img_arrowright_blue_gray_900_01.svg"
-              alt="arrowright"
-            /> */}
           </Link>
           <Link
             to="/portfolio"
