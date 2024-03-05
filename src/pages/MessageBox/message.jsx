@@ -156,7 +156,7 @@ const Message = () => {
           console.log(response);
 
           try {
-             await writeContract({
+             await writeContract(config, {
               address: nftcontract,
               abi: ContractABI,
               functionName: 'userMint',
