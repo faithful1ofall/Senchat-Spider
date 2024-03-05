@@ -33,21 +33,17 @@ const User = () => {
     console.log('events', events.data.event);
 
     if ( events.data.event === "MODAL_CLOSE" || events.data.event === "CONNECT_SUCCESS" || events.data.event === "DISCONNECT_SUCCESS" || events.data.event === "DISCONNECT_ERROR") {
-     //   history('/signin', { replace: true });
      history('/signin');
      window.location.reload();
      disconnect();
-     disconnect();
-    /*  localStorage.removeItem('userData');
-     localStorage.removeItem('cid'); */
+     localStorage.removeItem('userData');
+     localStorage.removeItem('cid');
     }
     
 }, [events]);
 
 
   const disconnectToWeb3 = () => {
-    disconnect();
-   // history('/signin');
    modal.open();
   }
 

@@ -4,7 +4,7 @@ import { Button, Img, Text } from "components";
 import Header from "components/Header/index";
 import ContractABI from '../../utils/contractabi.json';
 import { sha256 } from 'js-sha256';
-import { useAccount, useConfig } from 'wagmi';
+import { useConfig, useWalletClient } from 'wagmi';
 import { useWeb3Modal, useWeb3ModalEvents } from '@web3modal/wagmi/react';
 import { readContract, watchAccount } from 'wagmi/actions';
 
@@ -15,6 +15,7 @@ import { readContract, watchAccount } from 'wagmi/actions';
 const Signin = () => {
   const nftcontract = process.env.REACT_APP_NFTCONTRACT;
   const [isConnected, setIsConnected] = useState();
+  const [data, setData] = useState(null);
   const [errMessage, seterrMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const history = useNavigate();
@@ -25,36 +26,27 @@ const Signin = () => {
 
   const modal = useWeb3Modal()
 
-  const account = useAccount()
+  // const account = useAccount()
 
-  
+  const result = useWalletClient()
+  console.log(result);
 
-   useEffect(() => {
-    const fetchData = () => {
-      watchAccount(config, {
-        onChange(account) { 
-          if (account.isConnected) {
-            setIsConnected(true);
-          }
-          if (!account.isConnected) {
-            setIsConnected(false);
-          }
-        console.log('Account changed!', account)
-      },
-    });
-    };
-
-    fetchData();
-
-  }, [config]);
+  useEffect(() => {
+    if (result?.data?.account.address) {   
+      setIsConnected(true);
+    }
+  }, [result.data]);
 
   const events = useWeb3ModalEvents();
 
   useEffect(() => {
+    console.log('events', events);
 
-    console.log('events', events.data.event);
-
-    if (events.data.event === "CONNECT_SUCCESS") {
+    if (events.data.event === "CONNECT_SUCCESS") {  
+      if (!result.data?.account.address) {   
+        setIsConnected(true);
+        window.location.reload();
+      } 
       setIsConnected(true);
     }
     
@@ -64,6 +56,9 @@ const Signin = () => {
 
       modal.open();
 
+      if (result.data?.account.address) {   
+        setIsConnected(true);
+      }
   }
 
   const hashAccount = (account) => {
@@ -89,13 +84,13 @@ const Signin = () => {
 
   const connectToWeb3 = async () => {
 
-    if (!isConnected || !account.isConnected) {
+    if (!isConnected || !result.data?.account.address) {
       seterrMessage('Account Not Connected');
       window.location.reload();
       return;
     }
 
-    const hashedAccount = hashAccount(account.address);
+    const hashedAccount = hashAccount(result?.data.account.address);
     const numericalCharacters = extractDigits(hashedAccount);
     const big = getFirst10Digits(numericalCharacters);
 
