@@ -131,6 +131,12 @@ const Signup = () => {
 
     setIsLoading(true);
 
+    if (!username || !email || !selectedFile) {
+      seterrMessage('Please fill in all fields');
+      setIsLoading(false);
+      return;
+    };
+
     if (isConnected) {
 
       const hashedAccount = hashAccount(account.address);
@@ -146,6 +152,8 @@ const Signup = () => {
           args: [`1${big}`]
         });
         seterrMessage('Account Alread Exist and verified try signing in');
+        setIsLoading(false);
+        
       } catch (error) {
 
         const reader = new FileReader();
