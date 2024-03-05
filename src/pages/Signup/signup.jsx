@@ -14,6 +14,7 @@ import { bsc } from 'wagmi/chains';
 
 const Signup = () => {
   const [selectedFile, setSelectedFile] = useState(null);
+  const [fileUrl, setFileUrl] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [filename, setFilename] = useState(null);
   const [filetype, setFiletype] = useState(null);
@@ -92,6 +93,7 @@ const Signup = () => {
     const fetchData = async () => {
       if (!selectedFile && !filename) {
         const imageOriginUrl = process.env.REACT_APP_LOGO;
+        setFileUrl(imageOriginUrl);
         const r = await fetch(imageOriginUrl);
         const rb = await r.blob();
         setSelectedFile(rb);
@@ -108,7 +110,38 @@ const Signup = () => {
     setSelectedFile(doc.files[0]);
     setFilename(doc.files[0].name);
     setFiletype(doc.files[0].type);
+    const url = URL.createObjectURL(doc.files[0]);
+    setFileUrl(url);
   };
+
+  const getRandomColor = () => {
+    return '#' + Math.floor(Math.random()*16777215).toString(16);
+  }
+
+  const generateFavicon = async() => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 16;
+    canvas.height = 16;
+    const context = canvas.getContext('2d');
+
+    context.fillStyle = getRandomColor();
+    context.fillRect(0, 0, 16, 16);
+
+    const url = canvas.toDataURL('image/png');
+    setFileUrl(url);
+    const r = await fetch(url);
+    const rb = await r.blob();
+    setSelectedFile(rb);
+    setFilename('randomfavicon.png');
+    setFiletype('image/png');
+
+   // setFaviconURL(url);
+  }
+
+  useEffect(() => {
+    generateFavicon();
+  }, []);
+
 
   const hashAccount = (account) => {
     const hashedAccount = sha256(account.toString());
@@ -153,7 +186,7 @@ const Signup = () => {
         });
         seterrMessage('Account Alread Exist and verified try signing in');
         setIsLoading(false);
-        
+
       } catch (error) {
 
         const reader = new FileReader();
@@ -309,6 +342,9 @@ const Signup = () => {
                 onChange={handleFileChange}
               />
             </label>
+            <div className="w-[80px] h-[80px] rounded-full overflow-hidden">
+                <img className="w-100% md:h-auto object-cover" src={fileUrl} alt="Selected File" />
+              </div>
             <p>{filename}</p>
             {/* <Input type="file" className="text-[15.32px] text-gray-800 w-auto"
                 size="txtPromptMedium1532" onChange={handleFileChange} placeholder="Select a file" /> */}
