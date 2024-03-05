@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Img, Text, Button } from "components";
 import { Link } from "react-router-dom";
 import { useDisconnect  } from 'wagmi';
+import { useWeb3Modal, useWeb3ModalEvents } from '@web3modal/wagmi/react';
 
 
 
@@ -12,7 +13,8 @@ const User = () => {
   const [userimage, setUserimage] = useState();
   const userData = JSON.parse(userDataParam);
 
-  const { disconnect } = useDisconnect()
+  const { disconnect } = useDisconnect();
+  const modal = useWeb3Modal()
 
 
 
@@ -24,9 +26,29 @@ const User = () => {
 
   const history = useNavigate();
 
+  const events = useWeb3ModalEvents();
+
+  useEffect(() => {
+
+    console.log('events', events.data.event);
+
+    if ( events.data.event === "MODAL_CLOSE" || events.data.event === "CONNECT_SUCCESS" || events.data.event === "DISCONNECT_SUCCESS" || events.data.event === "DISCONNECT_ERROR") {
+     //   history('/signin', { replace: true });
+     history('/signin');
+     window.location.reload();
+     disconnect();
+     disconnect();
+    /*  localStorage.removeItem('userData');
+     localStorage.removeItem('cid'); */
+    }
+    
+}, [events]);
+
+
   const disconnectToWeb3 = () => {
     disconnect();
-    history('/signin', { replace: true });
+   // history('/signin');
+   modal.open();
   }
 
   return (

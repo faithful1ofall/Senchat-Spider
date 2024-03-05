@@ -4,9 +4,9 @@ import { Button, Img, Text } from "components";
 import Header from "components/Header/index";
 import ContractABI from '../../utils/contractabi.json';
 import { sha256 } from 'js-sha256';
-import { useAccount, useConfig, useAccountEffect  } from 'wagmi';
+import { useAccount, useConfig } from 'wagmi';
 import { useWeb3Modal, useWeb3ModalEvents } from '@web3modal/wagmi/react';
-import { readContract, watchAccount, watchConnections } from 'wagmi/actions';
+import { readContract, watchAccount } from 'wagmi/actions';
 
 
 
@@ -19,15 +19,6 @@ const Signin = () => {
   const [successMessage, setSuccessMessage] = useState(null);
   const history = useNavigate();
   const config = useConfig();
-
-  
-  const unwatch = watchAccount(config, {
-    onChange(data) {
-      if (!account.isConnected) {
-        setIsConnected(false);
-      }
-    },
-  });
   
 
   
@@ -69,30 +60,38 @@ const Signin = () => {
     
 }, [events]);
 
-
   const openmodal = () => {
-    modal.open(); 
+
+      modal.open();
+
   }
 
   const hashAccount = (account) => {
+    if (account) {
     const hashedAccount = sha256(account.toString());
     return hashedAccount;
+    }
   };
 
   const extractDigits = (text) => {
+    if (text) {
     const numericalCharacters = text.match(/\d/g);
     if (!numericalCharacters) return '';
     return numericalCharacters.join('');
+    }
   };
 
   const getFirst10Digits = (text) => {
+    if (text) {
     return text.substring(0, 10);
+    }
   };
 
   const connectToWeb3 = async () => {
 
-    if (!isConnected) {
+    if (!isConnected || !account.isConnected) {
       seterrMessage('Account Not Connected');
+      window.location.reload();
       return;
     }
 
@@ -126,6 +125,7 @@ const Signin = () => {
       console.log(url);
       setSuccessMessage(`connected succesfully ${cloudflareUrl}`);
       history(`/education`, { replace: true });
+      window.location.reload();
 
     } catch (error) {
       console.error(error);

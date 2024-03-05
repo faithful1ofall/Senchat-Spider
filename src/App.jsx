@@ -39,7 +39,7 @@ const config = createConfig({
 createWeb3Modal({
   wagmiConfig: config,
   projectId,
-  enableAnalytics: true 
+//  enableAnalytics: true 
 })
 
   return (
