@@ -39,6 +39,40 @@ const Signup = () => {
   const events = useWeb3ModalEvents();
 
   useEffect(() => {
+    // Retrieve saved input values from localStorage when the component mounts
+    const savedUsername = localStorage.getItem('username');
+    if (savedUsername) {
+      setUsername(savedUsername);
+    }
+
+    const savedEmail = localStorage.getItem('email');
+    if (savedEmail) {
+      setEmail(savedEmail);
+    }
+
+    const savedFileUrl = localStorage.getItem('fileUrl');
+    if (savedFileUrl) {
+      setFileUrl(savedFileUrl);
+    }
+
+    const savedFilename = localStorage.getItem('filename');
+    if (savedFilename) {
+      setFilename(savedFilename);
+    }
+
+    const savedFiletype = localStorage.getItem('filetype');
+    if (savedFiletype) {
+      setFiletype(savedFiletype);
+    }
+
+    const savedselectedFile = localStorage.getItem('selectedFile');
+    if (savedselectedFile) {
+      setSelectedFile(savedselectedFile);
+    }
+
+  }, []);
+
+  useEffect(() => {
 
     console.log('events', events.data.event);
 
@@ -87,15 +121,17 @@ const Signup = () => {
     });
   };
 
-
-
   const handleFileChange = () => {
     const doc = document.querySelector('input[type="file"]');
     setSelectedFile(doc.files[0]);
+    localStorage.setItem('selectedFile', doc.files[0]);
     setFilename(doc.files[0].name);
+    localStorage.setItem('filename', doc.files[0].name);
     setFiletype(doc.files[0].type);
+    localStorage.setItem('filetype', doc.files[0].type);
     const url = URL.createObjectURL(doc.files[0]);
     setFileUrl(url);
+    localStorage.setItem('fileUrl', url);
   };
 
   const getRandomColor = () => {
@@ -113,11 +149,15 @@ const Signup = () => {
 
     const url = canvas.toDataURL('image/png');
     setFileUrl(url);
+    localStorage.setItem('fileUrl', url);
     const r = await fetch(url);
     const rb = await r.blob();
     setSelectedFile(rb);
+    localStorage.setItem('selectedFile', rb);
     setFilename('randomfavicon.png');
+    localStorage.setItem('filename', 'randomfavicon.png');
     setFiletype('image/png');
+    localStorage.setItem('filetype', 'image/png');
   }
 
 
@@ -170,6 +210,11 @@ const Signup = () => {
           args: [`1${big}`]
         });
         seterrMessage('Account Alread Exist and verified try signing in');
+        localStorage.removeItem('username');
+        localStorage.removeItem('email');
+        localStorage.removeItem('fileUrl');
+        localStorage.removeItem('filename');
+        localStorage.removeItem('filetype');
         setIsLoading(false);
 
       } catch (error) {
@@ -210,6 +255,12 @@ const Signup = () => {
             });
             if (transactionReceipt) {
             setSuccessMessage('Successfully signed and verified');
+            localStorage.removeItem('username');
+            localStorage.removeItem('email');
+            localStorage.removeItem('fileUrl');
+            localStorage.removeItem('filename');
+            localStorage.removeItem('filetype');
+
             history('/signin', { replace: true });
             }
           } catch (error) {
@@ -234,6 +285,7 @@ const Signup = () => {
   const handleChange = (e) => {
     if (e) {
       setUsername(e);
+      localStorage.setItem('username', e);
     } else {
       console.error('Invalid event or value:', e);
     }
@@ -241,6 +293,7 @@ const Signup = () => {
   const handleChangeemail = (e) => {
     if (e) {
       setEmail(e);
+      localStorage.setItem('email', e);
     } else {
       console.error('Invalid event or value:', e);
     }
@@ -295,6 +348,7 @@ const Signup = () => {
                 wrapClassName="border border-blue_gray-100 border-solid pl-[17px] pr-[35px] py-3 rounded-lg w-full"
                 type="text"
                 onChange={handleChange}
+                value={username}
               ></Input>
             </div>
             <div className="flex flex-col gap-[8.75px] items-start justify-start w-full">
@@ -311,6 +365,7 @@ const Signup = () => {
                 wrapClassName="border border-blue_gray-100 border-solid pl-[17px] pr-3 py-3 rounded-lg w-full"
                 type="email"
                 onChange={handleChangeemail}
+                value={email} 
               ></Input>
             </div>
             <Text
