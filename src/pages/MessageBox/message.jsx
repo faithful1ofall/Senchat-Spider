@@ -7,6 +7,7 @@ import { Img, Text } from "components";
 import { readContract, writeContract } from 'wagmi/actions';
 import { useAccount, useConfig  } from 'wagmi';
 import { parseGwei } from 'viem';
+import { bsc } from 'wagmi/chains';
 import { NFTStorage, File } from 'nft.storage';
 import ContractABI from '../../utils/contractabi.json';
 import { sha256 } from 'js-sha256';
@@ -27,7 +28,7 @@ const Message = () => {
   const config = useConfig();
 
   const account = useAccount();
-  const chainId = account.chain.id;
+  const chainId = bsc.id;
 
   const userDataParam = localStorage.getItem('userData');
 
