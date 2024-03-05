@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Line, Text, Img, Button } from "components";
 import ContractABI from '../../utils/contractabi.json';
-import { useConfig, useWriteContract, useAccount } from 'wagmi';
-import { readContract  } from 'wagmi/actions';
+import { useConfig, useAccount } from 'wagmi';
+import { readContract, writeContract  } from 'wagmi/actions';
 import { NFTStorage } from 'nft.storage';
 
 
@@ -13,7 +13,6 @@ const PortfolioColumn = (props) => {
     const config = useConfig();
     const nftcontract = process.env.REACT_APP_NFTCONTRACT;
     const account = useAccount();   
-    const { writeContract } = useWriteContract(); 
 
     
 
@@ -81,7 +80,7 @@ const PortfolioColumn = (props) => {
         const allTokenDetails = await fetchAllTokenDetails(0, totalSupplyNumber - 1);
 
 
-        //const threadData = [];
+        const threadData = [];
 
         for (const tokenDetail of allTokenDetails) {
 
@@ -103,7 +102,6 @@ const PortfolioColumn = (props) => {
 
                         const jsonData = await response.json();
 
-
                         const image = jsonData.image.replace('ipfs://', '');
                         const imageurl = `https://cloudflare-ipfs.com/ipfs/${image}`;
 
@@ -120,8 +118,7 @@ const PortfolioColumn = (props) => {
                         const minutes = dateObject.getMinutes();
                         const date = dateObject.toLocaleDateString([], { year: 'numeric', month: '2-digit', day: '2-digit' });
 
-                        setthreadData((prevData) => [
-                            ...prevData,
+                        threadData.push(
                             {
                                 data: imageurl,
                                 titleofprops: jsonData.username,
@@ -134,7 +131,7 @@ const PortfolioColumn = (props) => {
                                 repliescounter13: '',
                                 anasabdinone10: jsonData.username,
                             },
-                        ]);
+                        );
 
                     } catch (error) {
                         console.error(`Error fetching from IPFS: ${error.message}`);
@@ -143,37 +140,41 @@ const PortfolioColumn = (props) => {
             }
         };
 
+        setthreadData(threadData);
+
     };
 
         Total();
+
     }, [account.address, config, nftcontract]);
 
 
     const del = async (tid, hashcid) => {
+
         setIsLoading(true);
+
         try {
             const hash1 = hashcid.split('/').slice(-2, -1)[0];
 
             console.log(hash1);
 
-                const nftstorage = new NFTStorage({ token: process.env.REACT_APP_NFT_STORAGE_KEY });
+            const nftstorage = new NFTStorage({ token: process.env.REACT_APP_NFT_STORAGE_KEY });
 
 
-                const tokenId =  writeContract({
-                    address: nftcontract,
-                    abi: ContractABI,
-                    functionName: 'burn',
-                    args: [tid],
-                });
+            const tokenId =  await writeContract(config, {
+                address: nftcontract,
+                abi: ContractABI,
+                functionName: 'burn',
+                args: [tid],
+            });
 
                 console.log(tokenId);
 
                 if (tokenId) {
                     nftstorage.delete(hash1);
+                    console.log(tokenId);
                     setIsLoading(false);
                     window.location.reload();
-                } else {
-                    setIsLoading(false);
                 }
         } catch (error) {
             setIsLoading(false);
@@ -202,11 +203,10 @@ const PortfolioColumn = (props) => {
                         {/* <div>{thread.anasabdin}</div> */}
 
                         {/*   <Button className="bg-blue_gray-100 cursor-pointer font-prompt font-semibold h-[46px] leading-[normal] py-[7px] rounded-[10px] text-black-900 text-center text-xl w-[46px]">
-                  {thread?.p}
-                </Button> */}
+                        {thread?.p}
+                        </Button> */}
                         <div className="flex flex-1 md:flex-col flex-row gap-[16px] items-start justify-start max-w-[1039px] px-5 py-[15px] w-full"
                         >
-
                             <Img
                                 src={thread?.userimage}
                                 alt="Image Alt Text"

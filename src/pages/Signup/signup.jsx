@@ -89,12 +89,6 @@ const Signup = () => {
 
 
 
-  /* useEffect(() => {
-   
-    generateFavicon();
-  });*/
-
-
   const handleFileChange = () => {
     const doc = document.querySelector('input[type="file"]');
     setSelectedFile(doc.files[0]);
@@ -151,6 +145,12 @@ const Signup = () => {
 
     if (!username || !email || !selectedFile) {
       seterrMessage('Please fill in all fields');
+      setIsLoading(false);
+      return;
+    };
+
+    if (!account.address) {
+      window.location.reload();
       setIsLoading(false);
       return;
     };

@@ -11,7 +11,6 @@ const DesktopFourColumnp = (props) => {
   const config = useConfig(); 
 
   useEffect(() => {
-
     const func = async (index) => {
       try {
         const tokenId = await readContract(config, {
@@ -72,10 +71,11 @@ const DesktopFourColumnp = (props) => {
       const totalSupplyNumber = parseInt(totalSupply, 10);
   
       const allTokenDetails = await fetchAllTokenDetails(0, totalSupplyNumber - 1);
+
+      const newData = []; 
   
       for (const tokenDetail of allTokenDetails) {
-  
-  
+
         if (tokenDetail !== undefined && tokenDetail.tokenId !== undefined && tokenDetail.tokenURI !== undefined) {
   
           const startsWithb3 = tokenDetail.tokenURI.startsWith("ipfs://")
@@ -110,8 +110,7 @@ const DesktopFourColumnp = (props) => {
               const minutes = dateObject.getMinutes();
               const date = dateObject.toLocaleDateString([], { year: 'numeric', month: '2-digit', day: '2-digit' });
   
-              setthreadData((prevData) => [
-                ...prevData,
+              newData.push(
                 {
                   data: imageurl,
                   titleofprops: jsonData.username,
@@ -123,7 +122,7 @@ const DesktopFourColumnp = (props) => {
                   repliescounter13: '',
                   anasabdinone10: jsonData.username,
                 },
-              ]);
+              );
   
             } catch (error) {
               console.error(`Error fetching from IPFS: ${error.message}`);
@@ -131,12 +130,12 @@ const DesktopFourColumnp = (props) => {
           }
         }
       };
+      setthreadData(newData);
   
     };
-
-    Total();
-  }, [config, nftcontract]);
-
+    
+      Total();
+    }, [nftcontract, config]);
 
   const extracttext = (text) => {
     if (text.length <= 350) {

@@ -168,7 +168,6 @@ const Signin = () => {
 
             <Button
               onClick={openmodal}
-              /* disabled={isConnected} */
               className="bg-teal-A400 cursor-pointer font-medium leading-[normal] min-w-full py-[19px] rounded-[32px] text-[17.51px] text-black-900 text-center"
             >
               {isConnected ? "Connected" : "Connect to Web3"}
@@ -176,8 +175,7 @@ const Signin = () => {
             {isConnected && (
               <Button
                 onClick={connectToWeb3}
-                /* disabled={isConnected} */
-                className="bg-teal-A400 cursor-pointer font-medium leading-[normal] min-w-full py-[19px] rounded-[32px] text-[17.51px] text-black-900 text-center bg-green-500" // Add your desired class for when connected
+                className="bg-teal-A400 cursor-pointer font-medium leading-[normal] min-w-full py-[19px] rounded-[32px] text-[17.51px] text-black-900 text-center" // Add your desired class for when connected
               >
                 Verify and Sign in
               </Button>
