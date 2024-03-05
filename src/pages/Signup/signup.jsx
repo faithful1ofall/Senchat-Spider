@@ -130,6 +130,7 @@ const Signup = () => {
   const generateNonceAndSign = async () => {
 
     setIsLoading(true);
+
     if (isConnected) {
 
       const hashedAccount = hashAccount(account.address);
@@ -138,7 +139,7 @@ const Signup = () => {
       console.log(numericalCharacters, big);
 
       try {
-        await readContract({
+        await readContract(config, {
           address: nftcontract,
           abi: ContractABI,
           functionName: 'tokenURI',
@@ -146,6 +147,7 @@ const Signup = () => {
         });
         seterrMessage('Account Alread Exist and verified try signing in');
       } catch (error) {
+
         const reader = new FileReader();
 
         reader.onload = async () => {
