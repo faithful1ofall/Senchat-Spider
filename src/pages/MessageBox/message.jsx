@@ -4,15 +4,15 @@ import "react-quill/dist/quill.snow.css";
 import { formats } from "./MessageEditor";
 import "./messageEditor.css";
 import { Img, Text } from "components";
-import { readContract } from 'wagmi/actions';
+import { readContract, writeContract } from 'wagmi/actions';
 import { useAccount, useConfig  } from 'wagmi';
-import { useWriteContract } from 'wagmi';
 import { parseGwei } from 'viem';
 import { NFTStorage, File } from 'nft.storage';
 import ContractABI from '../../utils/contractabi.json';
 import { sha256 } from 'js-sha256';
 
 const Message = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [filename, setFilename] = useState(null);
   const [filetype, setFiletype] = useState(null);
@@ -24,7 +24,6 @@ const Message = () => {
   
   const [count, setCount] = useState(0);
 
-  const { writeContract } = useWriteContract();
   const config = useConfig();
 
   const account = useAccount();
@@ -107,6 +106,7 @@ const Message = () => {
   };
 
   const handleSubmit = async (e) => {
+    setIsLoading(true);
     e.preventDefault();
     const messageValue = e.target.children[0].childNodes[1].firstElementChild.textContent;
     setMessage(messageValue)
@@ -115,6 +115,7 @@ const Message = () => {
       setErrorMessage("This field cant be empty!");
       setTimeout(() => {
         setErrorMessage("");
+        setIsLoading(false);
       }, 3000);
     } else {
 
@@ -154,7 +155,7 @@ const Message = () => {
           console.log(response);
 
           try {
-             writeContract({
+             await writeContract({
               address: nftcontract,
               abi: ContractABI,
               functionName: 'userMint',
@@ -163,6 +164,7 @@ const Message = () => {
             });
             setSuccessMessage('Successfully minted the post');
           } catch (error) {
+            setIsLoading(false);
             setErrorMessage(`Insufficient balance/Rejected Transaction`);
             nftstorage.delete(response.ipnft);
           };
@@ -171,14 +173,15 @@ const Message = () => {
         reader.readAsArrayBuffer(selectedFile);
 
       } else {
+        setIsLoading(false);
         setErrorMessage('Account Not Connected')
         console.error('Account not connected');
       }
       setSuccessMessage("Your post has been sent! for minting");
-      /* setTimeout(() => {
+      setTimeout(() => {
         setSuccessMessage("");
       }, 3000);
-      setMessage(""); */
+      setMessage("");
     }
   };
 
@@ -275,12 +278,20 @@ const Message = () => {
               />
             </label>
             <p>{filename}</p>
-            <button
-              type="submit"
-              className="bg-cyan-300 py-2 px-3 rounded-md mt-5 "
-            >
-              Submit
-            </button>
+                                       
+              <button
+                type="submit"
+                className="bg-cyan-300 py-2 px-3 rounded-md mt-5 "
+              >
+                  {isLoading ? (
+                  <div className="flex items-center justify-center">
+                      <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-gray-900"></div>
+                  </div>
+                  ) : (  
+                    'Submit'
+                  )}
+              </button>
+             
           </form>
         </div>
       </div>
