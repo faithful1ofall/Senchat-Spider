@@ -6,7 +6,7 @@ import ContractABI from '../../utils/contractabi.json';
 import { sha256 } from 'js-sha256';
 import { useConfig, useWalletClient } from 'wagmi';
 import { useWeb3Modal, useWeb3ModalEvents } from '@web3modal/wagmi/react';
-import { readContract, watchAccount } from 'wagmi/actions';
+import { readContract } from 'wagmi/actions';
 
 
 
@@ -15,7 +15,6 @@ import { readContract, watchAccount } from 'wagmi/actions';
 const Signin = () => {
   const nftcontract = process.env.REACT_APP_NFTCONTRACT;
   const [isConnected, setIsConnected] = useState();
-  const [data, setData] = useState(null);
   const [errMessage, seterrMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const history = useNavigate();
@@ -50,7 +49,7 @@ const Signin = () => {
       setIsConnected(true);
     }
     
-}, [events]);
+}, [events, result.data?.account]);
 
   const openmodal = () => {
 

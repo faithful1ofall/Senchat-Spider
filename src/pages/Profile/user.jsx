@@ -40,7 +40,7 @@ const User = () => {
      localStorage.removeItem('cid');
     }
     
-}, [events]);
+}, [events, history, disconnect]);
 
 
   const disconnectToWeb3 = () => {

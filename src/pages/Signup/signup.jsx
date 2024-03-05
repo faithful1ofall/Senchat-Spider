@@ -89,20 +89,10 @@ const Signup = () => {
 
 
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!selectedFile && !filename) {
-        const imageOriginUrl = process.env.REACT_APP_LOGO;
-        setFileUrl(imageOriginUrl);
-        const r = await fetch(imageOriginUrl);
-        const rb = await r.blob();
-        setSelectedFile(rb);
-        setFilename('senchatlogo.png');
-        setFiletype('image/png');
-      }
-    };
-    fetchData();
-  });
+  /* useEffect(() => {
+   
+    generateFavicon();
+  });*/
 
 
   const handleFileChange = () => {
@@ -116,16 +106,16 @@ const Signup = () => {
 
   const getRandomColor = () => {
     return '#' + Math.floor(Math.random()*16777215).toString(16);
-  }
+}
 
   const generateFavicon = async() => {
     const canvas = document.createElement('canvas');
-    canvas.width = 16;
-    canvas.height = 16;
+    canvas.width = 80;
+    canvas.height = 80;
     const context = canvas.getContext('2d');
 
     context.fillStyle = getRandomColor();
-    context.fillRect(0, 0, 16, 16);
+    context.fillRect(0, 0, 80, 80);
 
     const url = canvas.toDataURL('image/png');
     setFileUrl(url);
@@ -134,13 +124,8 @@ const Signup = () => {
     setSelectedFile(rb);
     setFilename('randomfavicon.png');
     setFiletype('image/png');
-
-   // setFaviconURL(url);
   }
 
-  useEffect(() => {
-    generateFavicon();
-  }, []);
 
 
   const hashAccount = (account) => {
@@ -344,8 +329,15 @@ const Signup = () => {
             </label>
             <div className="w-[80px] h-[80px] rounded-full overflow-hidden">
                 <img className="w-100% md:h-auto object-cover" src={fileUrl} alt="Selected File" />
-              </div>
+                
+            </div>            
             <p>{filename}</p>
+            <Button
+                  onClick={generateFavicon}
+                  className="absolute bottom-4 right-4 bg-teal-500 text-white py-2 px-4 rounded-full shadow-md"
+                >
+                   Generate Random Favicon
+            </Button>
             {/* <Input type="file" className="text-[15.32px] text-gray-800 w-auto"
                 size="txtPromptMedium1532" onChange={handleFileChange} placeholder="Select a file" /> */}
             <Button
