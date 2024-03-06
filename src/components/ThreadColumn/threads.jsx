@@ -154,7 +154,7 @@ const Thread = (props) => {
              args: [account.address, `3${tid}${likecount}`, `${response.url}`],
              value: parseGwei('100000'),
            });
-           setSuccessMessage('Successfully minted the post');
+           setSuccessMessage('Successfully minted the like');
            setIsLoading(false);
          } catch (error) {
            setIsLoading(false);
@@ -170,7 +170,7 @@ const Thread = (props) => {
         setErrorMessage('Account Not Connected')
         console.error('Account not connected');
       }
-      setSuccessMessage("Your post has been sent! for minting");
+      setSuccessMessage("Your like has been sent! for minting");
       setTimeout(() => {
         setSuccessMessage("");
       }, 3000);   
