@@ -167,7 +167,10 @@ const Thread = (props) => {
 
       } else {
         setIsLoading(false);
-        setErrorMessage('Account Not Connected')
+        setErrorMessage('Account Not Connected or Retry clicking again');
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 3000);  
         console.error('Account not connected');
       }
       setSuccessMessage("Your like has been sent! for minting");
