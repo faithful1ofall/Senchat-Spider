@@ -311,7 +311,7 @@ const Thread = (props) => {
               <div className="flex sm:flex-col flex-row sm:gap-5 items-center justify-start w-[51%] md:w-full">
                 <Button
                   onClick={like}
-                  className="bg-black-900 cursor-pointer flex items-center justify-center min-w-[109px] px-5 py-3.5 rounded-[7px]"
+                  className="bg-black-900 cursor-pointer flex items-center justify-center min-w-[129px] px-5 py-3.5 rounded-[7px]"
                   leftIcon={
                     <div className="mr-[7px] bg-black-A700 my-[3px]">
                       <Img src="../../images/img_edit_white_a700.svg" alt="edit"/>
@@ -322,7 +322,7 @@ const Thread = (props) => {
                     
                   {isLoading ? (
                   <div className="flex items-center justify-center">
-                      <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-gray-900"></div>
+                      <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-white-900"></div>
                   </div>
                   ) : ( 
                     userlike ? `Unlike ${likecount}` :`${thread?.like} ${likecount}`

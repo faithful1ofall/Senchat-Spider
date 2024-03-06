@@ -148,7 +148,7 @@ const PortfolioColumn = (props) => {
 
     }, [account.address, config, nftcontract]);
 
-
+   
     const del = async (tid, hashcid) => {
 
         setIsLoading(true);

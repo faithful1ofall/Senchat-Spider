@@ -60,7 +60,7 @@ const Thread = () => {
                           className="text-[16.8px] text-blue_gray-400"
                           size="txtPromptMedium168"
                         >
-                          {fdata.username != null ? ` ${fdata.username} ` : ''}
+                          {fdata.username != null ? ` ${fdata.username}   ` : ' '}
                         </Text>
                       
                         <Img
