@@ -119,6 +119,7 @@ const DesktopFourColumnp = (props) => {
                   userimage: userImageUrl,
                   time: `${hours}:${minutes} ${date}`,
                   cid: hash,
+                  tid: tokenDetail.tokenId,
                   repliescounter13: '',
                   anasabdinone10: jsonData.username,
                 },
@@ -154,7 +155,7 @@ const DesktopFourColumnp = (props) => {
             <div>{thread.titleofthread}</div>
             {/* <div>{thread.anasabdin}</div> */}
             <Link
-              to={`/thread/${encodeURIComponent(thread.cid)}`}
+              to={`/thread/${encodeURIComponent(thread.tid)}/${encodeURIComponent(thread.cid)}`}
               className="flex flex-1 md:flex-col flex-row gap-[16px] items-start justify-start max-w-[1039px] px-5 py-[15px] w-full"
             >
               <Link to="/thread">

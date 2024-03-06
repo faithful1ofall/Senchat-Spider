@@ -5,11 +5,12 @@ import ThreadColumn from "components/ThreadColumn/threads";
 import Navbar from "components/Header2/navbar";
 
 const Thread = () => {
-  const { cid } = useParams();
+  const { tid, cid } = useParams();
   const [fdata, setfdata] = useState({});
   const [time, settime] = useState();
 
   localStorage.setItem('cid', cid);
+  localStorage.setItem('tid', tid);
 
   
   useEffect(() => {
@@ -52,7 +53,7 @@ const Thread = () => {
                       <div className="flex flex-row items-start justify-between w-full">
                         <Img
                           className="h-5 mt-0.5 w-5"
-                          src="../images/img_user.svg"
+                          src="../../images/img_user.svg"
                           alt="user"
                         />
                         <Text
@@ -64,7 +65,7 @@ const Thread = () => {
                       
                         <Img
                           className="h-6 w-6"
-                          src="../images/img_clock.svg"
+                          src="../../images/img_clock.svg"
                           alt="clock"
                         />
                         <Text
@@ -87,7 +88,7 @@ const Thread = () => {
                         </Text>
                         <Img
                           className="h-5 sm:h-4"
-                          src="../images/img_arrowright.svg"
+                          src="../../images/img_arrowright.svg"
                           alt="arrowright"
                         />
                       </div>
@@ -100,7 +101,7 @@ const Thread = () => {
                         </Text>
                         <Img
                           className="h-5 sm:h-4"
-                          src="../images/img_arrowright.svg"
+                          src="../../images/img_arrowright.svg"
                           alt="arrowright_One"
                         />
                       </div>

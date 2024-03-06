@@ -223,7 +223,7 @@ const PortfolioColumn = (props) => {
                                         </Text>
                                     </div>
                                     <div className="flex flex-row gap-[7px] items-center justify-between w-full">
-                                        <Link to={`/thread/${encodeURIComponent(thread.cid)}`}>
+                                        <Link to={`/thread/${encodeURIComponent(thread.tid)}/${encodeURIComponent(thread.cid)}`}>
                                             <Text
                                                 className="text-black-900 text-sm"
                                                 size="txtPromptMedium14"

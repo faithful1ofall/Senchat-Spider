@@ -19,10 +19,10 @@ const User = () => {
 
 
   useEffect(() => {
-    const image = userData.image.replace('ipfs://', '');
+    const image = userData?.image.replace('ipfs://', '');
     const imageurl = `https://cloudflare-ipfs.com/ipfs/${image}`;
     setUserimage(imageurl);
-  }, [userData.image]);
+  }, [userData?.image]);
 
   const history = useNavigate();
 
@@ -65,7 +65,7 @@ const User = () => {
               className="ml-3 md:ml-[0] text-3xl sm:text-[26px] md:text-[28px] text-black-900"
               size="txtPromptMedium30Black900"
             >
-              {userData.name}
+              {userData?.name}
             </Text>
             <Text
               className="mb-0.5 ml-3 md:ml-[0] text-teal-100 text-xl"
@@ -100,28 +100,7 @@ const User = () => {
               src="images/img_arrowright_blue_gray_900_01.svg"
               alt="arrowright_One"
             />
-          </Link>
-          <Link
-            to="/coming-soon"
-            className="flex sm:flex-col flex-row sm:gap-5 items-start justify-start pt-[3px] w-full"
-          >
-            <Img
-              className="h-7 w-7"
-              src="images/img_search_teal_100.svg"
-              alt="search_One"
-            />
-            <Text
-              className="sm:ml-[0] ml-[51px] sm:text-[19px] md:text-[21px] text-[19px] text-black-900"
-              size="txtPromptSemiBold23"
-            >
-              Settings
-            </Text>
-            <Img
-              className="h-[19px] sm:ml-[0] ml-[326px] sm:mt-0 mt-[7px]"
-              src="images/img_arrowright_blue_gray_900_01.svg"
-              alt="arrowright_Two"
-            />
-          </Link>
+          </Link>           
           <Link
             to="/coming-soon"
             className="flex sm:flex-col flex-row sm:gap-5 items-start justify-start w-full"
@@ -163,6 +142,26 @@ const User = () => {
               alt="arrowright_Four"
             />
           </Button>
+          {/* <Button
+            className="flex sm:flex-col bg-red-600 flex-row sm:gap-5 items-start justify-start pt-[3px] w-full"
+            >
+            <Img
+              className="h-7 w-7"
+              src="images/img_search_teal_100.svg"
+              alt="search_One"
+            />
+            <Text
+              className="sm:ml-[0] ml-[49px] sm:text-[19px] md:text-[21px] text-[19px] text-gray-50"
+              size="txtPromptSemiBold23"
+            >
+              Delete Profile
+            </Text>
+            <Img
+              className="h-[19px] sm:ml-[0] ml-[259px] sm:mt-0 mt-[9px]"
+              src="images/img_arrowright_blue_gray_900_01.svg"
+              alt="arrowright_One"
+            />
+          </Button> */}
         </div>
       </div>
     </>

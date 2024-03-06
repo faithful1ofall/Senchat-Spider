@@ -146,7 +146,6 @@ const Message = () => {
             date: formattedDate,
             address: account.address,
             chainId: chainId,
-
           };
 
           const response = await nftstorage.store(
