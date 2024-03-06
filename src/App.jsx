@@ -4,7 +4,7 @@ import { createWeb3Modal } from '@web3modal/wagmi/react'
 import { http, createConfig, WagmiProvider } from 'wagmi'
 import { bsc } from 'wagmi/chains'
 import { walletConnect, injected } from 'wagmi/connectors'
-
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 function App() {
@@ -46,6 +46,7 @@ createWeb3Modal({
     <WagmiProvider config={config}>
     <QueryClientProvider client={queryClient}>
     <Routes />
+    <SpeedInsights />
     </QueryClientProvider>
   </WagmiProvider>
   );
