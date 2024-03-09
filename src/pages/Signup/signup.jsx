@@ -9,7 +9,26 @@ import { parseGwei } from 'viem';
 import { NFTStorage, File } from 'nft.storage';
 import ContractABI from '../../utils/contractabi.json';
 import { sha256 } from 'js-sha256';
-import { bsc } from 'wagmi/chains';
+import { defineChain } from 'viem';
+
+const BotanixTestnet = defineChain({
+  id: 3636,
+  name: 'BotanixTestnet',
+  nativeCurrency: {
+    decimals: 18,
+    name: 'Bitcoin',
+    symbol: 'BTC',
+  },
+  rpcUrls: {
+    default: {
+      http: ['https://node.botanixlabs.dev']
+    },
+  },
+  blockExplorers: {
+    default: { name: 'Explorer', url: 'https://3xpl.com/botanix' },
+  },
+  testnet: true
+})
 
 
 const Signup = () => {
@@ -34,7 +53,7 @@ const Signup = () => {
 
   const account = useAccount();
 
-  const chainId = bsc.id;
+  const chainId = BotanixTestnet.id;
 
   const events = useWeb3ModalEvents();
 

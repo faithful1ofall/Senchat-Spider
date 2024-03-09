@@ -4,8 +4,27 @@ import { readContract, writeContract } from 'wagmi/actions';
 import { useConfig, useAccount  } from 'wagmi';
 import ContractABI from '../../utils/contractabi.json';
 import { NFTStorage, File } from 'nft.storage';
-import { bsc } from 'wagmi/chains';
 import { parseGwei } from 'viem';
+import { defineChain } from 'viem';
+
+const BotanixTestnet = defineChain({
+  id: 3636,
+  name: 'BotanixTestnet',
+  nativeCurrency: {
+    decimals: 18,
+    name: 'Bitcoin',
+    symbol: 'BTC',
+  },
+  rpcUrls: {
+    default: {
+      http: ['https://node.botanixlabs.dev']
+    },
+  },
+  blockExplorers: {
+    default: { name: 'Explorer', url: 'https://3xpl.com/botanix' },
+  },
+  testnet: true
+})
 
 
 const Thread = (props) => {
@@ -26,7 +45,7 @@ const Thread = (props) => {
   const cid = localStorage.getItem('cid');
   const tid = localStorage.getItem('tid');
   const account = useAccount();
-  const chainId = bsc.id;
+  const chainId = BotanixTestnet.id;
 
   const userDataParam = localStorage.getItem('userData');
 

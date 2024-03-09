@@ -1,13 +1,32 @@
 import React from "react";
 import Routes from "./Routes";
-import { createWeb3Modal } from '@web3modal/wagmi/react'
-import { http, createConfig, WagmiProvider } from 'wagmi'
-import { bsc } from 'wagmi/chains'
-import { walletConnect, injected } from 'wagmi/connectors'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { createWeb3Modal } from '@web3modal/wagmi/react';
+import { http, createConfig, WagmiProvider } from 'wagmi';
+import { walletConnect, injected } from 'wagmi/connectors';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { defineChain } from 'viem';
+
+const BotanixTestnet = defineChain({
+  id: 3636,
+  name: 'BotanixTestnet',
+  nativeCurrency: {
+    decimals: 18,
+    name: 'Bitcoin',
+    symbol: 'BTC',
+  },
+  rpcUrls: {
+    default: {
+      http: ['https://node.botanixlabs.dev']
+    },
+  },
+  blockExplorers: {
+    default: { name: 'Explorer', url: 'https://3xpl.com/botanix' },
+  },
+  testnet: true
+})
+
 
 function App() {
- 
 
 const queryClient = new QueryClient();
 
@@ -21,9 +40,9 @@ const metadata = {
 }
 
 const config = createConfig({
-  chains: [bsc],
+  chains: [BotanixTestnet],
   transports: {
-    [bsc.id]: http('https://binance.llamarpc.com')
+    [BotanixTestnet.id]: http('https://node.botanixlabs.dev')
   },
   connectors: [
     walletConnect({ projectId, metadata, showQrModal: false }),
@@ -38,6 +57,7 @@ const config = createConfig({
 createWeb3Modal({
   wagmiConfig: config,
   projectId,
+  defaultChain: BotanixTestnet,
 //  enableAnalytics: true 
 })
 
