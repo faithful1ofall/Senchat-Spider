@@ -1,1 +1,1 @@
-# Senchatdapp
+# Senchat for Botanix testnet
